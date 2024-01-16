@@ -22,6 +22,5 @@ public class StudyPostController {
 	public ResponseEntity<List<StudyPost>> getAllStudyPost() {
 	List<StudyPost> studyPost = studyPostService.getAllStudyPost();
 	return ResponseEntity.ok(studyPost);
-	
 	}
 }

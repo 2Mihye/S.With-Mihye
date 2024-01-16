@@ -2,22 +2,64 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace = "lm.swith.mapper.StudyPostMapper">
-	<!-- 게시글 등록 -->
+	<!-- 스터디 전체 목록 -->
+	<select id="getAllStudyPost" parameterType="lm.swith.vo.StudyPost">
+		SELECT * FROM study_post ORDER BY post_no DESC
+	</select>
+	
+	<!-- 진행방식별 스터디 목록 -->
+	<select id="getStudiesByRecruitType">
+		SELECT * FROM study_post WHERE recruit_type = #{recruit_type}
+	</select>
+	
+	<!-- 지역별 스터디 목록 -->
+	<select id="getStudiesByStudyLocation">
+		SELECT * FROM study_post WHERE study_location = #{study_location}
+	</select>
+	
+	<!-- 기술스택별 스터디 목록 -->
+	<select id="getStudiesBySkills">
+		SELECT * FROM study_post WHERE skill_no = 1 OR skill_no = 2 OR skill_no = 3 OR skill_no = 4 OR skill_no = 5
+		OR skill_no = 6 OR skill_no = 7 OR skill_no = 8 OR skill_no = 9 OR skill_no = 10 OR skill_no = 11 OR skill_no = 12
+		OR skill_no = 13 OR skill_no = 14 OR skill_no = 15 OR skill_no = 16 OR skill_no = 17 OR skill_no = 18 OR skill_no = 19
+		OR skill_no = 20 OR skill_no = 21 OR skill_no = 22 OR skill_no = 23 OR skill_no = 24 OR skill_no = 26 OR skill_no = 27
+		OR skill_no = 28 OR skill_no = 29 OR skill_no = 30 OR skill_no = 16 31 skill_no = 32 OR skill_no = 33 OR skill_no = 34
+	</select>
+	
+	<!-- 키워드 검색결과 스터디 목록 -->
+	<select id="getStudiesBySearch">
+		SELECT * FROM study_post WHERE study_title like '%'||#{keyword}||'%'
+		OR study_content like '%'||#{keyword}||'%'
+	</select>
+	
+
+	<!-- 스터디 등록 -->
 	<insert id="insertStudyPost" parameterType="lm.swith.vo.StudyPost">
-		INSERT INTO study_post (post_no, stuty_title, Progress, recruit_type, recruit_deadline, MentorApplicants, MaxMentorApplicants, MenteeApplicants, MaxMenteeApplicants, Likes, Duration, Rating, Location, StartDate)
-		VALUES (2, 'Study1', 'Not Started', 'Study', TO_DATE('2024-03-15', 'YYYY-MM-DD'), 3, 5, 2, 5, 15, '3 weeks', 5, 'Location2', NULL);
+		INSERT INTO study_post (post_no, user_no, comment_no, study_no, skill_no, study_title, study_content, study_method, recruit_type, study_period, study_start, recruit_deadline, study_status, study_likes, study_location, mentor_applicants, max_mentor_applicants, mentee_applicants, max_mentee_applicants, study_post_time)
+		VALUES (#{post_no_seq.NEXTVAL}, #{user_no}, #{comment_no}, #{study_no}, #{skill_no}, #{study_title}, #{study_content}, #{study_method}, #{recruit_type}, #{study_period}, #{study_start}, #{recruit_deadline}, #{study_status}, #{study_likes}, #{study_location}, #{mentor_applicants}, #{max_mentor_applicants}, #{mentee_applicants}, #{max_mentee_applicants}, SYSDATE);
 	</insert>
 	
-	<!-- 게시글 수정 -->
-	<update id="updateStudyPost" parameterType="lm.swith.vo.StudyPost">
+	
+	
+	<!-- 스터디 수정 -->
+	<update id="updateStudyPostTitle" parameterType="lm.swith.vo.StudyPost">
 		UPDATE study_post SET
-				= #{},
-				= #{}
-		WHERE post_no = #{}
+		study_title = #{study_title},
+		study_content = #{study_content},
+		study_method = #{study_method},
+		recruit_type = #{recruit_type},
+		study_period = #{study_period},
+		study_start = #{study_start},
+		recruit_deadline = #{recruit_deadline},
+		study_location = #{study_location},
+		max_mentor_applicants = #{max_mentor_applicants},
+		max_mentee_applicants = #{max_mentee_applicatns},
+		WHERE post_no = #{post_no}
 	</update>
 	
-	<!-- 게시글 검색 -->
-	<select id="getAllStudyPost" parameterType="lm.swith.vo.StudyPost">
-		SELECT * FROM study_post
-	</select>
+	<!-- 스터디 삭제 -->
+	<delete id="deleteStudyByStudyPostNo" parameterType="Long">
+		DELETE FROM study_post WHERE post_no = #{post_no}
+	</delete>
+
 </mapper>
