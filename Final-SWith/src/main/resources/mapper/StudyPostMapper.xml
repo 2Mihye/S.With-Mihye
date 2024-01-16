@@ -1,0 +1,23 @@
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "lm.swith.mapper.StudyPostMapper">
+	<!-- 게시글 등록 -->
+	<insert id="insertStudyPost" parameterType="lm.swith.vo.StudyPost">
+		INSERT INTO study_post (post_no, stuty_title, Progress, recruit_type, recruit_deadline, MentorApplicants, MaxMentorApplicants, MenteeApplicants, MaxMenteeApplicants, Likes, Duration, Rating, Location, StartDate)
+		VALUES (2, 'Study1', 'Not Started', 'Study', TO_DATE('2024-03-15', 'YYYY-MM-DD'), 3, 5, 2, 5, 15, '3 weeks', 5, 'Location2', NULL);
+	</insert>
+	
+	<!-- 게시글 수정 -->
+	<update id="updateStudyPost" parameterType="lm.swith.vo.StudyPost">
+		UPDATE study_post SET
+				= #{},
+				= #{}
+		WHERE post_no = #{}
+	</update>
+	
+	<!-- 게시글 검색 -->
+	<select id="getAllStudyPost" parameterType="lm.swith.vo.StudyPost">
+		SELECT * FROM study_post
+	</select>
+</mapper>
