@@ -1,4 +1,4 @@
-package lm.swith.config;
+package lm.swith.main.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

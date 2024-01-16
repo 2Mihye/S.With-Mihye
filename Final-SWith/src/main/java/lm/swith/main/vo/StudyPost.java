@@ -1,4 +1,4 @@
-package lm.swith.vo;
+package lm.swith.main.vo;
 
 import java.sql.Date;
 
