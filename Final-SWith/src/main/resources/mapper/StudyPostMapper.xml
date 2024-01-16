@@ -28,8 +28,8 @@
 	
 	<!-- 키워드 검색결과 스터디 목록 -->
 	<select id="getStudiesBySearch">
-		SELECT * FROM study_post WHERE study_title like '%'||#{keyword}||'%'
-		OR study_content like '%'||#{keyword}||'%'
+		SELECT * FROM study_post WHERE study_title like '%' + #{keyword} +'%'
+		OR study_content like '%' + #{keyword} + '%'
 	</select>
 	
 

@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lm.swith.main.service.StudyPostService;
 import lm.swith.main.vo.StudyPost;
@@ -18,9 +16,11 @@ public class StudyPostController {
 	@Autowired
 	private StudyPostService studyPostService;
 	
-	
+	@GetMapping
 	public ResponseEntity<List<StudyPost>> getAllStudyPost() {
-	List<StudyPost> studyPost = studyPostService.getAllStudyPost();
-	return ResponseEntity.ok(studyPost);
+		List<StudyPost> studyPost = studyPostService.getAllStudyPost();
+		return ResponseEntity.ok(studyPost);
 	}
+	
+	
 }
