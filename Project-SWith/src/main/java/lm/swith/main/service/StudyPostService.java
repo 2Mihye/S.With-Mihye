@@ -17,4 +17,9 @@ public class StudyPostService {
 		return studyPostMapper.getAllStudyPost();
 	}
 	
+    public StudyPost getStudyPostById(Long post_no) {
+        return studyPostMapper.getStudyPostById(post_no);
+    }
+	
+	
 }

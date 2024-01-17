@@ -7,6 +7,11 @@
 		SELECT * FROM study_post ORDER BY post_no DESC
 	</select>
 	
+	<!-- 스터디 상세 페이지 -->
+	<select id="getStudyByStudyNo" parameterType="lm.swith.vo.StudyPost">
+		SELECT * FROM study_post WHERE post_no = #{post_no}
+	</select>
+	
 	<!-- 진행방식별 스터디 목록 -->
 	<select id="getStudiesByRecruitType">
 		SELECT * FROM study_post WHERE recruit_type = #{recruit_type}
@@ -35,8 +40,8 @@
 
 	<!-- 스터디 등록 -->
 	<insert id="insertStudyPost" parameterType="lm.swith.vo.StudyPost">
-		INSERT INTO study_post (post_no, user_no, comment_no, study_no, skill_no, study_title, study_content, study_method, recruit_type, study_period, study_start, recruit_deadline, study_status, study_likes, study_location, mentor_applicants, max_mentor_applicants, mentee_applicants, max_mentee_applicants, study_post_time)
-		VALUES (#{post_no_seq.NEXTVAL}, #{user_no}, #{comment_no}, #{study_no}, #{skill_no}, #{study_title}, #{study_content}, #{study_method}, #{recruit_type}, #{study_period}, #{study_start}, #{recruit_deadline}, #{study_status}, #{study_likes}, #{study_location}, #{mentor_applicants}, #{max_mentor_applicants}, #{mentee_applicants}, #{max_mentee_applicants}, SYSDATE);
+		INSERT INTO study_post (POST_NO, USER_NO, STUDY_TITLE, STUDY_CONTENT, STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD, STUDY_START, RECRUIT_DEADLINE, STUDY_STATUS, STUDY_LIKES, STUDY_LOCATION, STUDY_POST_TIME)
+		VALUES (#{post_no_seq.NEXTVAL}, #{user_no}, #{study_title}, #{study_content}, #{study_method}, #{recruit_type}, #{study_period}, #{study_start}, #{recruit_deadline}, #{study_status}, #{study_likes}, #{study_location}, SYSDATE);
 	</insert>
 	
 	
