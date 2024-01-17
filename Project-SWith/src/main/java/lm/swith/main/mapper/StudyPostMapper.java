@@ -13,4 +13,9 @@ public interface StudyPostMapper {
 
 	StudyPost getStudyPostById(@Param("post_no") Long post_no);
 	
+	void insertStudyPost (StudyPost studyPost);
+	
+	void updateStudyPost (StudyPost studyPost);
+	
+	void deleteStudyPost (StudyPost studyPost);
 }

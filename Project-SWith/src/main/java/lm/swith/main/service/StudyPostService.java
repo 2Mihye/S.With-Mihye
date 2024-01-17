@@ -13,13 +13,30 @@ public class StudyPostService {
 	@Autowired
 	private StudyPostMapper studyPostMapper;
 	
-	public List<StudyPost> getAllStudyPost(){
+    // 게시글 등록하기
+	public void insertStudyPost (StudyPost studyPost) {
+		studyPostMapper.insertStudyPost(studyPost);
+	}
+	
+    // 게시글 업데이트
+    public void updateStudyPost(StudyPost studyPost) {
+    	studyPostMapper.updateStudyPost(studyPost);
+    }
+    
+    // 게시글 삭제
+    public void deleteStudyPost(StudyPost studyPost) {
+    	studyPostMapper.deleteStudyPost(studyPost);
+    }
+	
+	// 게시글 목록 불러오기
+	public List<StudyPost> getAllStudyPost() {
 		return studyPostMapper.getAllStudyPost();
 	}
 	
+	// 게시글 상세 페이지 불러오기
     public StudyPost getStudyPostById(Long post_no) {
         return studyPostMapper.getStudyPostById(post_no);
     }
-	
-	
+    
+
 }
