@@ -12,40 +12,70 @@
 		SELECT * FROM study_post WHERE post_no = #{post_no}
 	</select>
 	
-	<!-- 스터디 등록 
+	<!-- 스터디 등록 -->
 	<insert id="insertStudyPost" parameterType="lm.swith.main.vo.StudyPost">
-		INSERT INTO study_post (POST_NO, USER_NO, STUDY_TITLE, STUDY_CONTENT, STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD, STUDY_START, RECRUIT_DEADLINE, STUDY_STATUS, STUDY_LIKES, STUDY_LOCATION, STUDY_POST_TIME)
-		VALUES (#{post_no_seq.NEXTVAL}, #{user_no}, #{study_title}, #{study_content}, #{study_method}, #{recruit_type}, #{study_period}, #{study_start}, #{recruit_deadline}, #{study_status}, #{study_likes}, #{study_location}, SYSDATE);
-	</insert> -->
-	
-	<!-- 진행방식별 스터디 목록 
-	<select id="getStudiesByRecruitType">
-		SELECT * FROM study_post WHERE recruit_type = #{recruit_type}
-	</select>-->
-	
-	<!-- 지역별 스터디 목록 
-	<select id="getStudiesByStudyLocation">
-		SELECT * FROM study_post WHERE study_location = #{study_location}
-	</select>-->
-	
-	<!-- 기술스택별 스터디 목록 
-	<select id="getStudiesBySkills">
-		SELECT * FROM study_post WHERE skill_no = 1 OR skill_no = 2 OR skill_no = 3 OR skill_no = 4 OR skill_no = 5
-		OR skill_no = 6 OR skill_no = 7 OR skill_no = 8 OR skill_no = 9 OR skill_no = 10 OR skill_no = 11 OR skill_no = 12
-		OR skill_no = 13 OR skill_no = 14 OR skill_no = 15 OR skill_no = 16 OR skill_no = 17 OR skill_no = 18 OR skill_no = 19
-		OR skill_no = 20 OR skill_no = 21 OR skill_no = 22 OR skill_no = 23 OR skill_no = 24 OR skill_no = 26 OR skill_no = 27
-		OR skill_no = 28 OR skill_no = 29 OR skill_no = 30 OR skill_no = 16 31 skill_no = 32 OR skill_no = 33 OR skill_no = 34
-	</select>-->
-	
-	<!-- 키워드 검색결과 스터디 목록 
-	<select id="getStudiesBySearch">
-		SELECT * FROM study_post WHERE study_title like '%' + #{keyword} +'%'
-		OR study_content like '%' + #{keyword} + '%'
-	</select>	-->
+	    <selectKey keyProperty="post_no" resultType="java.lang.Long" order="BEFORE">
+	        SELECT post_no_seq.NEXTVAL FROM DUAL
+	    </selectKey>
+	    INSERT INTO study_post (
+	        POST_NO, USER_NO, STUDY_TITLE, STUDY_CONTENT,
+	        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
+	        STUDY_START, RECRUIT_DEADLINE, STUDY_STATUS,
+	        STUDY_LIKES, STUDY_LOCATION, STUDY_POST_TIME
+	    ) VALUES (
+	        #{post_no}, #{user_no}, #{study_title}, #{study_content},
+	        #{study_method}, #{recruit_type}, #{study_period},
+	        #{study_start}, #{recruit_deadline}, #{study_status},
+	        #{study_likes}, #{study_location}, SYSDATE
+	    )
+	</insert>
 	
 	
-	<!-- 스터디 수정 
-	<update id="updateStudyPost" parameterType="lm.swith.vo.StudyPost">
+	<!-- 조건 select 문 parameterType="Map" -->
+	<select id="getUniqueStudies" parameterType="String" resultType="lm.swith.main.vo.StudyPost">
+    SELECT DISTINCT *
+    FROM (
+        <!-- 기술스택별 스터디 목록 -->
+        SELECT sp.*
+        FROM study_post sp
+        JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+        WHERE pts.skill_no = #{skill_no}
+
+        UNION
+
+        <!-- 모집구분별 스터디 목록 -->
+        SELECT *
+        FROM study_post
+        WHERE recruit_type = #{recruit_type}
+
+        UNION
+
+        <!-- 진행방식별 스터디 목록 -->
+        SELECT *
+        FROM study_post
+        WHERE study_method = #{study_method}
+
+        UNION
+
+        <!-- 지역별 스터디 목록 -->
+        SELECT *
+        FROM study_post 
+        WHERE study_location = #{study_location}
+    ) AS uniqueStudies
+	</select>
+	
+	
+	
+	<!-- 키워드 검색결과 스터디 목록 -->
+	<select id="getStudiesByKeyword">
+	    SELECT * FROM study_post 
+	    WHERE study_title LIKE '%' || #{keyword} || '%'
+	    OR study_content LIKE '%' || #{keyword}|| '%'
+	</select>
+	
+	
+	<!-- 스터디 수정 -->
+	<update id="updateStudyPost" parameterType="lm.swith.main.vo.StudyPost">
 		UPDATE study_post SET
 		study_title = #{study_title},
 		study_content = #{study_content},
@@ -54,15 +84,13 @@
 		study_period = #{study_period},
 		study_start = #{study_start},
 		recruit_deadline = #{recruit_deadline},
-		study_location = #{study_location},
-		max_mentor_applicants = #{max_mentor_applicants},
-		max_mentee_applicants = #{max_mentee_applicatns},
+		study_location = #{study_location}
 		WHERE post_no = #{post_no}
-	</update>-->
+	</update>
+	
 	
 	<!-- 스터디 삭제 -->
 	<delete id="deleteStudyPost" parameterType="Long">
 		DELETE FROM study_post WHERE post_no = #{post_no}
 	</delete>
-
 </mapper>

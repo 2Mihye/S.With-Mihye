@@ -22,5 +22,18 @@ public class StudyPostController {
 		return ResponseEntity.ok(studyPost);
 	}
 	
+	@PostMapping("/post")
+	public String postStudy (StudyPost StudyPost) {
+		studyPostService.insertStudyPost(StudyPost);
+		return "rediect:/";
+	}
+	
+	@PostMapping("/delete")
+	public String deleteStudy (Long post_no) {
+		studyPostService.deleteStudyPost(post_no);
+		return "redirect:/";
+	}
+	
+	
 	
 }

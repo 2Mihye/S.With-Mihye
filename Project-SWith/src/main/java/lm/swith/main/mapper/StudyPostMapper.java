@@ -17,5 +17,5 @@ public interface StudyPostMapper {
 	
 	void updateStudyPost (StudyPost studyPost);
 	
-	void deleteStudyPost (StudyPost studyPost);
+	void deleteStudyPost (Long post_no);
 }

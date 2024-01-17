@@ -24,8 +24,8 @@ public class StudyPostService {
     }
     
     // 게시글 삭제
-    public void deleteStudyPost(StudyPost studyPost) {
-    	studyPostMapper.deleteStudyPost(studyPost);
+    public void deleteStudyPost(Long post_no) {
+    	studyPostMapper.deleteStudyPost(post_no);
     }
 	
 	// 게시글 목록 불러오기
@@ -37,6 +37,5 @@ public class StudyPostService {
     public StudyPost getStudyPostById(Long post_no) {
         return studyPostMapper.getStudyPostById(post_no);
     }
-    
-
+   
 }
