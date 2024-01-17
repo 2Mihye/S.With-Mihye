@@ -21,18 +21,18 @@
 	        POST_NO, USER_NO, STUDY_TITLE, STUDY_CONTENT,
 	        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
 	        STUDY_START, RECRUIT_DEADLINE, STUDY_STATUS,
-	        STUDY_LIKES, STUDY_LOCATION, STUDY_POST_TIME
+	        STUDY_LIKES, STUDY_LOCATION, STUDY_PLACE, STUDY_POST_TIME
 	    ) VALUES (
 	        #{post_no}, #{user_no}, #{study_title}, #{study_content},
 	        #{study_method}, #{recruit_type}, #{study_period},
 	        #{study_start}, #{recruit_deadline}, #{study_status},
-	        #{study_likes}, #{study_location}, SYSDATE
+	        #{study_likes}, #{study_location}, #{study_place}, SYSDATE
 	    )
 	</insert>
 	
 	
 	<!-- 조건 select 문 parameterType="Map" -->
-	<select id="getUniqueStudies" parameterType="String" resultType="lm.swith.main.vo.StudyPost">
+	<select id="getStudiesbySelect" parameterType="String" resultType="lm.swith.main.vo.StudyPost">
     SELECT DISTINCT *
     FROM (
         <!-- 기술스택별 스터디 목록 -->
@@ -84,7 +84,8 @@
 		study_period = #{study_period},
 		study_start = #{study_start},
 		recruit_deadline = #{recruit_deadline},
-		study_location = #{study_location}
+		study_location = #{study_location},
+		study_place = #{study_place}
 		WHERE post_no = #{post_no}
 	</update>
 	
