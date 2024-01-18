@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lm.swith.main.mapper.StudyPostMapper;
-import lm.swith.main.vo.StudyPost;
+import lm.swith.main.model.StudyPost;
 
 @Service
 public class StudyPostService {
@@ -18,29 +18,34 @@ public class StudyPostService {
         this.studyPostMapper = studyPostMapper;
     }
 	
-    // 게시글 등록하기
+    // 스터디 등록하기
 	public void insertStudyPost (StudyPost studyPost) {
 		studyPostMapper.insertStudyPost(studyPost);
 	}
 	
-    // 게시글 업데이트
+    // 스터디 수정
     public void updateStudyPost(StudyPost studyPost) {
     	studyPostMapper.updateStudyPost(studyPost);
     }
     
-    // 게시글 삭제
-    public void deleteStudyPost(Long postNo) {
-    	studyPostMapper.deleteStudyPost(postNo);
+    // 스터디 삭제
+    public void deleteStudyPost(Long post_no) {
+    	studyPostMapper.deleteStudyPost(post_no);
     }
 	
-	// 게시글 목록 불러오기
+	// 스터디 목록 불러오기
 	public List<StudyPost> getAllStudyPost() {
 		return studyPostMapper.getAllStudyPost();
 	}
 	
-	// 게시글 상세 페이지 불러오기
-    public StudyPost getStudyPostByPostNo(Long postNo) {
-        return studyPostMapper.getStudyPostByPostNo(postNo);
+	// 스터디 상세 페이지 불러오기
+    public StudyPost getStudyPostByPostNo(Long post_no) {
+        return studyPostMapper.getStudyPostByPostNo(post_no);
+    }
+    
+    // 스터디 조건 검색
+    public List<StudyPost> getStudiesBySelect(String recruit_type, String study_method, String study_location, Long skill_no) {
+        return studyPostMapper.getStudiesBySelect(recruit_type, study_method, study_location, skill_no);
     }
    
 }

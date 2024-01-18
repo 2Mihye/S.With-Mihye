@@ -28,7 +28,7 @@
 	
 	<!-- 스터디 상세 페이지 -->
 	<!-- 특정 post_no에 해당하는 스터디 포스트 및 기술 스택 정보 조회 -->
-	<select id="1" resultMap="studyPostWithSkills">
+	<select id="getStudyPostByPostNo" resultMap="studyPostWithSkills">
 	    SELECT sp.*, s.skill_name, s.img
 	    FROM study_post sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
@@ -110,8 +110,6 @@
 	
 	
 	
-	
-	
 	<!-- 키워드 검색결과 스터디 목록 -->
 	<select id="getStudiesByKeyword">
 	    SELECT * FROM study_post 
@@ -121,40 +119,38 @@
 	
 	
 	
-	
 	<!-- 스터디 수정 -->
-	<insert id="insertStudyPost" parameterType="lm.swith.main.vo.StudyPost">
-	    <selectKey keyProperty="post_no" resultType="java.lang.Long" order="BEFORE">
-	        SELECT post_no_seq.NEXTVAL FROM DUAL
-	    </selectKey>
-	    
-	    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 삽입 -->
-	    INSERT INTO study_post (
-	        POST_NO, USER_NO, STUDY_TITLE, STUDY_CONTENT,
-	        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
-	        STUDY_START, RECRUIT_DEADLINE, STUDY_STATUS,
-	        STUDY_LOCATION, STUDY_PLACE, STUDY_POST_TIME
-	    ) VALUES (
-	        #{post_no}, #{user_no}, #{study_title}, #{study_content},
-	        #{study_method}, #{recruit_type}, #{study_period},
-	        #{study_start}, #{recruit_deadline}, #{study_status},
-	        #{study_location}, #{study_place}, SYSDATE
-	    )
+	<update id="updateStudyPost" parameterType="lm.swith.main.vo.StudyPost">
+	    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 업데이트 -->
+	    UPDATE study_post
+	    SET
+	        USER_NO = #{user_no},
+	        STUDY_TITLE = #{study_title},
+	        STUDY_CONTENT = #{study_content},
+	        STUDY_METHOD = #{study_method},
+	        RECRUIT_TYPE = #{recruit_type},
+	        STUDY_PERIOD = #{study_period},
+	        STUDY_START = #{study_start},
+	        RECRUIT_DEADLINE = #{recruit_deadline},
+	        STUDY_STATUS = #{study_status},
+	        STUDY_LOCATION = #{study_location},
+	        STUDY_PLACE = #{study_place},
+	        STUDY_POST_TIME = SYSDATE
+	    WHERE POST_NO = #{post_no};
 	
-	    <!-- 두 번째 쿼리: post_tech_stacks 테이블에 기술 스택 정보 삽입 -->
+	    <!-- 두 번째 쿼리: 기술 스택 정보 업데이트 기존 스킬 정보를 삭제 후 다시 저장 -->
+	    DELETE FROM post_tech_stacks WHERE post_no = #{post_no};
 	    <foreach collection="skills" item="skill" separator=";">
-	        INSERT INTO post_tech_stacks (post_no, skill_no)
-	        VALUES (#{post_no}, #{skill})
+	        INSERT INTO post_tech_stacks (post_no, skill_no) VALUES (#{post_no}, #{skill});
 	    </foreach>
 	
-	    <!-- 세 번째 쿼리: users 테이블에서 nickname 정보 가져와서 업데이트 -->
+	    <!-- 세 번째 쿼리: users 테이블에서 nickname 정보 가져와서 업데이트 
 	    UPDATE study_post sp
 	    SET sp.nickname = (SELECT nickname FROM users u WHERE u.user_no = sp.user_no)
-	    WHERE sp.post_no = #{post_no}
-	</insert>
-	
-	
-	
+	    WHERE sp.post_no = #{post_no};-->
+	</update>
+
+		
 	
 	
 	<!-- 스터디 삭제 -->
