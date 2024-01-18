@@ -13,6 +13,8 @@ public interface StudyPostMapper {
 	// 스터디 목록
 	List<StudyPost> getAllStudyPost();
 	
+	List<StudyPost> getAllStudyPostWithSkills();
+	
 	// 스터디 등록
 	void insertStudyPost (StudyPost studyPost);
 	

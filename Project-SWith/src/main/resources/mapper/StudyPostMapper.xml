@@ -7,7 +7,7 @@
 	<!-- 스터디 전체 목록 -->
 	<!-- 스터디 포스트 및 기술 스택 정보 조회 -->
 	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
-	    SELECT sp.*, s.skill_name, s.img
+	    SELECT sp.*, s.skill_name, s.skill_img
 	    FROM study_post sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
@@ -16,12 +16,20 @@
 	<resultMap id="studyPostWithSkills" type="lm.swith.main.model.StudyPost">
 	    <id property="post_no" column="post_no"/>
 	    <!-- 나머지 필드들도 매핑 -->
-	    <collection property="skills" ofType="lm.swith.main.model.Skill">
-	        <id property="skill_no" column="skill_no"/>
-	        <result property="skill_name" column="skill_name"/>
-	        <result property="img" column="img"/>
-	    </collection>
+		<collection property="skills" ofType="lm.swith.main.model.Skill" javaType="java.util.List">
+		    <id property="skill_no" column="skill_no"/>
+		    <result property="skill_name" column="skill_name"/>
+		    <result property="skill_img" column="skill_img"/>
+		</collection>
 	</resultMap>
+	
+	
+	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
+    SELECT sp.*, s.skill_name, s.skill_img
+    FROM study_post sp
+    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	</select>
 	
 	
 	
@@ -29,7 +37,7 @@
 	<!-- 스터디 상세 페이지 -->
 	<!-- 특정 post_no에 해당하는 스터디 포스트 및 기술 스택 정보 조회 -->
 	<select id="getStudyPostByPostNo" resultMap="studyPostWithSkills">
-	    SELECT sp.*, s.skill_name, s.img
+	    SELECT sp.*, s.skill_name, s.skill_img
 	    FROM study_post sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
@@ -42,7 +50,7 @@
 	
 	<!-- 스터디 등록 -->
 	<insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
-	    <selectKey keyProperty="post_no" resultType="java.lang.Long" order="BEFORE">
+	    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
 	        SELECT post_no_seq.NEXTVAL FROM DUAL
 	    </selectKey>
 	    
