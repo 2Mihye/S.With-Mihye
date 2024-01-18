@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import lm.swith.main.model.StudyPost;
 
 @Mapper
-public interface StudyPostMapper {
+public interface StudyPostMapper 
 	
 	// 스터디 목록
 	List<StudyPost> getAllStudyPost();
