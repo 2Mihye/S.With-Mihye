@@ -14,7 +14,7 @@ import lm.swith.main.service.StudyPostService;
 @RequestMapping("/")
 @CrossOrigin(origins="http://localhost:3000", allowCredentials="true", allowedHeaders="*")
 public class StudyPostController {
-	private final StudyPostService studyPostService;
+	private StudyPostService studyPostService;
 	
 	@Autowired
     public StudyPostController(StudyPostService studyPostService) {
@@ -32,13 +32,13 @@ public class StudyPostController {
 	@GetMapping("/post_detail/{post_no}")
 	public String getStudyPostByPostNo(@PathVariable Long post_no) {
 		studyPostService.getStudyPostByPostNo(post_no);
-		return "post_detail";
+		return "/post_detail";
 	}
 	
 	// 스터디 등록 페이지
 	@GetMapping("/post")
 	public String showPostForm (Model model) {
-		return "post_form";
+		return "/post_form";
 	}
 	
     // 스터디 생성 처리
@@ -62,19 +62,19 @@ public class StudyPostController {
         // 스터디 정보 및 관련 스킬 정보를 불러오는 서비스 메서드 호출
         StudyPost studyPost = studyPostService.getStudyPostByPostNo(post_no);
         model.addAttribute("studyPost", studyPost);
-        return "updateStudy";
+        return "/update_study";
 	}
 	
 	// 스터디 수정 적용
 	@PostMapping("update/{post_no}")
 	public String updateStudyPost(@ModelAttribute StudyPost studyPost) {
 		studyPostService.updateStudyPost(studyPost);
-		return "redirect:/study/" + studyPost.getPost_no();
+		return "redirect:/post_detail/" + studyPost.getPost_no();
 	}
 	
 	
     // 조건 스터디 목록
-    @GetMapping("/studies/select")
+    @GetMapping
     public String getStudiesBySelect(@RequestParam(required = false) String recruit_type,
                                      @RequestParam(required = false) String study_method,
                                      @RequestParam(required = false) String study_location,
@@ -82,7 +82,14 @@ public class StudyPostController {
                                      Model model) {
         List<StudyPost> studyPosts = studyPostService.getStudiesBySelect(recruit_type, study_method, study_location, skill_no);
         model.addAttribute("studyPosts", studyPosts);
-        return "studiesBySelect";
+        return "/";
     }
-	
+    
+    // 검색 스터디 목록
+    @GetMapping
+	public String getStudiesBySearch(String study_title, String study_content, Model model) {
+    	List<StudyPost> studyPosts = studyPostService.getStudiesByKeyword(study_title, study_content);
+    	model.addAttribute("studyPosts", studyPosts);
+    	return "/";
+    }
 }

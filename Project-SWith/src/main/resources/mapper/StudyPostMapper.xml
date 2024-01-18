@@ -13,10 +13,10 @@
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
 	</select>
 	
-	<resultMap id="studyPostWithSkills" type="lm.swith.main.vo.StudyPost">
+	<resultMap id="studyPostWithSkills" type="lm.swith.main.model.StudyPost">
 	    <id property="post_no" column="post_no"/>
 	    <!-- 나머지 필드들도 매핑 -->
-	    <collection property="skills" ofType="lm.swith.main.vo.Skill">
+	    <collection property="skills" ofType="lm.swith.main.model.Skill">
 	        <id property="skill_no" column="skill_no"/>
 	        <result property="skill_name" column="skill_name"/>
 	        <result property="img" column="img"/>
@@ -41,7 +41,7 @@
 	
 	
 	<!-- 스터디 등록 -->
-	<insert id="insertStudyPost" parameterType="lm.swith.main.vo.StudyPost">
+	<insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
 	    <selectKey keyProperty="post_no" resultType="java.lang.Long" order="BEFORE">
 	        SELECT post_no_seq.NEXTVAL FROM DUAL
 	    </selectKey>
@@ -76,7 +76,7 @@
 	
 	
 	<!-- 조건 select 문 parameterType="Map" -->
-	<select id="getStudiesbySelect" parameterType="String" resultType="lm.swith.main.vo.StudyPost">
+	<select id="getStudiesbySelect" parameterType="String" resultType="lm.swith.main.model.StudyPost">
     SELECT DISTINCT *
     FROM (
         <!-- 기술스택별 스터디 목록 -->
@@ -111,16 +111,16 @@
 	
 	
 	<!-- 키워드 검색결과 스터디 목록 -->
-	<select id="getStudiesByKeyword">
+	<select id="getStudiesByKeyword" resultType="lm.swith.main.model.StudyPost">
 	    SELECT * FROM study_post 
 	    WHERE study_title LIKE '%' || #{keyword} || '%'
-	    OR study_content LIKE '%' || #{keyword}|| '%'
+	    OR study_content LIKE '%' || #{keyword} || '%'
 	</select>
 	
 	
 	
 	<!-- 스터디 수정 -->
-	<update id="updateStudyPost" parameterType="lm.swith.main.vo.StudyPost">
+	<update id="updateStudyPost" parameterType="lm.swith.main.model.StudyPost">
 	    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 업데이트 -->
 	    UPDATE study_post
 	    SET

@@ -47,5 +47,9 @@ public class StudyPostService {
     public List<StudyPost> getStudiesBySelect(String recruit_type, String study_method, String study_location, Long skill_no) {
         return studyPostMapper.getStudiesBySelect(recruit_type, study_method, study_location, skill_no);
     }
-   
+    
+    // 스터디 키워드 검색
+    public List<StudyPost> getStudiesByKeyword(String study_title, String study_content) {
+        return studyPostMapper.getStudiesBySearch(study_title, study_content);
+    }
 }
