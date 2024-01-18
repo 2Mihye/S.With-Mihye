@@ -13,22 +13,30 @@
 	</select>
 	
 	<!-- 스터디 등록 -->
-	<insert id="insertStudyPost" parameterType="lm.swith.main.vo.StudyPost">
-	    <selectKey keyProperty="post_no" resultType="java.lang.Long" order="BEFORE">
-	        SELECT post_no_seq.NEXTVAL FROM DUAL
-	    </selectKey>
-	    INSERT INTO study_post (
-	        POST_NO, USER_NO, STUDY_TITLE, STUDY_CONTENT,
-	        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
-	        STUDY_START, RECRUIT_DEADLINE, STUDY_STATUS,
-	        STUDY_LIKES, STUDY_LOCATION, STUDY_PLACE, STUDY_POST_TIME
-	    ) VALUES (
-	        #{post_no}, #{user_no}, #{study_title}, #{study_content},
-	        #{study_method}, #{recruit_type}, #{study_period},
-	        #{study_start}, #{recruit_deadline}, #{study_status},
-	        #{study_likes}, #{study_location}, #{study_place}, SYSDATE
-	    )
-	</insert>
+<insert id="insertStudyPost" parameterType="lm.swith.main.vo.StudyPost">
+    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
+        SELECT post_no_seq.NEXTVAL FROM DUAL
+    </selectKey>
+    
+    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 삽입 -->
+    INSERT INTO study_post (
+        POST_NO, USER_NO, STUDY_TITLE, STUDY_CONTENT,
+        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
+        STUDY_START, RECRUIT_DEADLINE, STUDY_STATUS,
+        STUDY_LIKES, STUDY_LOCATION, STUDY_PLACE, STUDY_POST_TIME
+    ) VALUES (
+        #{post_no}, #{user_no}, #{study_title}, #{study_content},
+        #{study_method}, #{recruit_type}, #{study_period},
+        #{study_start}, #{recruit_deadline}, #{study_status},
+        #{study_likes}, #{study_location}, #{study_place}, SYSDATE
+    )
+
+    <!-- 두 번째 쿼리: post_tech_stacks 테이블에 기술 스택 정보 삽입 -->
+    <foreach collection="skills" item="skill" separator=";">
+        INSERT INTO post_tech_stacks (post_no, skill_no)
+        VALUES (#{post_no}, #{skill})
+    </foreach>
+</insert>
 	
 	
 	<!-- 조건 select 문 parameterType="Map" -->
