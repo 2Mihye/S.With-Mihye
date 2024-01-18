@@ -19,5 +19,6 @@ public class StudyPost {
 	private char study_status;
 	private Long study_likes;
 	private String study_location;
+	private String study_place;
 	private Date study_post_time;
 }

@@ -13,10 +13,10 @@ public interface StudyPostMapper {
 	List<StudyPost> getAllStudyPost();
 
 	// 스터디 상세 페이지
-	StudyPost getStudyPostById(@Param("post_no") Long post_no);
+	StudyPost getStudyPostByPostNo(@Param("post_no") Long postNo);
 	
-	// 스터디 분류
-	StudyPost getStudiesBySelect();
+	// 스터디 조건 검색
+	List<StudyPost> getStudiesBySelect(String recruitType, String studyMethod, String studyLocation, Long skillNo);
 	
 	// 스터디 제목+내용 검색
 	StudyPost getStudiesBySearch();
@@ -28,5 +28,5 @@ public interface StudyPostMapper {
 	void updateStudyPost (StudyPost studyPost);
 	
 	// 스터디 삭제
-	void deleteStudyPost (Long post_no);
+	void deleteStudyPost (Long postNo);
 }

@@ -28,7 +28,7 @@
 	
 	<!-- 스터디 상세 페이지 -->
 	<!-- 특정 post_no에 해당하는 스터디 포스트 및 기술 스택 정보 조회 -->
-	<select id="getStudyPostWithSkillsByPostNo" resultMap="studyPostWithSkills">
+	<select id="1" resultMap="studyPostWithSkills">
 	    SELECT sp.*, s.skill_name, s.img
 	    FROM study_post sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
@@ -152,7 +152,6 @@
 	    SET sp.nickname = (SELECT nickname FROM users u WHERE u.user_no = sp.user_no)
 	    WHERE sp.post_no = #{post_no}
 	</insert>
-	
 	
 	
 	

@@ -11,7 +11,12 @@ import lm.swith.main.vo.StudyPost;
 @Service
 public class StudyPostService {
 	@Autowired
-	private StudyPostMapper studyPostMapper;
+	private final StudyPostMapper studyPostMapper;
+	
+    @Autowired
+    public StudyPostService(StudyPostMapper studyPostMapper) {
+        this.studyPostMapper = studyPostMapper;
+    }
 	
     // 게시글 등록하기
 	public void insertStudyPost (StudyPost studyPost) {
@@ -24,8 +29,8 @@ public class StudyPostService {
     }
     
     // 게시글 삭제
-    public void deleteStudyPost(Long post_no) {
-    	studyPostMapper.deleteStudyPost(post_no);
+    public void deleteStudyPost(Long postNo) {
+    	studyPostMapper.deleteStudyPost(postNo);
     }
 	
 	// 게시글 목록 불러오기
@@ -34,8 +39,8 @@ public class StudyPostService {
 	}
 	
 	// 게시글 상세 페이지 불러오기
-    public StudyPost getStudyPostById(Long post_no) {
-        return studyPostMapper.getStudyPostById(post_no);
+    public StudyPost getStudyPostByPostNo(Long postNo) {
+        return studyPostMapper.getStudyPostByPostNo(postNo);
     }
    
 }
