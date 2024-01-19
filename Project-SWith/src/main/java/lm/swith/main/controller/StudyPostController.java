@@ -14,19 +14,18 @@ import lm.swith.main.service.StudyPostService;
 @RequestMapping("/")
 @CrossOrigin(origins="http://localhost:3000", allowCredentials="true", allowedHeaders="*")
 public class StudyPostController {
-	private StudyPostService studyPostService;
+	private final StudyPostService studyPostService;
 	
-	@Autowired
     public StudyPostController(StudyPostService studyPostService) {
         this.studyPostService = studyPostService;
     }
 	
 	// 스터디 목록
-	@GetMapping
-	public ResponseEntity<List<StudyPost>> getAllStudyPost() {
-		List<StudyPost> studyPost = studyPostService.getAllStudyPost();
-		return ResponseEntity.ok(studyPost);
-	}
+    @GetMapping ("/post_list")
+    public ResponseEntity<List<StudyPost>> getAllStudyPostWithSkills() {
+        List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
+        return ResponseEntity.ok(studyPost);
+    }
 	
 	// 스터디 상세 페이지
 	@GetMapping("/post_detail/{post_no}")
@@ -74,7 +73,7 @@ public class StudyPostController {
 	
 	
     // 조건 스터디 목록
-    @GetMapping
+    @GetMapping ("/getSelectedList")
     public String getStudiesBySelect(@RequestParam(required = false) String recruit_type,
                                      @RequestParam(required = false) String study_method,
                                      @RequestParam(required = false) String study_location,
@@ -86,8 +85,8 @@ public class StudyPostController {
     }
     
     // 검색 스터디 목록
-    @GetMapping
-	public String getStudiesBySearch(String study_title, String study_content, Model model) {
+    @GetMapping("/KeywordStudy")
+	public String getStudiesByKeyword(String study_title, String study_content, Model model) {
     	List<StudyPost> studyPosts = studyPostService.getStudiesByKeyword(study_title, study_content);
     	model.addAttribute("studyPosts", studyPosts);
     	return "/";

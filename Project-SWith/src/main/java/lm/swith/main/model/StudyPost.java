@@ -21,4 +21,28 @@ public class StudyPost {
 	private String study_location;
 	private String study_place;
 	private Date study_post_time;
+	
+	 /*
+    private List<Skill> skills;
+    // private List<Users> users;
+
+    public List<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
+    }
+    
+    
+   
+    public List<Users> getUsers() {
+    	return users;
+    }
+    
+    public void setUserS(List<Users> users) {
+    	this.users = users;
+    }
+    */
+    
 }
