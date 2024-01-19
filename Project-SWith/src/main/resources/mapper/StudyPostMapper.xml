@@ -16,10 +16,22 @@
         <result property="post_no" column="POST_NO" />
         <result property="skill_no" column="SKILL_NO" />
     </resultMap>
+    
+    <resultMap type="lm.swith.main.model.Users" id="UsersResult">
+    	<id property="user_no" column="user_no" />
+    	<result property="email" column="email" />
+    	<result property="nickname" column="nickname" />
+    	<result property="user_password" column="user_password" />
+    	<result property="user_name" column="user_name" />
+    	<result property="user_profile" column="user_profile" />
+    	<result property="user_introduction" column="user_introduction" />
+    	<result property="user_role" column="user_role" />
+    </resultMap>
 
     <resultMap type="lm.swith.main.model.StudyPost" id="studyPostWithSkills">
         <id property="post_no" column="POST_NO" />
         <result property="user_no" column="USER_NO" />
+        <result property="nickname" column="NICKNAME" />
         <result property="study_title" column="STUDY_TITLE" />
         <result property="study_content" column="STUDY_CONTENT" />
         <result property="study_method" column="STUDY_METHOD" />
@@ -30,15 +42,17 @@
         <result property="study_likes" column="STUDY_LIKES" />
         <result property="study_place" column="STUDY_PLACE" />
         <result property="study_post_time" column="STUDY_POST_TIME" />
+        <association property="user" resultMap="UsersResult"/>
         <collection property="studyPostWithSkills" resultMap="SkillResult"/>
     </resultMap>
 
-    <select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
-        SELECT sp.*, s.skill_name, s.skill_img
-        FROM STUDY_POST sp
-        LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-        LEFT JOIN skill s ON pts.skill_no = s.skill_no
-    </select>
+	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
+	    SELECT sp.*, s.skill_name, s.skill_img, u.email as USER_EMAIL, u.nickname as USER_NICKNAME
+	    FROM STUDY_POST sp
+	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	    LEFT JOIN users u ON sp.user_no = u.user_no
+	</select>
 
 	
 	
@@ -167,9 +181,8 @@
 	    WHERE sp.post_no = #{post_no};-->
 	</update>
 
-		
-	
-	
+
+
 	<!-- 스터디 삭제 -->
 	<delete id="deleteStudyPost" parameterType="Long">
 	    <!-- 첫 번째 쿼리: study_post 테이블에서 해당 post_no에 대한 스터디 정보 삭제 -->

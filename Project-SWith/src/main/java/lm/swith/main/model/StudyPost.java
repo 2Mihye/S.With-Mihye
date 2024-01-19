@@ -11,6 +11,7 @@ import lombok.Setter;
 public class StudyPost {
 	private Long post_no;
 	private Long user_no;
+	private String nickname;
 	private String study_title;
 	private String study_content;
 	private String study_method;
@@ -24,12 +25,19 @@ public class StudyPost {
 	private Date study_post_time;
 	private List<Skill> studyPostWithSkills;
 	
+	private Users user;
+	
     public List<Skill> getStudyPostWithSkills() {
         return studyPostWithSkills;
     }
     
     public void setStudyPostWithSkills(List<Skill> studyPostWithSkills) {
         this.studyPostWithSkills = studyPostWithSkills;
+    }
+    
+    
+    public String getNickname() {
+        return user != null ? user.getNickname() : null;
     }
 	 /*
     private List<Skill> skills;
