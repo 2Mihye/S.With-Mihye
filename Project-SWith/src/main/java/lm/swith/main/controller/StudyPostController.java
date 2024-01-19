@@ -24,15 +24,23 @@ public class StudyPostController {
     @GetMapping("/post_list")
     public ResponseEntity<List<StudyPost>> getAllStudyPostWithSkills() {
         List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
-        return ResponseEntity.ok(studyPost);
+        if (studyPost != null) {
+            return ResponseEntity.ok(studyPost);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 	// 스터디 상세 페이지
 	@GetMapping("/post_detail/{post_no}")
-	public String getStudyPostByPostNo(@PathVariable Long post_no) {
-		studyPostService.getStudyPostByPostNo(post_no);  
-		return "/post_detail";
-	}
+    public ResponseEntity<StudyPost> getStudyPostByPostNo(@PathVariable Long post_no) {
+        StudyPost studyPost = studyPostService.getStudyPostByPostNo(post_no); 
+        if (studyPost != null) {
+            return ResponseEntity.ok(studyPost);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 	
 	// 스터디 등록 페이지
 	@GetMapping("/post")
