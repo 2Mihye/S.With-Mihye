@@ -1,6 +1,7 @@
 package lm.swith.main.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,15 @@ public class StudyPost {
 	private String study_location;
 	private String study_place;
 	private Date study_post_time;
+	private List<Skill> studyPostWithSkills;
 	
+    public List<Skill> getStudyPostWithSkills() {
+        return studyPostWithSkills;
+    }
+    
+    public void setStudyPostWithSkills(List<Skill> studyPostWithSkills) {
+        this.studyPostWithSkills = studyPostWithSkills;
+    }
 	 /*
     private List<Skill> skills;
     // private List<Users> users;

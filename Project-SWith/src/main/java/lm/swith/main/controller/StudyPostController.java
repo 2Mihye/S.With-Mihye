@@ -21,12 +21,12 @@ public class StudyPostController {
     }
 	
 	// 스터디 목록
-    @GetMapping ("/post_list")
+    @GetMapping("/post_list")
     public ResponseEntity<List<StudyPost>> getAllStudyPostWithSkills() {
         List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
         return ResponseEntity.ok(studyPost);
     }
-	
+
 	// 스터디 상세 페이지
 	@GetMapping("/post_detail/{post_no}")
 	public String getStudyPostByPostNo(@PathVariable Long post_no) {
