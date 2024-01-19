@@ -17,31 +17,16 @@ public class StudyPostService {
     public StudyPostService(StudyPostMapper studyPostMapper) {
         this.studyPostMapper = studyPostMapper;
     }
-	
+	// Main Part
+    
     // 스터디 등록하기
 	public void insertStudyPost (StudyPost studyPost) {
 		studyPostMapper.insertStudyPost(studyPost);
 	}
 	
-    // 스터디 수정
-    public void updateStudyPost(StudyPost studyPost) {
-    	studyPostMapper.updateStudyPost(studyPost);
-    }
-    
-    // 스터디 삭제
-    public void deleteStudyPost(Long post_no) {
-    	studyPostMapper.deleteStudyPost(post_no);
-    }
-	
 	// 스터디 목록 불러오기	
     public List<StudyPost> getAllStudyPostWithSkills() {
         return studyPostMapper.getAllStudyPostWithSkills();
-    }
-	
-	
-	// 스터디 상세 페이지 불러오기
-    public StudyPost getStudyPostByPostNo(Long post_no) {
-        return studyPostMapper.getStudyPostByPostNo(post_no);
     }
     
     // 스터디 조건 검색
@@ -53,4 +38,24 @@ public class StudyPostService {
     public List<StudyPost> getStudiesByKeyword(String study_title, String study_content) {
         return studyPostMapper.getStudiesBySearch(study_title, study_content);
     }
+	
+    
+    
+    // Detail Part
+	// 스터디 상세 페이지 불러오기
+    public StudyPost getStudyPostByPostNo(Long post_no) {
+        return studyPostMapper.getStudyPostByPostNo(post_no);
+    }
+    
+    // 스터디 수정
+    public void updateStudyPost(StudyPost studyPost) {
+    	studyPostMapper.updateStudyPost(studyPost);
+    }
+    
+    // 스터디 삭제
+    public void deleteStudyPost(Long post_no) {
+    	studyPostMapper.deleteStudyPost(post_no);
+    }
+	  
+
 }
