@@ -30,7 +30,7 @@ public class StudyPostController {
 	// 스터디 상세 페이지
 	@GetMapping("/post_detail/{post_no}")
 	public String getStudyPostByPostNo(@PathVariable Long post_no) {
-		studyPostService.getStudyPostByPostNo(post_no);
+		studyPostService.getStudyPostByPostNo(post_no);  
 		return "/post_detail";
 	}
 	
