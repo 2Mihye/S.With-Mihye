@@ -11,8 +11,6 @@ import lm.swith.main.model.StudyPost;
 public interface StudyPostMapper {
 	
 	// 스터디 목록
-	List<StudyPost> getAllStudyPost();
-	
 	List<StudyPost> getAllStudyPostWithSkills();
 	
 	// 스터디 등록

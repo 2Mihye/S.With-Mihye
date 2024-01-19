@@ -21,13 +21,7 @@ public class StudyPostController {
     }
 	
 	// 스터디 목록
-	@GetMapping ("/post_list")
-	public ResponseEntity<List<StudyPost>> getAllStudyPost() {
-		List<StudyPost> studyPost = studyPostService.getAllStudyPost();
-		return ResponseEntity.ok(studyPost);
-	}
-	
-    @GetMapping
+    @GetMapping ("/post_list")
     public ResponseEntity<List<StudyPost>> getAllStudyPostWithSkills() {
         List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
         return ResponseEntity.ok(studyPost);

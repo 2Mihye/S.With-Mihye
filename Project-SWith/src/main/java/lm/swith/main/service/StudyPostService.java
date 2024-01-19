@@ -33,11 +33,7 @@ public class StudyPostService {
     	studyPostMapper.deleteStudyPost(post_no);
     }
 	
-	// 스터디 목록 불러오기
-	public List<StudyPost> getAllStudyPost() {
-		return studyPostMapper.getAllStudyPost();
-	}
-	
+	// 스터디 목록 불러오기	
     public List<StudyPost> getAllStudyPostWithSkills() {
         return studyPostMapper.getAllStudyPostWithSkills();
     }
