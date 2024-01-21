@@ -167,7 +167,8 @@
 	        STUDY_LOCATION = #{study_location},
 	        STUDY_PLACE = #{study_place},
 	        STUDY_POST_TIME = SYSDATE
-	    WHERE POST_NO = #{post_no};
+	    WHERE POST_NO = #{post_no} AND USER_NO = #{user_no};
+	    
 	
 	    <!-- 두 번째 쿼리: 기술 스택 정보 업데이트 기존 스킬 정보를 삭제 후 다시 저장 -->
 	    DELETE FROM post_tech_stacks WHERE post_no = #{post_no};
@@ -186,7 +187,7 @@
 	<!-- 스터디 삭제 -->
 	<delete id="deleteStudyPost" parameterType="Long">
 	    <!-- 첫 번째 쿼리: study_post 테이블에서 해당 post_no에 대한 스터디 정보 삭제 -->
-	    DELETE FROM study_post WHERE post_no = #{post_no}
+	    DELETE FROM study_post WHERE post_no = #{post_no} AND user_no = #{user_no};
 	    
 	    <!-- 두 번째 쿼리: post_tech_stacks 테이블에서 해당 post_no에 대한 기술 스택 정보 삭제 -->
 	    DELETE FROM post_tech_stacks WHERE post_no = #{post_no}

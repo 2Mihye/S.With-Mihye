@@ -17,8 +17,8 @@ public class StudyPostService {
     public StudyPostService(StudyPostMapper studyPostMapper) {
         this.studyPostMapper = studyPostMapper;
     }
-	// Main Part
     
+	// Main Part
     // 스터디 등록하기
 	public void insertStudyPost (StudyPost studyPost) {
 		studyPostMapper.insertStudyPost(studyPost);
@@ -56,6 +56,4 @@ public class StudyPostService {
     public void deleteStudyPost(Long post_no) {
     	studyPostMapper.deleteStudyPost(post_no);
     }
-	  
-
 }
