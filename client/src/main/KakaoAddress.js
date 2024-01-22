@@ -9,12 +9,9 @@ function sample6_execDaumPostcode({ setNewUser }) {
       // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
       var addr = ""; // 주소 변수
 
-      //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-      if (data.userSelectedType === "R") {
-        // 사용자가 도로명 주소를 선택했을 경우
-        addr = data.jibunAddress;
-      } else {
-        // 사용자가 지번 주소를 선택했을 경우(J)
+      // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+      if (data.userSelectedType === "R" || data.userSelectedType === "J") {
+        // 사용자가 도로명 주소 또는 지번 주소를 선택했을 경우
         addr = data.jibunAddress;
       }
 
@@ -22,11 +19,12 @@ function sample6_execDaumPostcode({ setNewUser }) {
       if (data.userSelectedType === "R") {
         // 법정동명이 있을 경우 추가한다. (법정리는 제외)
         // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-        if (data.bname !== "" && /[동|로|가]$/g.test(data.bname))
+        if (data.bname !== "" && /[동|로|가|길]$/g.test(data.bname)) {
           // 우편번호와 주소 정보를 해당 필드에 넣는다.
-
           document.getElementById("useraddress").value = addr;
+        }
       }
+
       setNewUser((prevUser) => ({ ...prevUser, useraddress: addr }));
     },
   }).open();
