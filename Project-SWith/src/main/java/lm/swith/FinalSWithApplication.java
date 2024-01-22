@@ -1,4 +1,4 @@
-package lm.swith.main;
+package lm.swith;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +25,7 @@ public class FinalSWithApplication {
 				registry.addMapping("/**")
 				.allowedMethods("*")
 				.allowedOrigins("http://localhost:3000");
-			}
+			};
 		};
 	}
 }
