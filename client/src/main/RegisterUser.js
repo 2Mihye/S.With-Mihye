@@ -3,10 +3,15 @@ import axios from "axios";
 import Header from "./Header";
 import "../css/RegisterUser.css";
 import Required from "./img/required.png";
-import sample6_execDaumPostcode from "../main/KakaoAddress";
+import sample6_execDaumPostcode from "./KakaoAddress";
+import { useNavigate } from "react-router-dom";
 
 function RegisterUser() {
+  const [number, setNumber] = useState("");
   const [data, setData] = useState([]);
+  const [confirm, setConfirm] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const navigate = useNavigate();
   const [swithUser, setNewUser] = useState({
     email: "",
     password: "",
@@ -24,16 +29,52 @@ function RegisterUser() {
     setNewUser((prevUser) => ({ ...prevUser, [name]: value }));
   };
 
+  const handleEmail = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/users/mail",
+        swithUser,
+        {
+          withCredentials: true,
+        }
+      );
+
+      setConfirm(response.data.toString());
+      //db에 이메일이 존재하면 alert 이미 존재하는 아이디입니다. else 사용가능한 아이디입니다.
+      if (response.data !== "error") {
+        console.log(response.data);
+        console.log("서버 응답:", response);
+        console.log("ok");
+        alert("인증번호가 전송되었습니다.(사용가능)");
+      } else {
+        alert("이미 중복된 아이디입니다");
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error("이메일이 부적합합니다.", error);
+    }
+  };
+
+  const handleConfirm = async () => {
+    console.log("number:", number);
+    console.log("confirm:", confirm);
+    if (number === confirm) {
+      alert("인증 완료, 사용가능한 이메일입니다.");
+      setIsButtonDisabled(true);
+      // 전송한 이메일 값을 a에 담아주기
+    } else {
+      alert("인증 번호가 다릅니다.");
+      console.error("인증 실패");
+    }
+  };
+  const handleNumberChange = (e) => {
+    const { value } = e.target;
+    setNumber(value);
+  };
+
   const handleAddUser = async () => {
     try {
-      // 추가된 부분: 주소 값을 설정
-      const addressElement = document.getElementById("useraddress");
-
-      if (addressElement) {
-        const address = addressElement.value;
-        setNewUser((prevUser) => ({ ...prevUser, useraddress: address }));
-      }
-
       const response = await axios.post(
         "http://localhost:8080/users/register",
         swithUser,
@@ -42,10 +83,14 @@ function RegisterUser() {
         }
       );
 
-      // 변경된 데이터 값 저장
+      // 추가된 부분: 주소 값을 설정
+      const address = document.getElementById("useraddress").value;
+      setNewUser((prevUser) => ({ ...prevUser, useraddress: address }));
+
+      //변경된 데이터 값 저장
       setData((prevUser) => [...prevUser, response.data]);
 
-      // 데이터 저장되고 나서 빈값으로 초기화
+      //데이터 저장되고 나서 빈값으로 초기화 하길 원한다면  초기화도 진행!!
       setNewUser({
         email: "",
         password: "",
@@ -56,15 +101,11 @@ function RegisterUser() {
         userintroduction: "",
         role: "",
       });
+      navigate("/"); // 이동 경로 수정
     } catch (error) {
-      console.error("서버 오류:", error);
-      if (error.response) {
-        console.error("응답 데이터:", error.response.data);
-        console.error("상태 코드:", error.response.status);
-      }
+      console.error("데이터가 부적합합니다.", error);
     }
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0]; // 선택한 파일
     const reader = new FileReader();
@@ -103,6 +144,17 @@ function RegisterUser() {
               value={swithUser.email}
               onChange={handleInputChange}
             />
+            <button onClick={handleEmail}>이메일 인증하기</button>
+            <br />
+            <input
+              type="text"
+              name="number"
+              value={number}
+              onChange={handleNumberChange}
+            />
+            <button disabled={isButtonDisabled} onClick={handleConfirm}>
+              인증확인
+            </button>
           </div>
           <div className="register_id m-3">
             <div className="two">

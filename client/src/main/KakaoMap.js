@@ -1,8 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/KakaoMap.css";
-
+import usersUserinfoAxios from "../token/tokenAxios";
 const KakaoMap = () => {
+  const [userData, setUserData] = useState("");
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // 서버에 사용자 정보를 가져오는 요청
+        const response = await usersUserinfoAxios.get("/users/userinfo");
+        setUserData(response.data);
+        console.log(userData);
+      } catch (error) {
+        console.error("Failed to fetch user data.", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
@@ -73,7 +89,7 @@ const KakaoMap = () => {
     <div className="container">
       <div className="mt-5 px-5">
         <div className="adress_section">
-          <h1 className="banner_font">강남 역삼동 스윗</h1>
+          <h1 className="banner_font">{userData.useraddress}</h1>
           <br />
         </div>
 

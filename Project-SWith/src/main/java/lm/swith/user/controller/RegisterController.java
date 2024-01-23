@@ -12,12 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lm.swith.user.Service.UserService;
-import lm.swith.user.common.MsgEntity;
 import lm.swith.user.model.ResponseDTO;
 import lm.swith.user.model.SwithDTO;
 import lm.swith.user.model.SwithUser;
@@ -38,7 +34,9 @@ public class RegisterController {
 		SwithDTO userDTO = new SwithDTO();
 		userDTO.setEmail(user.getEmail());
 		userDTO.setUser_no(user.getUser_no());
-        userDTO.setUsername(user.getUsername());
+	    userDTO.setUsername(user.getUsername());
+	    userDTO.setUseraddress(user.getUseraddress());
+	    userDTO.setNickname(user.getNickname());
         // 필요한 경우, 다른 필드도 추가로 복사
 
         return userDTO;
@@ -54,8 +52,11 @@ public class RegisterController {
 			final String token = tokenProvider.createAccessToken(user);  
 			final SwithDTO responseUserDTO = SwithDTO.builder()
 					.email(user.getEmail())
+					.useraddress(user.getUseraddress())
+					.nickname(user.getNickname())
 					.user_no(user.getUser_no())
 					.username(user.getUsername())
+
 					.token(token)          //반환된 토큰 적용
 					.build();
 			return ResponseEntity.ok().body(responseUserDTO);
@@ -92,11 +93,21 @@ public class RegisterController {
 	  public String MailPage(){
 	      return "/";
 	  }
-
-
-		@PostMapping("/register")
-		public ResponseEntity<SwithUser> registerUser(@RequestBody SwithUser swithUser){
-			SwithUser createUser = userService.signUpUser(swithUser);
-			return ResponseEntity.ok(createUser);
-		}
+	  
+	  
+	  @GetMapping("/register")
+	  public String showRegisterForm(Model model) {
+		  model.addAttribute("users",new SwithUser());
+		  return "register";
+	  }
+	/*@GetMapping("/register")
+	public List<SwithUser> findUsersAll() {
+		return userService.findUsersAll();
+	}
+	*/	
+	@PostMapping("/register")
+	public ResponseEntity<SwithUser> registerUser(@RequestBody SwithUser swithUser){
+		SwithUser createUser = userService.signUpUser(swithUser);
+		return ResponseEntity.ok(createUser);
+	}
 }

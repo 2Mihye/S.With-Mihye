@@ -108,7 +108,7 @@ function MainContent() {
             {userData ? (
               <div>
                 <p>
-                  Welcome to the Dashboard, {userData.username}님! You are
+                  Welcome to the Dashboard, {userData.nickname}님! You are
                   logged in.
                 </p>
               </div>
