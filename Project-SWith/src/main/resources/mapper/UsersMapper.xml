@@ -24,8 +24,4 @@
 	<select id = "findUsersAll" parameterType="lm.swith.user.model.SwithUser">
 		SELECT * FROM Users
 	</select>
-	
-	<select id = "findAddressByUserNo" parameterType = "lm.swith.user.model.SwithUser">
-		SELECT USERADDRESS FROM users WEHRE user_no = #{user_no}
-	</select>
 </mapper>
