@@ -4,8 +4,8 @@
 <mapper namespace="lm.swith.user.mapper.UsersMapper">
 	<!-- 회원등록 -->
 	<insert id ="insertUser" parameterType="lm.swith.user.model.SwithUser">
-		INSERT INTO USERS (EMAIL, PASSWORD, USERNAME, NICKNAME, USERADDRESS, USERINTRODUCTION, USERROLE)
-		VALUES(#{email}, #{password}, #{username}, #{nickname}, #{useraddress}, #{userintroduction}, #{role})
+		INSERT INTO USERS (EMAIL, PASSWORD, USERNAME, NICKNAME, USERADDRESS, USERINTRODUCTION)
+		VALUES(#{email}, #{password}, #{username}, #{nickname}, #{useraddress}, #{userintroduction})
 	</insert>
 	
 	

@@ -24,12 +24,13 @@ public class StudyPostController {
     @GetMapping("/post_list")
     public ResponseEntity<List<StudyPost>> getAllStudyPostWithSkills() {
         List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
-        if (studyPost != null) {
+        if (!studyPost.isEmpty()) {
             return ResponseEntity.ok(studyPost);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
+
 
 	// 스터디 상세 페이지
 	@GetMapping("/post_detail/{post_no}")

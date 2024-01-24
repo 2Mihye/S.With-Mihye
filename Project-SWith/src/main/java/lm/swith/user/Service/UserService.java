@@ -37,7 +37,6 @@ public class UserService {
 		user.setPassword(passwordEncoder.encode(swithUser.getPassword()));
 		user.setUsername(swithUser.getUsername());
 		user.setNickname(swithUser.getNickname());
-		user.setUserprofile(swithUser.getUserprofile());
 		user.setUseraddress(swithUser.getUseraddress());
 		user.setUserintroduction(swithUser.getUserintroduction());
 		user.setRole(swithUser.getRole());

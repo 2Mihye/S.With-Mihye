@@ -21,11 +21,11 @@
     	<id property="user_no" column="user_no" />
     	<result property="email" column="email" />
     	<result property="nickname" column="nickname" />
-    	<result property="user_password" column="user_password" />
-    	<result property="user_name" column="user_name" />
+    	<result property="password" column="password" />
+    	<result property="username" column="username" />
     	<result property="user_profile" column="user_profile" />
-    	<result property="user_introduction" column="user_introduction" />
-    	<result property="user_role" column="user_role" />
+    	<result property="userintroduction" column="userintroduction" />
+    	<result property="userrole" column="userrole" />
     </resultMap>
 
     <resultMap type="lm.swith.main.model.StudyPost" id="studyPostWithSkills">
@@ -36,24 +36,25 @@
         <result property="study_content" column="STUDY_CONTENT" />
         <result property="study_method" column="STUDY_METHOD" />
         <result property="recruit_type" column="RECRUIT_TYPE" />
-        <result property="study_date" column="STUDY_DATE" />
+        <result property="study_period" column="STUDY_PERIOD" />
+        <result property="study_start" column="STUDY_START" />
         <result property="recruit_deadline" column="RECRUIT_DEADLINE" />
         <result property="study_status" column="STUDY_STATUS" />
         <result property="study_likes" column="STUDY_LIKES" />
-        <result property="study_place" column="STUDY_PLACE" />
+        <result property="study_location" column="STUDY_LOCATION" />
+        <result property="first_study" column="FIRST_STUDY" />
         <result property="study_post_time" column="STUDY_POST_TIME" />
         <association property="user" resultMap="UsersResult"/>
         <collection property="studyPostWithSkills" resultMap="SkillResult"/>
     </resultMap>
+    
 
 	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
-	    SELECT sp.*, s.skill_name, s.skill_img, u.email as USER_EMAIL, u.nickname as USER_NICKNAME
+	    SELECT sp.*, s.skill_name, s.skill_img
 	    FROM STUDY_POST sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
-	    LEFT JOIN users u ON sp.user_no = u.user_no
 	</select>
-
 	
 	
 	
@@ -71,36 +72,33 @@
 	
 	
 	
-	<!-- 스터디 등록 -->
-	<insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
-	    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
-	        SELECT post_no_seq.NEXTVAL FROM DUAL
-	    </selectKey>
-	    
-	    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 삽입 -->
-	    INSERT INTO study_post (
-	        POST_NO, USER_NO, STUDY_TITLE, STUDY_CONTENT,
-	        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
-	        STUDY_START, RECRUIT_DEADLINE, STUDY_STATUS,
-	        STUDY_LIKES, STUDY_LOCATION, STUDY_PLACE, STUDY_POST_TIME
-	    ) VALUES (
-	        #{post_no}, #{user_no}, #{study_title}, #{study_content},
-	        #{study_method}, #{recruit_type}, #{study_period},
-	        #{study_start}, #{recruit_deadline}, #{study_status},
-	        #{study_likes}, #{study_location}, #{study_place}, SYSDATE
-	    )
-	
-	    <!-- 두 번째 쿼리: post_tech_stacks 테이블에 기술 스택 정보 삽입 -->
-	    <foreach collection="skills" item="skill" separator=";">
-	        INSERT INTO post_tech_stacks (post_no, skill_no)
-	        VALUES (#{post_no}, #{skill})
-	    </foreach>
-	
-	    <!-- 세 번째 쿼리: users 테이블에서 nickname 정보 가져와서 업데이트 -->
-	    UPDATE study_post sp
-	    SET sp.nickname = (SELECT nickname FROM users u WHERE u.user_no = sp.user_no)
-	    WHERE sp.post_no = #{post_no}
-	</insert>
+<!-- 스터디 등록 -->
+<insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
+    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
+        SELECT post_no_seq.NEXTVAL FROM DUAL
+    </selectKey>
+    
+    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 삽입 -->
+    INSERT INTO study_post (
+        POST_NO, USER_NO, NICKNAME, STUDY_TITLE, STUDY_CONTENT,
+        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
+        STUDY_START, RECRUIT_DEADLINE,
+        STUDY_LIKES, STUDY_LOCATION, FIRST_STUDY
+    ) VALUES (
+        #{post_no}, #{user_no}, (SELECT NICKNAME FROM USERS WHERE USER_NO = #{user_no}),
+        #{study_title}, #{study_content},
+        #{study_method}, #{recruit_type}, #{study_period},
+        #{study_start}, #{recruit_deadline},
+        #{study_likes}, #{study_location}, #{first_study}
+    )
+
+    <!-- 두 번째 쿼리: post_tech_stacks 테이블에 기술 스택 정보 삽입 -->
+    <foreach collection="skills" item="skill" separator=";">
+        INSERT INTO post_tech_stacks (post_no, skill_no)
+        VALUES (#{post_no}, #{skill})
+    </foreach>
+</insert>
+
 	
 	
 	
@@ -156,6 +154,7 @@
 	    UPDATE study_post
 	    SET
 	        USER_NO = #{user_no},
+	        NICKNAME = #{nickname},
 	        STUDY_TITLE = #{study_title},
 	        STUDY_CONTENT = #{study_content},
 	        STUDY_METHOD = #{study_method},
@@ -165,8 +164,7 @@
 	        RECRUIT_DEADLINE = #{recruit_deadline},
 	        STUDY_STATUS = #{study_status},
 	        STUDY_LOCATION = #{study_location},
-	        STUDY_PLACE = #{study_place},
-	        STUDY_POST_TIME = SYSDATE
+	        FRIST_STUDY = #{FIRST_STUDY}
 	    WHERE POST_NO = #{post_no} AND USER_NO = #{user_no};
 	    
 	
@@ -176,10 +174,10 @@
 	        INSERT INTO post_tech_stacks (post_no, skill_no) VALUES (#{post_no}, #{skill});
 	    </foreach>
 	
-	    <!-- 세 번째 쿼리: users 테이블에서 nickname 정보 가져와서 업데이트 
+	    <!-- 세 번째 쿼리: users 테이블에서 nickname 정보 가져와서 업데이트 -->
 	    UPDATE study_post sp
 	    SET sp.nickname = (SELECT nickname FROM users u WHERE u.user_no = sp.user_no)
-	    WHERE sp.post_no = #{post_no};-->
+	    WHERE sp.post_no = #{post_no};
 	</update>
 
 

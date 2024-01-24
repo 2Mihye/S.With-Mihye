@@ -7,10 +7,10 @@ public class Users {
 	private Long user_no;
 	private String email;
 	private String nickname;
-	private String user_password;
-	private String user_name;
+	private String password;
+	private String username;
 	private String user_profile;
-	private String user_address;
-	private String user_introduction;
-	private String user_role;
+	private String useraddress;
+	private String userintroduction;
+	private String userrole; 
 }

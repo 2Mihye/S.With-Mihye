@@ -6,5 +6,5 @@ import lombok.*;
 public class Skill {
 	private Long skill_no;
 	private String skill_name;
-	private String img;
+	private String skill_img;
 }
