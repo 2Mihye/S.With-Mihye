@@ -38,7 +38,7 @@ public class UserService {
 		user.setUsername(swithUser.getUsername());
 		user.setNickname(swithUser.getNickname());
 		user.setUseraddress(swithUser.getUseraddress());
-		user.setUserintroduction(swithUser.getUserintroduction());
+		user.setUser_introduction(swithUser.getUser_introduction());
 		user.setRole(swithUser.getRole());
 		
 		usersMapper.insertUser(user);

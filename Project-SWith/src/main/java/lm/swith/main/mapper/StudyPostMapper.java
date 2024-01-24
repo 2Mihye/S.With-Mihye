@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import lm.swith.main.model.Comments;
 import lm.swith.main.model.StudyPost;
 
 @Mapper
@@ -33,5 +34,11 @@ public interface StudyPostMapper {
 	
 	// 스터디 수정
 	void updateStudyPost (StudyPost studyPost);
+	
+	
+	
+	// Comments Part
+	// 댓글 불러오기
+	List<Comments> getCommentsByPostNo(Long post_no);
 	
 }

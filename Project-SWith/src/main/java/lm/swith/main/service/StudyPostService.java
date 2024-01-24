@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lm.swith.main.mapper.StudyPostMapper;
+import lm.swith.main.model.Comments;
 import lm.swith.main.model.StudyPost;
 
 @Service
@@ -56,4 +57,11 @@ public class StudyPostService {
     public void deleteStudyPost(Long post_no) {
     	studyPostMapper.deleteStudyPost(post_no);
     }
+    
+    
+    // Comments Part
+    /* 댓글 불러오기
+    public List<Comments> getCommentsByPostNo(Long post_no) {
+    	return studyPostMapper.getCommentsByPostNo(post_no);
+    }*/
 }
