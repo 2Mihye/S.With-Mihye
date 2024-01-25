@@ -25,11 +25,17 @@ public class StudyPost {
 	private String study_location;
 	private String first_study;
 	private Date study_post_time;
-	
+    private int mentorCount;
+    private int menteeCount;
+    private int applicationCount;
 	
 	private List<Skill> studyPostWithSkills;
 	
 	private Users user;
+	
+    private Mentor mentor;
+    private Mentee mentee;
+    private StudyApplication studyApplication;
 	
     public List<Skill> getStudyPostWithSkills() {
         return studyPostWithSkills;
@@ -44,5 +50,53 @@ public class StudyPost {
         return user != null ? user.getNickname() : null;
     }
 
+    public Mentor getMentor() {
+        return mentor;
+    }
+
+    public void setMentor(Mentor mentor) {
+        this.mentor = mentor;
+    }
+    
+    public Mentee getMentee() {
+    	return mentee;
+    }
+    
+    public void setMentee(Mentee mentee) {
+    	this.mentee = mentee;
+    }
+    
+    public StudyApplication getStudyApplication() {
+    	return studyApplication;
+    }
+    
+    public void setStudyApplication(StudyApplication studyApplication) {
+    	this.studyApplication = studyApplication;
+    }
+    
+    public int getMentorCount() {
+        return mentorCount;
+    }
+
+    public void setMentorCount(int mentorCount) {
+        this.mentorCount = mentorCount;
+    }
+
+    public int getMenteeCount() {
+        return menteeCount;
+    }
+
+    public void setMenteeCount(int menteeCount) {
+        this.menteeCount = menteeCount;
+    }
+
+    public int getApplicationCount() {
+        return applicationCount;
+    }
+
+    public void setApplicationCount(int applicationCount) {
+        this.applicationCount = applicationCount;
+    }
+    
     
 }
