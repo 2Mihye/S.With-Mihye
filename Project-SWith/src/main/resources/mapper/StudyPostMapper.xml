@@ -85,43 +85,43 @@
 	
 	<!-- 스터디 상세 페이지 -->
 	<!-- 특정 post_no에 해당하는 스터디 포스트 및 기술 스택 정보 조회 -->
-<select id="getStudyPostByPostNo" resultSets="studyPost,mentor,mentee,application" resultMap="studyPostWithSkills">
-    SELECT 
-        sp.*,
-        s.skill_name,
-        s.skill_img,
-        m.USER_NO AS mentor_user_no,
-        m.MENTOR_STATUS,
-        m.MAX_MENTOR_APPLICANTS,
-        me.USER_NO AS mentee_user_no,
-        me.MENTEE_STATUS,
-        me.MAX_MENTEE_APPLICANTS,
-        sa.USER_NO AS application_user_no,
-        sa.STATUS,
-        sa.MAX_STUDY_APPLICANTS,
-        (
-            SELECT COUNT(DISTINCT m.USER_NO)
-            FROM mentor m
-            WHERE m.POST_NO = sp.post_no AND m.MENTOR_STATUS = '승인'
-        ) AS mentor_count,
-        (
-            SELECT COUNT(DISTINCT me.USER_NO)
-            FROM mentee me
-            WHERE me.POST_NO = sp.post_no AND me.MENTEE_STATUS = '승인'
-        ) AS mentee_count,
-        (
-            SELECT COUNT(DISTINCT sa.USER_NO)
-            FROM study_application sa
-            WHERE sa.POST_NO = sp.post_no AND sa.STATUS = '승인'
-        ) AS application_count
-    FROM study_post sp
-    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-    LEFT JOIN skill s ON pts.skill_no = s.skill_no
-    LEFT JOIN mentor m ON sp.post_no = m.POST_NO
-    LEFT JOIN mentee me ON sp.post_no = me.POST_NO
-    LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
-    WHERE sp.post_no = #{post_no}
-</select>
+	<select id="getStudyPostByPostNo" resultSets="studyPost,mentor,mentee,application" resultMap="studyPostWithSkills">
+	    SELECT 
+	        sp.*,
+	        s.skill_name,
+	        s.skill_img,
+	        m.USER_NO AS mentor_user_no,
+	        m.MENTOR_STATUS,
+	        m.MAX_MENTOR_APPLICANTS,
+	        me.USER_NO AS mentee_user_no,
+	        me.MENTEE_STATUS,
+	        me.MAX_MENTEE_APPLICANTS,
+	        sa.USER_NO AS application_user_no,
+	        sa.STATUS,
+	        sa.MAX_STUDY_APPLICANTS,
+	        (
+	            SELECT COUNT(DISTINCT m.USER_NO)
+	            FROM mentor m
+	            WHERE m.POST_NO = sp.post_no AND m.MENTOR_STATUS = '승인'
+	        ) AS mentor_count,
+	        (
+	            SELECT COUNT(DISTINCT me.USER_NO)
+	            FROM mentee me
+	            WHERE me.POST_NO = sp.post_no AND me.MENTEE_STATUS = '승인'
+	        ) AS mentee_count,
+	        (
+	            SELECT COUNT(DISTINCT sa.USER_NO)
+	            FROM study_application sa
+	            WHERE sa.POST_NO = sp.post_no AND sa.STATUS = '승인'
+	        ) AS application_count
+	    FROM study_post sp
+	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	    LEFT JOIN mentor m ON sp.post_no = m.POST_NO
+	    LEFT JOIN mentee me ON sp.post_no = me.POST_NO
+	    LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
+	    WHERE sp.post_no = #{post_no}
+	</select>
 
 	
 	
