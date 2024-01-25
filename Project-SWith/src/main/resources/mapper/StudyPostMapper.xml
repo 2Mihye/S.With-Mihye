@@ -3,8 +3,6 @@
 
 <mapper namespace = "lm.swith.main.mapper.StudyPostMapper">
 
-
-	<!-- 스터디 전체 목록 -->
 	<!-- 스터디 포스트 및 기술 스택 정보 조회 -->	
     <resultMap type="lm.swith.main.model.Skill" id="SkillResult">
         <id property="skill_no" column="skill_no"/>
@@ -46,6 +44,20 @@
     	<result property="userintroduction" column="userintroduction" />
     	<result property="userrole" column="userrole" />
     </resultMap>
+    
+    <resultMap type="lm.swith.main.model.Comments" id="commentWithUser">
+	    <id property="comment_no" column="COMMENT_NO"/>
+	    <result property="user_no" column="USER_NO"/>
+	    <result property="post_no" column="POST_NO"/>
+	    <result property="comment_content" column="COMMENT_CONTENT"/>
+	    <result property="comment_post_time" column="COMMENT_POST_TIME"/>
+	    <association property="user" resultMap="userResult"/> <!-- 사용자 정보를 association으로 매핑 -->
+	</resultMap>
+	
+	<resultMap type="lm.swith.main.model.Users" id="userResult">
+	    <id property="user_no" column="USER_NO"/>
+	    <result property="nickname" column="NICKNAME"/>
+	</resultMap>
 
     <resultMap type="lm.swith.main.model.StudyPost" id="studyPostWithSkills">
         <id property="post_no" column="POST_NO" />
@@ -73,7 +85,9 @@
         <collection property="studyPostWithSkills" resultMap="SkillResult"/>
     </resultMap>
     
-
+    
+    
+	<!-- 스터디 전체 목록 -->
 	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
 	    SELECT sp.*, s.skill_name, s.skill_img
 	    FROM STUDY_POST sp
@@ -127,22 +141,6 @@
 	
 	
 	<!-- 댓글 불러오기 -->
-	<!-- 댓글과 사용자 정보를 함께 매핑하는 resultMap -->
-	<resultMap type="lm.swith.main.model.Comments" id="commentWithUser">
-	    <id property="comment_no" column="COMMENT_NO"/>
-	    <result property="user_no" column="USER_NO"/>
-	    <result property="post_no" column="POST_NO"/>
-	    <result property="comment_content" column="COMMENT_CONTENT"/>
-	    <result property="comment_post_time" column="COMMENT_POST_TIME"/>
-	    <association property="user" resultMap="userResult"/> <!-- 사용자 정보를 association으로 매핑 -->
-	</resultMap>
-	
-	<!-- 사용자 정보를 매핑하는 resultMap -->
-	<resultMap type="lm.swith.main.model.Users" id="userResult">
-	    <id property="user_no" column="USER_NO"/>
-	    <result property="nickname" column="NICKNAME"/>
-	</resultMap>
-	
 	<select id="getCommentsByPostNo" resultMap="commentWithUser">
 	    SELECT c.*, u.NICKNAME
 	    FROM COMMENTS c
@@ -316,6 +314,14 @@
 	    UPDATE study_post sp
 	    SET sp.nickname = (SELECT nickname FROM users u WHERE u.user_no = sp.user_no)
 	    WHERE sp.post_no = #{post_no};
+	    
+	    <if test="mentor_check">
+		    UPDATE mentor SET USER_NO = #{user_no} WHERE POST_NO = #{post_no};
+		</if>
+		<if test="mentee_check">
+		    UPDATE mentee SET USER_NO = #{user_no} WHERE POST_NO = #{post_no};
+		</if>
+	    
 	</update>
 
 
