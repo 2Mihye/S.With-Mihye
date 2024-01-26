@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.StudyPost;
 
@@ -18,16 +19,23 @@ public interface StudyPostMapper {
 	List<StudyPost> getStudiesBySelect(String recruit_type, String study_method, String study_location, Long skill_no);
 		
 	// 스터디 제목+내용 검색
-	List<StudyPost> getStudiesBySearch(String study_title, String study_content);
+	List<StudyPost> getStudiesByKeyword(String keyword);
 	
 	// 스터디 등록
 	void insertStudyPost (StudyPost studyPost);
+	
+	// 카페 목록
+	List<Cafes> getAllCafes(String bplcnm, String sitewhladdr, String x, String y);
+	// 스터디 게시글 작성 내 카페 검색
+	List<Cafes> searchCafes(String keyword);
+	
+	
 	
 	
 	
 	// Detail Part	
 	// 스터디 삭제
-	void deleteStudyPost (Long post_no);
+	void deleteStudyPost (@Param("post_no") Long postNo, @Param("user_no") Long userNo);
 	
 	// 스터디 상세 페이지
 	StudyPost getStudyPostByPostNo(@Param("post_no") Long post_no);
@@ -37,8 +45,16 @@ public interface StudyPostMapper {
 	
 	
 	
-	// Comments Part
+	// Comment Part
+	// 댓글 등록
+	void insertComment (Comments comment);
+	
 	// 댓글 불러오기
 	List<Comments> getCommentsByPostNo(Long post_no);
 	
+	// 댓글 수정
+	void updateComment (Comments comments);
+	
+	// 댓글 삭제
+	void deleteComment(@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lm.swith.main.mapper.StudyPostMapper;
+import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.StudyPost;
 
@@ -25,6 +26,18 @@ public class StudyPostService {
 		studyPostMapper.insertStudyPost(studyPost);
 	}
 	
+	// 스터디 게시글 작성 내 첫모임 장소 카페 리스트
+    public List<Cafes> getAllCafes(String bplcnm, String sitewhladdr, String x, String y) {
+        return studyPostMapper.getAllCafes(bplcnm, sitewhladdr, x, y);
+    }
+    
+    // 스터디 게시글 작성 내 첫모임 장소 검색
+    public List<Cafes> searchCafes(String keyword) {
+        return studyPostMapper.searchCafes(keyword);
+    }
+	
+	
+	
 	// 스터디 목록 불러오기	
     public List<StudyPost> getAllStudyPostWithSkills() {
         return studyPostMapper.getAllStudyPostWithSkills();
@@ -36,17 +49,25 @@ public class StudyPostService {
     }
     
     // 스터디 키워드 검색
-    public List<StudyPost> getStudiesByKeyword(String study_title, String study_content) {
-        return studyPostMapper.getStudiesBySearch(study_title, study_content);
+    public List<StudyPost> getStudiesByKeyword(String keyword) {
+        return studyPostMapper.getStudiesByKeyword(keyword);
     }
 	
     
     
     // Detail Part
-	// 스터디 상세 페이지 불러오기
+    // 스터디 상세 페이지 불러오기
     public StudyPost getStudyPostByPostNo(Long post_no) {
-        return studyPostMapper.getStudyPostByPostNo(post_no);
+        StudyPost studyPost = studyPostMapper.getStudyPostByPostNo(post_no);
+
+        if (studyPost != null) {
+            List<Comments> comments = studyPostMapper.getCommentsByPostNo(post_no);
+            studyPost.setComments(comments);
+        }
+
+        return studyPost;
     }
+
     
     // 스터디 수정
     public void updateStudyPost(StudyPost studyPost) {
@@ -54,14 +75,32 @@ public class StudyPostService {
     }
     
     // 스터디 삭제
-    public void deleteStudyPost(Long post_no) {
-    	studyPostMapper.deleteStudyPost(post_no);
+    public void deleteStudyPost(Long post_no, Long user_no) {
+    	studyPostMapper.deleteStudyPost(post_no, user_no);
     }
     
     
+    
+    
     // Comments Part
-    /* 댓글 불러오기
+    // 댓글 등록
+    public void insertComment(Comments comment) {
+    	studyPostMapper.insertComment(comment);
+    }
+    
+    // 댓글 불러오기
     public List<Comments> getCommentsByPostNo(Long post_no) {
     	return studyPostMapper.getCommentsByPostNo(post_no);
-    }*/
+    }
+    
+    // 댓글 수정
+    public void updateComment(Comments comment) {
+    	studyPostMapper.updateComment(comment);
+    }
+    
+    
+    // 댓글 삭제
+    public void deleteComment(Long post_no, Long user_no) {
+    	studyPostMapper.deleteComment(post_no, user_no);
+    }
 }

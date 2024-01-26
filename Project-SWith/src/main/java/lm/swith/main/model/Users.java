@@ -11,6 +11,6 @@ public class Users {
 	private String username;
 	private String user_profile;
 	private String useraddress;
-	private String userintroduction;
-	private String userrole; 
+	private String user_introduction;
+	private String user_role; 
 }

@@ -8,5 +8,4 @@ public class StudyApplication { // 스터디 신청 현황
 	private Long user_no;
 	private String status;
 	private int max_study_applicants;
-	private int study_join_member;
 }

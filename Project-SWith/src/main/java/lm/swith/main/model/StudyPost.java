@@ -8,7 +8,7 @@ import lombok.Setter;
 
 
 @Getter @Setter
-public class StudyPost { // 스터디 게시글
+public class StudyPost { 
 	private Long post_no;
 	private Long user_no;
 	private Long comment_no;
@@ -25,11 +25,17 @@ public class StudyPost { // 스터디 게시글
 	private String study_location;
 	private String first_study;
 	private Date study_post_time;
-    private int mentorCount;
-    private int menteeCount;
-    private int applicationCount;
+	// 스터디 게시글 ===================== 여기까지 Study_Post 테이블 칼럼
+	
+    private int mentorCount; // mentor에서 status가 '승인'인 user count
+    private int menteeCount; // mentee에서 status가 '승인'인 user count
+    private int applicationCount; // study_application에서 status가 '승인'인 user count
+    private String skill_name; // join 했을 때 skill 이름 받을 곳
+    private String skill_img; // join 했을 때 skill img 받을 곳
 	
 	private List<Skill> studyPostWithSkills; // 같은 post_no 와 함께있는 skill_no 리스트로 저장
+	
+	private List<Comments> comments; // 댓글들 담을 곳
 	
 	private Users user; // 유저테이블
 	
@@ -37,66 +43,4 @@ public class StudyPost { // 스터디 게시글
     private Mentee mentee; // 멘티 테이블
     private StudyApplication studyApplication; // 스터디 참가 현황 테이블
 	
-    public List<Skill> getStudyPostWithSkills() { // skill_no get
-        return studyPostWithSkills;
-    }
-    
-    public void setStudyPostWithSkills(List<Skill> studyPostWithSkills) { // skill_no set
-        this.studyPostWithSkills = studyPostWithSkills;
-    }
-    
-    
-    public String getNickname() { // 유저 테이블에서 user가 null이 아니라면 nickname 반환 null이면 null 반환
-        return user != null ? user.getNickname() : null;
-    }
-
-    public Mentor getMentor() { // 멘토 테이블 정보 get
-        return mentor;
-    }
-
-    public void setMentor(Mentor mentor) { // 멘토 테이블 정보 set
-        this.mentor = mentor;
-    }
-    
-    public Mentee getMentee() { // 멘티 테이블 정보 get
-    	return mentee;
-    }
-    
-    public void setMentee(Mentee mentee) { // 멘티 테이블 정보 set
-    	this.mentee = mentee;
-    }
-    
-    public StudyApplication getStudyApplication() { // 스터디 참가 현황 테이블 정보 get
-    	return studyApplication;
-    }
-    
-    public void setStudyApplication(StudyApplication studyApplication) { // 스터디 참가 현황 테이블 정보 set
-    	this.studyApplication = studyApplication;
-    }
-    
-    public int getMentorCount() { // 멘토 참가수 get
-        return mentorCount;
-    }
-
-    public void setMentorCount(int mentorCount) { // 멘토 참가수 set
-        this.mentorCount = mentorCount;
-    }
-
-    public int getMenteeCount() { // 멘티 참가수 get
-        return menteeCount;
-    }
-
-    public void setMenteeCount(int menteeCount) { // 멘티 참가수 set
-        this.menteeCount = menteeCount;
-    }
-
-    public int getApplicationCount() { // 스터디 참가수 get
-        return applicationCount;
-    }
-
-    public void setApplicationCount(int applicationCount) { // 스터디 참가수 set
-        this.applicationCount = applicationCount;
-    }
-    
-    
 }

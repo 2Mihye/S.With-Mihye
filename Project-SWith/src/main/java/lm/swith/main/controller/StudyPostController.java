@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.StudyPost;
 import lm.swith.main.service.StudyPostService;
@@ -38,23 +39,15 @@ public class StudyPostController {
         }
     }
     
-    /* 댓글 목록
-    @GetMapping("/comments/{post_no}")
-    public ResponseEntity<List<Comments>> getCommentsByPostNo(Long post_no) {
-    	List<Comments> comments = studyPostService.getCommentsByPostNo(post_no);
-    	if (!comments.isEmpty()) {
-    		return ResponseEntity.ok(comments);
-    	} else {
-    		return ResponseEntity.noContent().build();
-    	}
-    }*/
 
 
-	// 스터디 상세 페이지
-	@GetMapping("/post_detail/{post_no}")
+    // 스터디 상세 페이지 + 댓글
+    @GetMapping("/post_detail/{post_no}")
     public ResponseEntity<StudyPost> getStudyPostByPostNo(@PathVariable Long post_no) {
         StudyPost studyPost = studyPostService.getStudyPostByPostNo(post_no); 
+        List<Comments> comments = studyPostService.getCommentsByPostNo(post_no); // 댓글 목록 조회
         if (studyPost != null) {
+            studyPost.setComments(comments); // 스터디 게시물에 댓글 목록 설정
             return ResponseEntity.ok(studyPost);
         } else {
             return ResponseEntity.notFound().build();
@@ -67,6 +60,45 @@ public class StudyPostController {
 		return "/post_form";
 	}
 	
+	
+	// 댓글 등록
+    @PostMapping("/add_comment")
+    public String addComment(@ModelAttribute Comments comment) {
+        studyPostService.insertComment(comment);
+        return "redirect:/post_detail/" + comment.getPost_no();
+    }
+    
+    // 댓글 삭제
+    @PostMapping("/delete_comment/{post_no}/{user_no}")
+    public String deleteComment(@PathVariable Long post_no, @PathVariable Long user_no) {
+        studyPostService.deleteComment(post_no, user_no);
+        return "redirect:/post_detail/" + post_no;
+    }
+    
+    // 댓글 수정
+    @PostMapping("/update_comment/{post_no}/{user_no}")
+    public String updateComment(@ModelAttribute Comments comment) {
+    	studyPostService.updateComment(comment);
+    	return "redirect:/post_detail/" + comment.getPost_no();
+    }
+    
+	
+	
+	// 카페 리스트
+    @GetMapping ("/cafe_list")
+    public ResponseEntity<List<Cafes>> getAllCafes(String bplcnm, String sitewhladdr, String x, String y) {
+        List<Cafes> cafes = studyPostService.getAllCafes(bplcnm, sitewhladdr, x, y);
+        return ResponseEntity.ok(cafes);
+    }
+    
+    // 검색 카페 목록
+    @GetMapping("/KeywordCafes")
+    public List<Cafes> searchCafes(@RequestParam String keyword) {
+        return studyPostService.searchCafes(keyword);
+    }
+	
+	
+    
     // 스터디 생성 처리
     @PostMapping("/create")
     public String insertStudyPost(@ModelAttribute StudyPost studyPost) {
@@ -75,12 +107,12 @@ public class StudyPostController {
     }
 	
 	
-	// 스터디 삭제
-	@PostMapping("/delete/{post_no}")
-	public String deleteStudyPost (@PathVariable Long post_no) {
-		studyPostService.deleteStudyPost(post_no);
-		return "redirect:/";
-	}
+    // 스터디 삭제
+    @PostMapping("/delete/{post_no}")
+    public String deleteStudyPost(@PathVariable Long post_no, @RequestParam Long user_no) {
+        studyPostService.deleteStudyPost(post_no, user_no);
+        return "redirect:/";
+    }
 	
 	// 스터디 수정 페이지 이동
 	@GetMapping("update/{post_no}")
@@ -113,10 +145,8 @@ public class StudyPostController {
     
     // 검색 스터디 목록
     @GetMapping("/KeywordStudy")
-	public String getStudiesByKeyword(String study_title, String study_content, Model model) {
-    	List<StudyPost> studyPosts = studyPostService.getStudiesByKeyword(study_title, study_content);
-    	model.addAttribute("studyPosts", studyPosts);
-    	return "/";
+    public List<StudyPost> getStudiesByKeyword(@RequestParam(required = false) String keyword) {
+    	return studyPostService.getStudiesByKeyword(keyword);
     }
-    
+
 }
