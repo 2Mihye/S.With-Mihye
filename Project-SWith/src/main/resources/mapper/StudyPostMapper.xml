@@ -95,6 +95,15 @@
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
 	</select>
 	
+	<!-- 내가 쓴 스터디 목록 -->
+	<select id="getAllStudyPostsWithUserNo" resultMap="studyPostWithSkills">
+		SELECT sp.*, s.skill_name, s.skill_img
+		FROM STUDY_POST sp
+		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+		LEFT JOIN skill s ON pts.skill_no = s.skill_no
+		WHERE sp.user_no = #{user_no}
+	</select>
+	
 	
 	
 	<!-- 스터디 상세 페이지 -->

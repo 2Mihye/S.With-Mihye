@@ -105,6 +105,17 @@ public class StudyPostController {
         studyPostService.insertStudyPost(studyPost);
         return "redirect:/";
     }
+    
+    // 내가 쓴 스터디 목록
+    @GetMapping("/my_own_studies/{user_no}")
+    public ResponseEntity<List<StudyPost>> getAllStudyPostsByUserNo(@PathVariable Long user_no) {
+    	List<StudyPost> studyPost = studyPostService.getAllStudyPostsWithUserNo(user_no);
+        if (studyPost != null  && !studyPost.isEmpty()) {
+            return ResponseEntity.ok(studyPost);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 	
 	
     // 스터디 삭제

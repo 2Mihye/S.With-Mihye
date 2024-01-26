@@ -31,6 +31,13 @@ public interface StudyPostMapper {
 	
 	
 	
+	// My page
+	// 마이페이지 내가 쓴 게시물 목록
+	List<StudyPost> getAllStudyPostsWithUserNo(Long user_no);
+	
+	
+	
+	
 	
 	
 	// Detail Part	
@@ -39,6 +46,7 @@ public interface StudyPostMapper {
 	
 	// 스터디 상세 페이지
 	StudyPost getStudyPostByPostNo(@Param("post_no") Long post_no);
+	
 	
 	// 스터디 수정
 	void updateStudyPost (StudyPost studyPost);

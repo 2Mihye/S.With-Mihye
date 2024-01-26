@@ -43,6 +43,11 @@ public class StudyPostService {
         return studyPostMapper.getAllStudyPostWithSkills();
     }
     
+    // 내가 쓴 스터디 목록
+    public List<StudyPost> getAllStudyPostsWithUserNo(Long user_no) {
+    	return studyPostMapper.getAllStudyPostsWithUserNo(user_no);
+    }
+    
     // 스터디 조건 검색
     public List<StudyPost> getStudiesBySelect(String recruit_type, String study_method, String study_location, Long skill_no) {
         return studyPostMapper.getStudiesBySelect(recruit_type, study_method, study_location, skill_no);
