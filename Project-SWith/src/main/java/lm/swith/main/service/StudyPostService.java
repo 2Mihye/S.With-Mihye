@@ -30,13 +30,7 @@ public class StudyPostService {
     public List<Cafes> getAllCafes(String bplcnm, String sitewhladdr, String x, String y) {
         return studyPostMapper.getAllCafes(bplcnm, sitewhladdr, x, y);
     }
-    
-    // 스터디 게시글 작성 내 첫모임 장소 검색
-    public List<Cafes> searchCafes(String keyword) {
-        return studyPostMapper.searchCafes(keyword);
-    }
-	
-	
+    	
 	
 	// 스터디 목록 불러오기	
     public List<StudyPost> getAllStudyPostWithSkills() {
@@ -84,6 +78,13 @@ public class StudyPostService {
     	studyPostMapper.deleteStudyPost(post_no, user_no);
     }
     
+    
+    
+    // MyPage Part
+    // 스터디 게시글 작성 내 첫모임 장소 검색
+    public List<Cafes> searchCafes(String keyword) {
+        return studyPostMapper.searchCafes(keyword);
+    }
     
     
     

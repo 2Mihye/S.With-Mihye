@@ -144,37 +144,12 @@
 	    LEFT JOIN mentee me ON sp.post_no = me.POST_NO
 	    LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
 	    WHERE sp.post_no = #{post_no}
-	</select>	
+	</select>
 	
-	
-	
-	
-	<!-- 스터디 등록 -->
-	<!-- <insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
-	    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
-	        SELECT post_no_seq.NEXTVAL FROM DUAL
-	    </selectKey>
-	    
-	     첫 번째 쿼리: study_post 테이블에 스터디 정보 삽입 
-	    INSERT INTO study_post (
-	        POST_NO, USER_NO, NICKNAME, STUDY_TITLE, STUDY_CONTENT,
-	        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
-	        STUDY_START, RECRUIT_DEADLINE,
-	        STUDY_LIKES, STUDY_LOCATION, FIRST_STUDY
-	    ) VALUES (
-	        #{post_no}, #{user_no}, (SELECT NICKNAME FROM USERS WHERE USER_NO = #{user_no}),
-	        #{study_title}, #{study_content},
-	        #{study_method}, #{recruit_type}, #{study_period},
-	        #{study_start}, #{recruit_deadline},
-	        #{study_likes}, #{study_location}, #{first_study}
-	    )
-	
-	     두 번째 쿼리: post_tech_stacks 테이블에 기술 스택 정보 삽입 
-	    <foreach collection="skills" item="skill" separator=";">
-	        INSERT INTO post_tech_stacks (post_no, skill_no)
-	        VALUES (#{post_no}, #{skill})
-	    </foreach>
-	</insert>  -->
+	<!-- 스터디 참가 신청 -->
+	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
+
+	</insert>
 	
 	
 
