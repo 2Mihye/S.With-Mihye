@@ -148,7 +148,11 @@
 	
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
-
+		<selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
+			SELECT STUDY_POST_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		
 	</insert>
 	
 	
