@@ -1,6 +1,8 @@
 package lm.swith.main.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,8 +42,18 @@ public class StudyPostService {
     }
     
     // 내가 쓴 스터디 목록
-    public List<StudyPost> getAllStudyPostsWithUserNo(Long user_no) {
-    	return studyPostMapper.getAllStudyPostsWithUserNo(user_no);
+    public List<StudyPost> getOwnStudiesWithUserNo(Long user_no) {
+    	return studyPostMapper.getOwnStudiesWithUserNo(user_no);
+    }
+    
+    // 찜한 스터디 목록
+    public List<StudyPost> getAllStudiesWithLikes(Long user_no) {
+    	return studyPostMapper.getAllStudiesWithLikes(user_no);
+    }
+    
+    // 내가 참여한 스터디 목록
+    public List<StudyPost> getAllStudiesWithUserNo(Long user_no) {
+    	return studyPostMapper.getAllStudiesWithUserNo(user_no);
     }
     
     // 스터디 조건 검색
@@ -86,12 +98,18 @@ public class StudyPostService {
     }
     
     // 스터디 찜
-    public void addLikesByPostNo(Likes likes) {
-    	if (likes.getLikes() = null) {
-    		Likes likes = studyPostMapper.addLikes(likes);
-    	} else if (likes.getLikes() = 'F') {
-    		
-    	}
+    public void likesUpdate(Long user_no, Long post_no) {
+        Likes likes = new Likes();
+        likes.setUser_no(user_no);
+        likes.setPost_no(post_no);
+
+        List<Likes> likesList = studyPostMapper.isLiked(post_no, user_no);
+
+        if (!likesList.isEmpty()) {
+            studyPostMapper.deleteLikes(post_no, user_no);
+        } else {
+            studyPostMapper.addLikes(likes);
+        }
     }
     
     
@@ -105,8 +123,8 @@ public class StudyPostService {
     
     // Comments Part
     // 댓글 등록
-    public void insertComment(Comments comment) {
-    	studyPostMapper.insertComment(comment);
+    public void insertComment(Comments comments) {
+    	studyPostMapper.insertComment(comments);
     }
     
     // 댓글 불러오기
@@ -115,8 +133,8 @@ public class StudyPostService {
     }
     
     // 댓글 수정
-    public void updateComment(Comments comment) {
-    	studyPostMapper.updateComment(comment);
+    public void updateComment(Comments comments) {
+    	studyPostMapper.updateComment(comments);
     }
     
     

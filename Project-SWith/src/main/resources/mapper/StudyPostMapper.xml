@@ -59,10 +59,10 @@
 	    <result property="nickname" column="NICKNAME"/>
 	</resultMap>
 	
-	<resultMap type="lm.swith.main.model.Likes" id="Likes">
+	<resultMap type="lm.swith.main.model.Likes" id="LikesResult">
 		<result property="post_no" column="POST_NO" />
 		<result property="user_no" column="USER_NO" />
-		<result property="lieks" column="LIKES" />
+		<result property="likes" column="LIKES" />
 	</resultMap>
 
     <resultMap type="lm.swith.main.model.StudyPost" id="studyPostWithSkills">
@@ -77,14 +77,13 @@
         <result property="study_start" column="STUDY_START" />
         <result property="recruit_deadline" column="RECRUIT_DEADLINE" />
         <result property="study_status" column="STUDY_STATUS" />
-        <result property="study_likes" column="STUDY_LIKES" />
         <result property="study_location" column="STUDY_LOCATION" />
         <result property="first_study" column="FIRST_STUDY" />
         <result property="study_post_time" column="STUDY_POST_TIME" />
-        <result property="mentorCount" column="mentor_count"/>
-    	<result property="menteeCount" column="mentee_count"/>
-    	<result property="applicationCount" column="application_count"/>
-    	<result property="likesCount" column="likes_count" />
+        <result property="mentor_count" column="mentor_count"/>
+    	<result property="mentee_count" column="mentee_count"/>
+    	<result property="application_count" column="application_count"/>
+    	<result property="likes_count" column="likes_count" />
         <association property="user" resultMap="UsersResult"/>
         <association property="likes" resultMap="LikesResult" />
         <association property="mentor" resultMap="MentorResult" />
@@ -95,16 +94,25 @@
     
     
     
-	<!-- 스터디 전체 목록 -->
+	<!-- 스터디 전체 목록 OK -->
 	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
-	    SELECT sp.*, s.skill_name, s.skill_img
+	    SELECT sp.*, s.skill_name, s.skill_img,
+	    ( 
+	    	SELECT COUNT(*)
+	    	FROM likes l
+	    	WHERE post_no = sp.post_no
+	    ) AS likes_count
 	    FROM STUDY_POST sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	    LEFT JOIN likes l ON sp.post_no = l.post_no
+	    WHERE sp.study_status = 'O'
 	</select>
 	
-	<!-- 내가 쓴 스터디 목록 -->
-	<select id="getAllStudyPostsWithUserNo" resultMap="studyPostWithSkills">
+	
+	 
+	<!-- 내가 쓴 스터디 목록 OK -->
+	<select id="getOwnStudiesWithUserNo" resultMap="studyPostWithSkills">
 		SELECT sp.*, s.skill_name, s.skill_img
 		FROM STUDY_POST sp
 		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
@@ -113,8 +121,30 @@
 	</select>
 	
 	
+	<!-- 내가 찜한 스터디 목록 OK -->
+	<select id="getAllStudiesWithLikes" resultMap="studyPostWithSkills">
+		SELECT sp.*, s.skill_name, s.skill_img
+	    FROM study_post sp
+	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	    LEFT JOIN likes l ON sp.post_no = l.post_no
+	    WHERE l.user_no = #{user_no} AND sp.study_status = 'O'
+	</select>
 	
-	<!-- 스터디 상세 페이지 -->
+	
+	<!-- 내가 참여한 스터디 목록 OK -->
+	<select id="getAllStudiesWithUserNo" resultMap="studyPostWithSkills">
+		SELECT sp.*, s.skill_name, s.skill_img
+		FROM study_post sp
+		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+		LEFT JOIN skill s ON pts.skill_no = s.skill_no
+		LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
+		WHERE sa.user_no = #{user_no} AND sa.status = '승인'
+	</select>
+	
+	
+	
+	<!-- 스터디 상세 페이지 OK -->
 	<!-- 특정 post_no에 해당하는 스터디 포스트 및 기술 스택 정보 조회 -->
 	<select id="getStudyPostByPostNo" resultSets="studyPost,mentor,mentee,application" resultMap="studyPostWithSkills">
 	    SELECT 
@@ -144,13 +174,19 @@
 	            SELECT COUNT(DISTINCT sa.USER_NO)
 	            FROM study_application sa
 	            WHERE sa.POST_NO = sp.post_no AND sa.STATUS = '승인'
-	        ) AS application_count
+	        ) AS application_count,
+	       	( 
+	    	SELECT COUNT(*)
+	    	FROM likes l
+	    	WHERE post_no = sp.post_no
+	    	) AS likes_count
 	    FROM study_post sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
 	    LEFT JOIN mentor m ON sp.post_no = m.POST_NO
 	    LEFT JOIN mentee me ON sp.post_no = me.POST_NO
 	    LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
+	    LEFT JOIN likes l ON sp.post_no = l.post_no
 	    WHERE sp.post_no = #{post_no}
 	</select>
 	
@@ -163,26 +199,7 @@
 			#{post_no}, #{user_no}, #{status}
 		)
 	</insert>
-	
-	
-	<!-- 스터디 찜 -->
-	<insert id="addLikes" parameterType="lm.swith.main.model.Likes">
-		INSERT INITO LIKES (
-			POST_NO, USER_NO
-		) VALUES (
-			#{post_no}, #{user_no}
-		)
-	</insert>
-	
-	
-	<!-- 스터디 찜 삭제 -->
-	<delete id="deleteLikes" parameterType="Long">
-		DELETE FROM LIKES WHERE post_no = #{post_no} AND user_no = #{user_no}
-	</delete>
-	
-	<!-- 스터디 카운트 -->
-	<select id="countLikes" parame
-	
+
 	
 
 	<!-- 스터디 등록 -->
@@ -294,7 +311,7 @@
 	
 	
 	
-	<!-- 키워드 검색결과 스터디 목록 -->
+	<!-- 키워드 검색결과 스터디 목록 OK -->
 	<select id="getStudiesByKeyword" resultType="lm.swith.main.model.StudyPost">
 	    SELECT sp.*, s.skill_name, s.skill_img 
 	    FROM study_post sp
@@ -322,7 +339,7 @@
 	        RECRUIT_DEADLINE = #{recruit_deadline},
 	        STUDY_STATUS = #{study_status},
 	        STUDY_LOCATION = #{study_location},
-	        FRIST_STUDY = #{FIRST_STUDY}
+	        FRIST_STUDY = #{first_study}
 	    WHERE POST_NO = #{post_no} AND USER_NO = #{user_no};
 	    
 	
@@ -372,19 +389,14 @@
 	
 	<!-- 댓글 등록 -->
 	<insert id="addCommentWithNickname" parameterType="lm.swith.main.model.Comments">
-        INSERT INTO COMMENTS (POST_ID, CONTENT, AUTHOR, COMMENT_POST_TIME)
-        SELECT #{postId}, #{content}, u.NICKNAME, #{comment_post_time}
-        FROM USERS u
-        WHERE u.USER_NO = #{userNo}
+        INSERT INTO COMMENTS (COMMENT_NO, USER_NO, POST_NO, COMMENT_CONTENT, NICKNAME, COMMENT_POST_TIME)
+        VALUES COMMENTS_NO_SEQ.NEXTVAL, #{USER_NO}, #{post_no}, #{comment_content}, (SELECT NICKNAME FROM USERS WHERE USER_NO = #{user_no}), #{comment_post_time}
     </insert>
 
 
 	<!-- 댓글 목록 -->
 	<select id="getCommentsByPostNo" resultMap="commentWithUser">
-	    SELECT c.*, u.NICKNAME
-	    FROM COMMENTS c
-	    JOIN USERS u ON c.USER_NO = u.USER_NO
-	    WHERE c.POST_NO = #{post_no}
+	    SELECT * FROM COMMENTS WHERE POST_NO = #{post_no}
 	</select>
 	
 	
@@ -404,6 +416,25 @@
 	    DELETE FROM COMMENTS
 	    WHERE POST_NO = #{post_no}
 	      AND USER_NO = #{user_no}
+	</delete>
+	
+	
+
+	<!-- 스터디 찜 -->
+	<insert id="addLikes" parameterType="lm.swith.main.model.Likes">
+		INSERT INTO LIKES ( POST_NO, USER_NO)
+		VALUES ( #{post_no}, #{user_no} )
+	</insert>
+	
+	<!-- 스터디 찜 여부 확인 -->
+	<select id="isLiked" resultType="lm.swith.main.model.Likes">
+		SELECT is_liked FROM LIKES WHERE user_no = #{user_no} AND post_no = #{post_no}
+	</select>
+	
+	
+	<!-- 스터디 찜 삭제 -->
+	<delete id="deleteLikes" parameterType="lm.swith.main.model.Likes">
+		DELETE FROM LIKES WHERE post_no = #{post_no} AND user_no = #{user_no}
 	</delete>
 	
 </mapper>

@@ -6,5 +6,5 @@ import lombok.*;
 public class Likes {
 	private Long post_no;
 	private Long user_no;
-	private char likes;
+	private String is_liked; 
 }

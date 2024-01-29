@@ -1,6 +1,7 @@
 package lm.swith.main.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,11 +18,14 @@ public interface StudyPostMapper {
 	// 스터디 목록
 	List<StudyPost> getAllStudyPostWithSkills();
 	
-	// 스터디 찜 등록
+	// 스터디 찜
 	void addLikes (Likes likes);
 	
-	// 스터디 찜 상태 변화
-	void updateLikes (Likes likes);
+	// 스터디 찜 확인
+	List<Likes> isLiked (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
+	
+	// 스터디 찜 삭제
+	void deleteLikes (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 	// 스터디 조건 검색
 	List<StudyPost> getStudiesBySelect(String recruit_type, String study_method, String study_location, Long skill_no);
@@ -41,16 +45,20 @@ public interface StudyPostMapper {
 	
 	// My page
 	// 마이페이지 내가 쓴 게시물 목록
-	List<StudyPost> getAllStudyPostsWithUserNo(Long user_no);
+	List<StudyPost> getOwnStudiesWithUserNo(Long user_no);
 	
+	// 마이페이지 찜한 게시물 목록
+	List<StudyPost> getAllStudiesWithLikes(Long user_no);
 	
+	// 내가 참여한 스터디 목록
+	List<StudyPost> getAllStudiesWithUserNo(Long user_no);
 	
 	
 	
 	
 	// Detail Part	
 	// 스터디 삭제
-	void deleteStudyPost (@Param("post_no") Long postNo, @Param("user_no") Long userNo);
+	void deleteStudyPost (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 	// 스터디 상세 페이지
 	StudyPost getStudyPostByPostNo(@Param("post_no") Long post_no);
@@ -66,7 +74,7 @@ public interface StudyPostMapper {
 	
 	// Comment Part
 	// 댓글 등록
-	void insertComment (Comments comment);
+	void insertComment (Comments comments);
 	
 	// 댓글 불러오기
 	List<Comments> getCommentsByPostNo(Long post_no);
@@ -76,4 +84,6 @@ public interface StudyPostMapper {
 	
 	// 댓글 삭제
 	void deleteComment(@Param("post_no") Long post_no, @Param("user_no") Long user_no);
+
+	
 }
