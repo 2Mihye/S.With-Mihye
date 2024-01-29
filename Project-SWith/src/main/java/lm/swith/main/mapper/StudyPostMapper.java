@@ -72,7 +72,7 @@ public interface StudyPostMapper {
 	void addUsersByPostNo (StudyApplication studyApplication);
 	
 	// 스터디 수락
-	
+	void acceptUsers (StudyApplication studyApplication);
 	
 	
 	
