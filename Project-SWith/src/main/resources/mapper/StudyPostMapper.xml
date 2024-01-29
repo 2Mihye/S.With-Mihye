@@ -29,6 +29,7 @@
     
     <resultMap type="lm.swith.main.model.StudyApplication" id="StudyApplicationResult">
     	<result property="user_no" column="USER_NO" />
+    	<result property="nickname" column="NICKNAME" />
     	<result property="status" column="STATUS" />
     	<result property="max_study_applicants" column="MAX_STUDY_APPLICANTS" />    	
     </resultMap>
@@ -93,7 +94,7 @@
     </resultMap>
     
     
-    
+    <!-- OK 붙은 건 JSON 파일 전송 확인까지 됨 -->
 	<!-- 스터디 전체 목록 OK -->
 	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
 	    SELECT sp.*, s.skill_name, s.skill_img,
@@ -193,12 +194,18 @@
 	
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
-		INSERT INTO STUDY_APPLICATION (
-			POST_NO, USER_NO, STATUS
-		) VALUES (
-			#{post_no}, #{user_no}, #{status}
-		)
+	    SELECT sa.status, u.nickname
+	    FROM study_application sa
+	    LEFT JOIN users u ON sa.user_no = u.user_no
+	    WHERE sa.post_no = #{post_no}
 	</insert>
+	
+	<!-- 스터디 참가 수락 -->
+	<select id="acceptUsers" resultMap="StudyApplicationResult" parameterType="Long">
+		SELECT sa.status, u.nickname FROM study_application sa
+		LEFT JOIN sa.user_no = u.user_no
+		WHERE sa.post_no = #{post_no} 
+	</select>
 
 	
 
@@ -425,6 +432,7 @@
 		INSERT INTO LIKES ( POST_NO, USER_NO)
 		VALUES ( #{post_no}, #{user_no} )
 	</insert>
+
 	
 	<!-- 스터디 찜 여부 확인 -->
 	<select id="isLiked" resultType="lm.swith.main.model.Likes">
