@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
+import lm.swith.main.model.Likes;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 
@@ -15,6 +16,12 @@ public interface StudyPostMapper {
 	// Main Part
 	// 스터디 목록
 	List<StudyPost> getAllStudyPostWithSkills();
+	
+	// 스터디 찜 등록
+	void addLikes (Likes likes);
+	
+	// 스터디 찜 상태 변화
+	void updateLikes (Likes likes);
 	
 	// 스터디 조건 검색
 	List<StudyPost> getStudiesBySelect(String recruit_type, String study_method, String study_location, Long skill_no);

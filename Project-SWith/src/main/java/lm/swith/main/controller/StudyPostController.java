@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
+import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 import lm.swith.main.service.StudyPostService;
 
@@ -58,6 +59,13 @@ public class StudyPostController {
 	@GetMapping("/post")
 	public String showPostForm (Model model) {
 		return "/post_form";
+	}
+	
+	// 스터디 신청
+	@PostMapping("/add_users")
+	public String addUsersByPostNo (@ModelAttribute StudyApplication studyApplication) {
+		studyPostService.addUsersByPostNo(studyApplication);
+		return "redirect:/post_detail/" + studyApplication.getPost_no();
 	}
 	
 	

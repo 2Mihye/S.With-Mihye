@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import lm.swith.main.mapper.StudyPostMapper;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
+import lm.swith.main.model.Likes;
+import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 
 @Service
@@ -78,6 +80,19 @@ public class StudyPostService {
     	studyPostMapper.deleteStudyPost(post_no, user_no);
     }
     
+    // 스터디 신청
+    public void addUsersByPostNo(StudyApplication studyApplication) {
+    	studyPostMapper.addUsersByPostNo(studyApplication);
+    }
+    
+    // 스터디 찜
+    public void addLikesByPostNo(Likes likes) {
+    	if (likes.getLikes() = null) {
+    		Likes likes = studyPostMapper.addLikes(likes);
+    	} else if (likes.getLikes() = 'F') {
+    		
+    	}
+    }
     
     
     // MyPage Part

@@ -45,7 +45,7 @@
     	<result property="user_role" column="user_role" />
     </resultMap>
     
-	<resultMap id="commentWithUser" type="lm.swith.main.model.Comments">
+	<resultMap  type="lm.swith.main.model.Comments" id="commentWithUser">
 	    <result property="comment_no" column="COMMENT_NO"/>
 	    <result property="post_no" column="POST_NO"/>
 	    <result property="user_no" column="USER_NO"/>
@@ -57,6 +57,12 @@
 	<resultMap type="lm.swith.main.model.Users" id="userResult">
 	    <id property="user_no" column="USER_NO"/>
 	    <result property="nickname" column="NICKNAME"/>
+	</resultMap>
+	
+	<resultMap type="lm.swith.main.model.Likes" id="Likes">
+		<result property="post_no" column="POST_NO" />
+		<result property="user_no" column="USER_NO" />
+		<result property="lieks" column="LIKES" />
 	</resultMap>
 
     <resultMap type="lm.swith.main.model.StudyPost" id="studyPostWithSkills">
@@ -78,7 +84,9 @@
         <result property="mentorCount" column="mentor_count"/>
     	<result property="menteeCount" column="mentee_count"/>
     	<result property="applicationCount" column="application_count"/>
+    	<result property="likesCount" column="likes_count" />
         <association property="user" resultMap="UsersResult"/>
+        <association property="likes" resultMap="LikesResult" />
         <association property="mentor" resultMap="MentorResult" />
         <association property="mentee" resultMap="MenteeResult" />
         <association property="studyApplication" resultMap="StudyApplicationResult" />
@@ -149,16 +157,31 @@
 	
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
-		<selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
-			SELECT STUDY_POST_SEQ.NEXTVAL FROM DUAL
-		</selectKey>
-			
 		INSERT INTO STUDY_APPLICATION (
 			POST_NO, USER_NO, STATUS
 		) VALUES (
 			#{post_no}, #{user_no}, #{status}
 		)
 	</insert>
+	
+	
+	<!-- 스터디 찜 -->
+	<insert id="addLikes" parameterType="lm.swith.main.model.Likes">
+		INSERT INITO LIKES (
+			POST_NO, USER_NO
+		) VALUES (
+			#{post_no}, #{user_no}
+		)
+	</insert>
+	
+	
+	<!-- 스터디 찜 삭제 -->
+	<delete id="deleteLikes" parameterType="Long">
+		DELETE FROM LIKES WHERE post_no = #{post_no} AND user_no = #{user_no}
+	</delete>
+	
+	<!-- 스터디 카운트 -->
+	<select id="countLikes" parame
 	
 	
 
