@@ -146,13 +146,18 @@
 	    WHERE sp.post_no = #{post_no}
 	</select>
 	
+	
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
 		<selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
 			SELECT STUDY_POST_SEQ.NEXTVAL FROM DUAL
 		</selectKey>
-		
-		
+			
+		INSERT INTO STUDY_APPLICATION (
+			POST_NO, USER_NO, STATUS
+		) VALUES (
+			#{post_no}, #{user_no}, #{status}
+		)
 	</insert>
 	
 	

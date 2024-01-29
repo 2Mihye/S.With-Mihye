@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
+import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 
 @Mapper
@@ -50,6 +51,9 @@ public interface StudyPostMapper {
 	
 	// 스터디 수정
 	void updateStudyPost (StudyPost studyPost);
+	
+	// 스터디 신청
+	void addUsersByPostNo (StudyApplication studyApplication);
 	
 	
 	
