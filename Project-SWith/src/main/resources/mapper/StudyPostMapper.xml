@@ -194,10 +194,18 @@
 	
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
+<<<<<<< HEAD
 	    SELECT sa.status, u.nickname
 	    FROM study_application sa
 	    LEFT JOIN users u ON sa.user_no = u.user_no
 	    WHERE sa.post_no = #{post_no}
+=======
+		INSERT INTO STUDY_APPLICATION (
+			POST_NO, USER_NO
+		) VALUES (
+			#{post_no}, #{user_no}
+		)
+>>>>>>> 2f320a3e09c9724f86b7cd35b5bd51460822be8e
 	</insert>
 	
 	<!-- 스터디 참가 수락 -->
