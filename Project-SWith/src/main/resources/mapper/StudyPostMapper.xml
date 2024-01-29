@@ -194,9 +194,9 @@
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
 		INSERT INTO STUDY_APPLICATION (
-			POST_NO, USER_NO, STATUS
+			POST_NO, USER_NO
 		) VALUES (
-			#{post_no}, #{user_no}, #{status}
+			#{post_no}, #{user_no}
 		)
 	</insert>
 

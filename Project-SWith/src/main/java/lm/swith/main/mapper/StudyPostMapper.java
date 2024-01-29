@@ -18,15 +18,6 @@ public interface StudyPostMapper {
 	// 스터디 목록
 	List<StudyPost> getAllStudyPostWithSkills();
 	
-	// 스터디 찜
-	void addLikes (Likes likes);
-	
-	// 스터디 찜 확인
-	List<Likes> isLiked (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
-	
-	// 스터디 찜 삭제
-	void deleteLikes (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
-	
 	// 스터디 조건 검색
 	List<StudyPost> getStudiesBySelect(String recruit_type, String study_method, String study_location, Long skill_no);
 		
@@ -41,6 +32,16 @@ public interface StudyPostMapper {
 	// 스터디 게시글 작성 내 카페 검색
 	List<Cafes> searchCafes(String keyword);
 	
+	
+	// Study Likes
+	// 스터디 찜
+	void addLikes (Likes likes);
+	
+	// 스터디 찜 확인
+	List<Likes> isLiked (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
+	
+	// 스터디 찜 삭제
+	void deleteLikes (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 	
 	// My page
