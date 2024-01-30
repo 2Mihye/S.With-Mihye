@@ -72,6 +72,8 @@ public interface StudyPostMapper {
 	void addUsersByPostNo (StudyApplication studyApplication);
 	
 
+	
+	// Study Application Part
 	// 스터디 신청 목록
 	List<StudyApplication> getAllApplicantsByPostNo(Long post_no);
 	

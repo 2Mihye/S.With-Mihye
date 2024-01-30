@@ -2,6 +2,7 @@ package lm.swith.main.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -70,11 +71,32 @@ public class StudyPostController {
 	}
 	
 	// 스터디 신청
-	@PostMapping("/add_users")
+	@PostMapping("/add_applicants")
 	public String addUsersByPostNo (@ModelAttribute StudyApplication studyApplication) {
 		studyPostService.addUsersByPostNo(studyApplication);
 		return "redirect:/post_detail/" + studyApplication.getPost_no();
 	}
+	
+	// 스터디 신청 목록 업데이트 (승인/거절)
+    @PostMapping("/process-application")
+    public ResponseEntity<String> processApplication(
+            @RequestParam("post_no") Long post_no,
+            @RequestParam("user_no") Long user_no,
+            @RequestParam("action") String action) { // action은 HTTP 요청에서 "action"이라는 이름의 파라미터를 String 타입으로 받아옴 (accept 혹은 reject로)
+
+        try {
+            boolean accept = "accept".equalsIgnoreCase(action); // 대소문자 상관없이 action으로 accept를 가져오면 수락
+            if (accept || "reject".equalsIgnoreCase(action)) { // action으로 reject를 가져와서 accept이거나 reject라면
+                studyPostService.acceptApplicant(user_no, post_no, accept); // service코드 실행
+                return ResponseEntity.ok("Application " + (accept ? "accepted" : "rejected") + " successfully."); // 처리 성공 후 HTTP200 OK와 메세지 반환
+            } else { // 값이 accept나 reject가 아닌 경우
+                return ResponseEntity.badRequest().body("Invalid action specified."); // 400 bad request 반환
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 예외인 경우 HTTP 500 서버 에러 반환
+                    .body("Error processing application: " + e.getMessage());
+        }
+    }
 	
 	
 	// 댓글 등록
