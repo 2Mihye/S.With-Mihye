@@ -13,6 +13,7 @@ import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
+import lm.swith.main.model.Users;
 
 @Service
 public class StudyPostService {
@@ -173,5 +174,14 @@ public class StudyPostService {
     // 댓글 삭제
     public void deleteComment(Long post_no, Long user_no) {
     	studyPostMapper.deleteComment(post_no, user_no);
+    }
+    
+    
+    
+    // Profile Part
+    // 유저 프로필 확인
+    public Users getUserByUserNo(Long user_no) {
+    	Users users = studyPostMapper.getUserByUserNo(user_no);
+    	return users;
     }
 }

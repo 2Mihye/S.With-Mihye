@@ -216,12 +216,16 @@ public class StudyPostController {
         }
     }
     
-    
-    
+
     // 검색 스터디 목록
     @GetMapping("/KeywordStudy")
     public List<StudyPost> getStudiesByKeyword(@RequestParam(required = false) String keyword) {
     	return studyPostService.getStudiesByKeyword(keyword);
     }
 
+    
+    
+    // 유저 프로필
+//    @GetMapping("/userProfile/{user_no}")
+//    public 
 }

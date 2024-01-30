@@ -400,6 +400,7 @@
 	<!-- ********************************************************* Study Application Part *********************************************************************** -->
 	
 	
+	
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
 	    INSERT INTO study_application (POST_NO, USER_NO)
@@ -469,5 +470,11 @@
 	
 
 	<!-- ********************************************************** Users Part *********************************************************************** -->
+
+	<!-- 유저 프로필 확인 -->
+	<select id="getUserByUserNo" resultMap="UsersResult">
+		SELECT * FROM USERS
+		WHERE USER_NO = #{user_no}
+	</select>
 	
 </mapper>
