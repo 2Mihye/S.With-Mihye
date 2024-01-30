@@ -1,6 +1,7 @@
 package lm.swith.main.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,8 +79,8 @@ public class StudyPostController {
 	}
 	
 	// 스터디 신청 목록 업데이트 (승인/거절)
-    @PostMapping("/process-application")
-    public ResponseEntity<String> processApplication(
+    @PostMapping("/application_update")
+    public ResponseEntity<String> updateApplication(
             @RequestParam("post_no") Long post_no,
             @RequestParam("user_no") Long user_no,
             @RequestParam("action") String action) { // action은 HTTP 요청에서 "action"이라는 이름의 파라미터를 String 타입으로 받아옴 (accept 혹은 reject로)
@@ -181,9 +182,9 @@ public class StudyPostController {
 	
 	
     // 스터디 삭제
-    @PostMapping("/delete/{post_no}")
-    public String deleteStudyPost(@PathVariable Long post_no, @RequestParam Long user_no) {
-        studyPostService.deleteStudyPost(post_no, user_no);
+    @GetMapping("/delete/{post_no}")
+    public String deleteStudyPost(@PathVariable Long post_no) {
+        studyPostService.deleteStudyPost(post_no);
         return "redirect:/";
     }
 	
@@ -204,17 +205,18 @@ public class StudyPostController {
 	}
 	
 	
-    // 조건 스터디 목록
-    @GetMapping ("/getSelectedList")
-    public String getStudiesBySelect(@RequestParam(required = false) String recruit_type,
-                                     @RequestParam(required = false) String study_method,
-                                     @RequestParam(required = false) String study_location,
-                                     @RequestParam(required = false) Long skill_no,
-                                     Model model) {
-        List<StudyPost> studyPosts = studyPostService.getStudiesBySelect(recruit_type, study_method, study_location, skill_no);
-        model.addAttribute("studyPosts", studyPosts);
-        return "/";
+	// 조건 스터디 목록    
+    @GetMapping("/getSelectedList")
+    public ResponseEntity<List<StudyPost>> getStudiesBySelect(@RequestParam Map<String, Object> params) {
+        List<StudyPost> studyPost = studyPostService.getStudiesBySelect(params);
+        if (!studyPost.isEmpty()) {
+            return ResponseEntity.ok(studyPost);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
+    
+    
     
     // 검색 스터디 목록
     @GetMapping("/KeywordStudy")

@@ -11,6 +11,7 @@ import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
+import lm.swith.main.model.Users;
 
 @Mapper
 public interface StudyPostMapper {
@@ -19,7 +20,7 @@ public interface StudyPostMapper {
 	List<StudyPost> getAllStudyPostWithSkills();
 	
 	// 스터디 조건 검색
-	List<StudyPost> getStudiesBySelect(String recruit_type, String study_method, String study_location, Long skill_no);
+	List<StudyPost> getStudiesBySelect(Map<String, Object> params);
 		
 	// 스터디 제목+내용 검색
 	List<StudyPost> getStudiesByKeyword(String keyword);
@@ -33,6 +34,7 @@ public interface StudyPostMapper {
 	List<Cafes> searchCafes(String keyword);
 	
 	
+	
 	// Study Likes
 	// 스터디 찜
 	void addLikes (Likes likes);
@@ -44,7 +46,8 @@ public interface StudyPostMapper {
 	void deleteLikes (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 	
-	// My page
+	
+	// My page Part
 	// 마이페이지 내가 쓴 게시물 목록
 	List<StudyPost> getOwnStudiesWithUserNo(Long user_no);
 	
@@ -57,23 +60,32 @@ public interface StudyPostMapper {
 	
 	
 	
-	// Detail Part	
-	// 스터디 삭제
-	void deleteStudyPost (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
-	
+	// Detail Part
 	// 스터디 상세 페이지
 	StudyPost getStudyPostByPostNo(@Param("post_no") Long post_no);
-	
 	
 	// 스터디 수정
 	void updateStudyPost (StudyPost studyPost);
 	
-	// 스터디 신청
-	void addUsersByPostNo (StudyApplication studyApplication);
+	// 스터디 삭제
+	void deleteStudyPost (@Param("post_no") Long post_no);
+	
+	// 댓글 삭제
+	void deleteComments(@Param("post_no") Long post_no);
+	
+	// 지원자 삭제
+	void deleteStudyApplication(@Param("post_no") Long post_no);
+	
+	// 기술스텍 삭제
+	void deletePostTechStacks(@Param("post_no") Long post_no);
+
 	
 
 	
 	// Study Application Part
+	// 스터디 신청
+	void addUsersByPostNo (StudyApplication studyApplication);
+	
 	// 스터디 신청 목록
 	List<StudyApplication> getAllApplicantsByPostNo(Long post_no);
 	
@@ -82,9 +94,6 @@ public interface StudyPostMapper {
 	
 	// 스터디 거절
 	void deleteApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
-
-	// 스터디 수락
-	void acceptUsers (StudyApplication studyApplication);
 
 	
 	
@@ -103,4 +112,8 @@ public interface StudyPostMapper {
 	void deleteComment(@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 
 	
+	
+	// Profile Part
+	// 유저 프로필 확인
+	Users getUserByUserNo (@Param("user_no") Long user_no);
 }

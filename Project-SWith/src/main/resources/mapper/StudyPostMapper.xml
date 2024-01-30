@@ -95,6 +95,10 @@
     
     
     <!-- OK 붙은 건 JSON 파일 전송 확인까지 됨 -->
+    
+    <!-- ********************************************************* Main Page Part ********************************************************************************* -->
+    
+    
 	<!-- 스터디 전체 목록 OK -->
 	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
 	    SELECT sp.*, s.skill_name, s.skill_img,
@@ -111,115 +115,46 @@
 	</select>
 	
 	
-	 
-	<!-- 내가 쓴 스터디 목록 OK -->
-	<select id="getOwnStudiesWithUserNo" resultMap="studyPostWithSkills">
-		SELECT sp.*, s.skill_name, s.skill_img
-		FROM STUDY_POST sp
-		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-		LEFT JOIN skill s ON pts.skill_no = s.skill_no
-		WHERE sp.user_no = #{user_no}
+	
+	<!-- 조건 sort 해서 검색 -->
+	<select id="getStudiesBySelect" parameterType="java.util.Map" resultType="lm.swith.main.model.StudyPost">
+	    SELECT DISTINCT * FROM (
+	        SELECT sp.*, s.skill_name, s.skill_img
+	        FROM study_post sp
+	        JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+	        LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	        WHERE
+	            1=1
+	            <if test="skill_no != null">
+	                AND pts.skill_no = #{skill_no}
+	            </if>
+	            <if test="recruit_type != null">
+	                AND sp.recruit_type = #{recruit_type}
+	            </if>
+	            <if test="study_method != null">
+	                AND sp.study_method = #{study_method}
+	            </if>
+	            <if test="study_location != null">
+	                AND sp.study_location = #{study_location}
+	            </if>
+	    ) uniqueStudies
 	</select>
 	
 	
-	<!-- 내가 찜한 스터디 목록 OK -->
-	<select id="getAllStudiesWithLikes" resultMap="studyPostWithSkills">
-		SELECT sp.*, s.skill_name, s.skill_img
+	
+	<!-- 키워드 검색결과 스터디 목록 OK -->
+	<select id="getStudiesByKeyword" resultType="lm.swith.main.model.StudyPost">
+	    SELECT sp.*, s.skill_name, s.skill_img 
 	    FROM study_post sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
-	    LEFT JOIN likes l ON sp.post_no = l.post_no
-	    WHERE l.user_no = #{user_no} AND sp.study_status = 'O'
-	</select>
-	
-	
-	<!-- 내가 참여한 스터디 목록 OK -->
-	<select id="getAllStudiesWithUserNo" resultMap="studyPostWithSkills">
-		SELECT sp.*, s.skill_name, s.skill_img
-		FROM study_post sp
-		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-		LEFT JOIN skill s ON pts.skill_no = s.skill_no
-		LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
-		WHERE sa.user_no = #{user_no} AND sa.status = '승인'
+	    WHERE sp.study_title LIKE '%' || #{keyword} || '%'
+	    OR sp.study_content LIKE '%' || #{keyword} || '%'
 	</select>
 	
 	
 	
-	<!-- 스터디 상세 페이지 OK -->
-	<!-- 특정 post_no에 해당하는 스터디 포스트 및 기술 스택 정보 조회 -->
-	<select id="getStudyPostByPostNo" resultSets="studyPost,mentor,mentee,application" resultMap="studyPostWithSkills">
-	    SELECT 
-	        sp.*,
-	        s.skill_name,
-	        s.skill_img,
-	        m.USER_NO AS mentor_user_no,
-	        m.MENTOR_STATUS,
-	        m.MAX_MENTOR_APPLICANTS,
-	        me.USER_NO AS mentee_user_no,
-	        me.MENTEE_STATUS,
-	        me.MAX_MENTEE_APPLICANTS,
-	        sa.USER_NO AS application_user_no,
-	        sa.STATUS,
-	        sa.MAX_STUDY_APPLICANTS,
-	        (
-	            SELECT COUNT(DISTINCT m.USER_NO)
-	            FROM mentor m
-	            WHERE m.POST_NO = sp.post_no AND m.MENTOR_STATUS = '승인'
-	        ) AS mentor_count,
-	        (
-	            SELECT COUNT(DISTINCT me.USER_NO)
-	            FROM mentee me
-	            WHERE me.POST_NO = sp.post_no AND me.MENTEE_STATUS = '승인'
-	        ) AS mentee_count,
-	        (
-	            SELECT COUNT(DISTINCT sa.USER_NO)
-	            FROM study_application sa
-	            WHERE sa.POST_NO = sp.post_no AND sa.STATUS = '승인'
-	        ) AS application_count,
-	       	( 
-	    	SELECT COUNT(*)
-	    	FROM likes l
-	    	WHERE post_no = sp.post_no
-	    	) AS likes_count
-	    FROM study_post sp
-	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
-	    LEFT JOIN mentor m ON sp.post_no = m.POST_NO
-	    LEFT JOIN mentee me ON sp.post_no = me.POST_NO
-	    LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
-	    LEFT JOIN likes l ON sp.post_no = l.post_no
-	    WHERE sp.post_no = #{post_no}
-	</select>
 	
-	
-	<!-- 스터디 참가 신청 -->
-	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
-	    INSERT INTO study_application (POST_NO, USER_NO, STATUS, ) 
-	</insert>
-	
-	<!-- 스터디 참가 신청 목록 -->
-	<select id="getAllApplicantsByPostNo" resultMap="StudyApplicationResult">
-		SELECT sa.status, u.nickname
-	    FROM study_application sa
-	    LEFT JOIN users u ON sa.user_no = u.user_no
-	    WHERE sa.post_no = #{post_no} AND sa.status = '대기'
-	</select>
-	
-	<!-- 스터디 참가 승인 -->
-	<update id="acceptApplicant" parameterType="Long">
-	    UPDATE study_application SET
-	 		status = '승인'
-	 	WHERE post_no = #{post_no} AND user_no = #{user_no} AND status = '대기'
-	</update>
-	
-	<!-- 스터디 참가 거절 -->
-	<delete id="deleteApplicant" parameterType="Long">
-		DELETE FROM study_application
-		WHERE post_no = #{post_no} AND user_no = #{user_no} AND status = '대기'
-	</delete>
-
-	
-
 	<!-- 스터디 등록 -->
 	<insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
 	    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
@@ -287,56 +222,116 @@
 	</select>
 	
 	
+	
+    <!-- ********************************************************* Likes Part ********************************************************************************* -->
+	
+	
+	<!-- 스터디 찜 -->
+	<insert id="addLikes" parameterType="lm.swith.main.model.Likes">
+		INSERT INTO LIKES ( POST_NO, USER_NO)
+		VALUES ( #{post_no}, #{user_no} )
+	</insert>
 
 	
-	<!-- 조건 sort 해서 검색 -->
-	<select id="getStudiesbySelect" parameterType="String" resultType="lm.swith.main.model.StudyPost">
-    SELECT DISTINCT *
-    FROM (
-        <!-- 기술스택별 스터디 목록 -->
-        SELECT sp.*, s.skill_name, s.skill_img
-        FROM study_post sp
-        JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-        LEFT JOIN skill s ON pts.skill_no = s.skill_no
-        WHERE pts.skill_no = #{skill_no}
-
-        UNION
-
-        <!-- 모집구분별 스터디 목록 -->
-        SELECT sp.*, s.skill_name, s.skill_img
-        FROM study_post sp
-        JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-        LEFT JOIN skill s ON pts.skill_no = s.skill_no
-        WHERE sp.recruit_type = #{recruit_type}
-
-        UNION
-
-        <!-- 진행방식별 스터디 목록 -->
-        SELECT sp.*, s.skill_name, s.skill_img
-        FROM study_post sp
-        JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-        WHERE sp.study_method = #{study_method}
-
-        UNION
-
-        <!-- 지역별 스터디 목록 -->
-        SELECT sp.*, s.skill_name, s.skill_img
-        FROM study_post sp
-        JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-        WHERE sp.study_location = #{study_location}
-    ) AS uniqueStudies
+	<!-- 스터디 찜 여부 확인 -->
+	<select id="isLiked" resultType="lm.swith.main.model.Likes">
+		SELECT is_liked FROM LIKES WHERE user_no = #{user_no} AND post_no = #{post_no}
+	</select>
+	
+	
+	<!-- 스터디 찜 삭제 -->
+	<delete id="deleteLikes" parameterType="lm.swith.main.model.Likes">
+		DELETE FROM LIKES WHERE post_no = #{post_no} AND user_no = #{user_no}
+	</delete>
+	
+	
+	
+	
+	<!-- ******************************************************** My Page Part***************************************************************************** -->
+	
+	
+	
+	<!-- 내가 쓴 스터디 목록 OK -->
+	<select id="getOwnStudiesWithUserNo" resultMap="studyPostWithSkills">
+		SELECT sp.*, s.skill_name, s.skill_img
+		FROM STUDY_POST sp
+		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+		LEFT JOIN skill s ON pts.skill_no = s.skill_no
+		WHERE sp.user_no = #{user_no}
+	</select>
+	
+	
+	<!-- 내가 찜한 스터디 목록 OK -->
+	<select id="getAllStudiesWithLikes" resultMap="studyPostWithSkills">
+		SELECT sp.*, s.skill_name, s.skill_img
+	    FROM study_post sp
+	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	    LEFT JOIN likes l ON sp.post_no = l.post_no
+	    WHERE l.user_no = #{user_no} AND sp.study_status = 'O'
+	</select>
+	
+	
+	<!-- 내가 참여한 스터디 목록 OK -->
+	<select id="getAllStudiesWithUserNo" resultMap="studyPostWithSkills">
+		SELECT sp.*, s.skill_name, s.skill_img
+		FROM study_post sp
+		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+		LEFT JOIN skill s ON pts.skill_no = s.skill_no
+		LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
+		WHERE sa.user_no = #{user_no} AND sa.status = '승인'
 	</select>
 	
 	
 	
-	<!-- 키워드 검색결과 스터디 목록 OK -->
-	<select id="getStudiesByKeyword" resultType="lm.swith.main.model.StudyPost">
-	    SELECT sp.*, s.skill_name, s.skill_img 
+	
+	<!-- *********************************************************** Study Detail Part ************************************************************************** -->
+	
+	
+	
+	<!-- 스터디 상세 페이지 OK -->
+	<select id="getStudyPostByPostNo" resultSets="studyPost,mentor,mentee,application" resultMap="studyPostWithSkills">
+	    SELECT 
+	        sp.*,
+	        s.skill_name,
+	        s.skill_img,
+	        m.USER_NO AS mentor_user_no,
+	        m.MENTOR_STATUS,
+	        m.MAX_MENTOR_APPLICANTS,
+	        me.USER_NO AS mentee_user_no,
+	        me.MENTEE_STATUS,
+	        me.MAX_MENTEE_APPLICANTS,
+	        sa.USER_NO AS application_user_no,
+	        sa.STATUS,
+	        sa.MAX_STUDY_APPLICANTS,
+	        (
+	            SELECT COUNT(DISTINCT m.USER_NO)
+	            FROM mentor m
+	            WHERE m.POST_NO = sp.post_no AND m.MENTOR_STATUS = '승인'
+	        ) AS mentor_count,
+	        (
+	            SELECT COUNT(DISTINCT me.USER_NO)
+	            FROM mentee me
+	            WHERE me.POST_NO = sp.post_no AND me.MENTEE_STATUS = '승인'
+	        ) AS mentee_count,
+	        (
+	            SELECT COUNT(DISTINCT sa.USER_NO)
+	            FROM study_application sa
+	            WHERE sa.POST_NO = sp.post_no AND sa.STATUS = '승인'
+	        ) AS application_count,
+	       	( 
+	    	SELECT COUNT(*)
+	    	FROM likes l
+	    	WHERE post_no = sp.post_no
+	    	) AS likes_count
 	    FROM study_post sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
-	    WHERE sp.study_title LIKE '%' || #{keyword} || '%'
-	    OR sp.study_content LIKE '%' || #{keyword} || '%'
+	    LEFT JOIN mentor m ON sp.post_no = m.POST_NO
+	    LEFT JOIN mentee me ON sp.post_no = me.POST_NO
+	    LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
+	    LEFT JOIN likes l ON sp.post_no = l.post_no
+	    WHERE sp.post_no = #{post_no}
 	</select>
 	
 	
@@ -380,28 +375,62 @@
 		</if>
 	    
 	</update>
-
-
-	<!-- 스터디 삭제 -->
-	<delete id="deleteStudyPost" parameterType="Long">
-	    <!-- 첫 번째 쿼리: study_post 테이블에서 해당 post_no에 대한 스터디 정보 삭제 -->
-	    DELETE FROM study_post WHERE post_no = #{post_no} AND user_no = #{user_no} AND study_status = O; 
-	    
-	    <!-- 두 번째 쿼리: post_tech_stacks 테이블에서 해당 post_no에 대한 기술 스택 정보 삭제 -->
-	    DELETE FROM post_tech_stacks WHERE post_no = #{post_no}
-	    
-	    <!-- 세 번째 쿼리 : studyApplication 테이블에서 해당 post_no 대한 스터디 신청 정보 삭제  -->
-	    DELETE FROM study_application WHERE post_no = #{post_no}
-	    
-	    <!-- 네 번째 쿼리 : mentor 테이블에서 해당 post_no에 대한 멘토 정보 삭제 -->
-	    DELETE FROM mentor WHERE post_no = #{post_no}
-	    
-	    <!-- 다섯 번째 쿼리 : mentee 테이블에서 해당 post_no에 대한 멘티 정보 삭제 -->
-	    DELETE FROM mentee WHERE post_no = #{post_no}
-	    
-	    <!-- 여섯 번째 쿼리 : comments 테이블에서 해당 post_no에 대한 댓글 정보 삭제-->
-	    DELETE FROM comments WHERE post_no = #{post_no}
+	
+	
+	<!-- 스터디 삭제 삭제되는 순서 댓글 - study application - post tech stack - studypost -->
+	<!-- 댓글 테이블에서 해당 post_no에 대한 댓글 정보 삭제 -->
+	<delete id="deleteComments" parameterType="Long">
+		DELETE FROM COMMENTS WHERE POST_NO = #{post_no}
 	</delete>
+	<!-- 스터디 신청 현황 테이블에서 해당 post_no에 대한 스터디 신청 정보 삭제 -->
+	<delete id="deleteStudyApplication" parameterType="Long">
+		DELETE FROM STUDY_APPLICATION WHERE POST_NO = #{post_no}
+	</delete>
+	<!-- 게시글의 기술스택 테이블에서 해당 post_no에 대한 기술 스택 정보 삭제 -->
+	<delete id="deletePostTechStacks" parameterType="Long">
+		DELETE FROM POST_TECH_STACKS WHERE POST_NO = #{post_no}
+	</delete>
+	<!-- 스터디(게시글) 테이블에서 해당 post_no에 대한 스터디 정보 삭제 -->
+	<delete id="deleteStudyPost" parameterType="Long">
+		DELETE FROM STUDY_POST WHERE POST_NO = #{post_no}
+	</delete>
+	
+	
+	
+	<!-- ********************************************************* Study Application Part *********************************************************************** -->
+	
+	
+	<!-- 스터디 참가 신청 -->
+	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
+	    INSERT INTO study_application (POST_NO, USER_NO, STATUS, ) 
+	</insert>
+	
+	<!-- 스터디 참가 신청 목록 -->
+	<select id="getAllApplicantsByPostNo" resultMap="StudyApplicationResult">
+		SELECT sa.status, u.nickname
+	    FROM study_application sa
+	    LEFT JOIN users u ON sa.user_no = u.user_no
+	    WHERE sa.post_no = #{post_no} AND sa.status = '대기'
+	</select>
+	
+	<!-- 스터디 참가 승인 -->
+	<update id="acceptApplicant" parameterType="Long">
+	    UPDATE study_application SET
+	 		status = '승인'
+	 	WHERE post_no = #{post_no} AND user_no = #{user_no} AND status = '대기'
+	</update>
+	
+	<!-- 스터디 참가 거절 -->
+	<delete id="deleteApplicant" parameterType="Long">
+		DELETE FROM study_application
+		WHERE post_no = #{post_no} AND user_no = #{user_no} AND status = '대기'
+	</delete>
+
+
+
+
+
+	<!-- ********************************************************** Comments Part *********************************************************************** -->
 	
 	
 	
@@ -438,22 +467,6 @@
 	
 	
 
-	<!-- 스터디 찜 -->
-	<insert id="addLikes" parameterType="lm.swith.main.model.Likes">
-		INSERT INTO LIKES ( POST_NO, USER_NO)
-		VALUES ( #{post_no}, #{user_no} )
-	</insert>
-
-	
-	<!-- 스터디 찜 여부 확인 -->
-	<select id="isLiked" resultType="lm.swith.main.model.Likes">
-		SELECT is_liked FROM LIKES WHERE user_no = #{user_no} AND post_no = #{post_no}
-	</select>
-	
-	
-	<!-- 스터디 찜 삭제 -->
-	<delete id="deleteLikes" parameterType="lm.swith.main.model.Likes">
-		DELETE FROM LIKES WHERE post_no = #{post_no} AND user_no = #{user_no}
-	</delete>
+	<!-- ********************************************************** Users Part *********************************************************************** -->
 	
 </mapper>
