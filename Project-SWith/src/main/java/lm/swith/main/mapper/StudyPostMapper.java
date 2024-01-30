@@ -71,8 +71,14 @@ public interface StudyPostMapper {
 	// 스터디 신청
 	void addUsersByPostNo (StudyApplication studyApplication);
 	
-	// 스터디 수락
+	// 스터디 신청 목록
+	List<StudyApplication> getAllApplicantsByPostNo(Long post_no);
 	
+	// 스터디 승인
+	void acceptApplicant (@Param("post_no") Long post_no);
+	
+	// 스터디 거절
+	void deleteApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 	
 	

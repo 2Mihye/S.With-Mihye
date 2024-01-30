@@ -194,19 +194,29 @@
 	
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
-	    SELECT sa.status, u.nickname
-	    FROM study_application sa
-	    LEFT JOIN users u ON sa.user_no = u.user_no
-	    WHERE sa.post_no = #{post_no}
+	    INSERT INTO study_application (POST_NO, USER_NO, STATUS, ) 
 	</insert>
 	
-	<!-- 스터디 참가 수락 -->
-	<select id="acceptUsers" resultMap="StudyApplicationResult" parameterType="Long">
-	    SELECT sa.status, u.nickname
+	<!-- 스터디 참가 신청 목록 -->
+	<select id="getAllApplicantsByPostNo" resultMap="StudyApplicationResult">
+		SELECT sa.status, u.nickname
 	    FROM study_application sa
 	    LEFT JOIN users u ON sa.user_no = u.user_no
-	    WHERE sa.post_no = #{post_no}
+	    WHERE sa.post_no = #{post_no} AND sa.status = '대기'
 	</select>
+	
+	<!-- 스터디 참가 승인 -->
+	<update id="acceptApplicant" parameterType="Long">
+	    UPDATE study_application SET
+	 		status = '승인'
+	 	WHERE post_no = #{post_no} AND user_no = #{user_no} AND status = '대기'
+	</update>
+	
+	<!-- 스터디 참가 거절 -->
+	<delete id="deleteApplicant" parameterType="Long">
+		DELETE FROM study_application
+		WHERE post_no = #{post_no} AND user_no = #{user_no} AND status = '대기'
+	</delete>
 
 	
 

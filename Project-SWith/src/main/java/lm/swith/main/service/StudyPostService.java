@@ -97,6 +97,27 @@ public class StudyPostService {
     	studyPostMapper.addUsersByPostNo(studyApplication);
     }
     
+    // 스터디 신청 상태 업데이트 (승인/거절)
+    public void acceptApplicant(Long user_no, Long post_no, boolean accept) {
+        // study_post 테이블의 post_no와 user_no 가 일치하는 사용자가
+        // study_application 테이블에서 같은 post_no를 가지고 있는 사용자들의 목록을 확인
+        List<StudyApplication> applicantsList = studyPostMapper.getAllApplicantsByPostNo(post_no);
+
+        for (StudyApplication application : applicantsList) {
+            if (application.getUser_no().equals(user_no)) {
+                // 특정 사용자의 신청 정보가 존재함
+                if (accept) {
+                    // 승인 버튼을 누르면 '승인'으로 업데이트
+                    studyPostMapper.acceptApplicant(post_no);
+                } else {
+                    // 거절 버튼을 누르면 해당 사용자의 신청 정보를 삭제
+                    studyPostMapper.deleteApplicant(post_no, user_no);
+                }
+                break; // 찾았으면 더 이상 반복할 필요가 없으므로 break
+            }
+        }
+    }
+    
     // 스터디 찜
     public void likesUpdate(Long user_no, Long post_no) {
         Likes likes = new Likes();
