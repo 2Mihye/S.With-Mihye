@@ -90,10 +90,10 @@ public class StudyPostService {
     }
 
     
-    // 스터디 수정
-    public void updateStudyPost(StudyPost studyPost) {
-    	studyPostMapper.updateStudyPost(studyPost);
-    }
+//    // 스터디 수정
+//    public void updateStudyPost(StudyPost studyPost) {
+//    	studyPostMapper.updateStudyPost(studyPost);
+//    }
     
     // 스터디 삭제
     @Transactional

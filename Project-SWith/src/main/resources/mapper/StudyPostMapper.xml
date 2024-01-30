@@ -337,8 +337,8 @@
 	
 	
 	<!-- 스터디 수정 -->
-	<update id="updateStudyPost" parameterType="lm.swith.main.model.StudyPost">
-	    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 업데이트 -->
+	<!-- <update id="updateStudyPost" parameterType="lm.swith.main.model.StudyPost">
+	     첫 번째 쿼리: study_post 테이블에 스터디 정보 업데이트 
 	    UPDATE study_post
 	    SET
 	        USER_NO = #{user_no},
@@ -356,13 +356,13 @@
 	    WHERE POST_NO = #{post_no} AND USER_NO = #{user_no};
 	    
 	
-	    <!-- 두 번째 쿼리: 기술 스택 정보 업데이트 기존 스킬 정보를 삭제 후 다시 저장 -->
+	     두 번째 쿼리: 기술 스택 정보 업데이트 기존 스킬 정보를 삭제 후 다시 저장 
 	    DELETE FROM post_tech_stacks WHERE post_no = #{post_no};
 	    <foreach collection="skills" item="skill" separator=";">
 	        INSERT INTO post_tech_stacks (post_no, skill_no) VALUES (#{post_no}, #{skill});
 	    </foreach>
 	
-	    <!-- 세 번째 쿼리: users 테이블에서 nickname 정보 가져와서 업데이트 -->
+	     세 번째 쿼리: users 테이블에서 nickname 정보 가져와서 업데이트 
 	    UPDATE study_post sp
 	    SET sp.nickname = (SELECT nickname FROM users u WHERE u.user_no = sp.user_no)
 	    WHERE sp.post_no = #{post_no};
@@ -374,7 +374,7 @@
 		    UPDATE mentee SET USER_NO = #{user_no} WHERE POST_NO = #{post_no};
 		</if>
 	    
-	</update>
+	</update>  -->
 	
 	
 	<!-- 스터디 삭제 삭제되는 순서 댓글 - study application - post tech stack - studypost -->
@@ -402,7 +402,8 @@
 	
 	<!-- 스터디 참가 신청 -->
 	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
-	    INSERT INTO study_application (POST_NO, USER_NO, STATUS, ) 
+	    INSERT INTO study_application (POST_NO, USER_NO)
+	    VALUES (#{post_no}, #{user_no})
 	</insert>
 	
 	<!-- 스터디 참가 신청 목록 -->

@@ -188,21 +188,21 @@ public class StudyPostController {
         return "redirect:/";
     }
 	
-	// 스터디 수정 페이지 이동
-	@GetMapping("update/{post_no}")
-	public String showUpdateFrom (@PathVariable Long post_no, Model model) {
-        // 스터디 정보 및 관련 스킬 정보를 불러오는 서비스 메서드 호출
-        StudyPost studyPost = studyPostService.getStudyPostByPostNo(post_no);
-        model.addAttribute("studyPost", studyPost);
-        return "/update_study";
-	}
+//	// 스터디 수정 페이지 이동
+//	@GetMapping("update/{post_no}")
+//	public String showUpdateFrom (@PathVariable Long post_no, Model model) {
+//        // 스터디 정보 및 관련 스킬 정보를 불러오는 서비스 메서드 호출
+//        StudyPost studyPost = studyPostService.getStudyPostByPostNo(post_no);
+//        model.addAttribute("studyPost", studyPost);
+//        return "/update_study";
+//	}
 	
-	// 스터디 수정 적용
-	@PostMapping("update/{post_no}")
-	public String updateStudyPost(@ModelAttribute StudyPost studyPost) {
-		studyPostService.updateStudyPost(studyPost);
-		return "redirect:/post_detail/" + studyPost.getPost_no();
-	}
+//	// 스터디 수정 적용
+//	@PostMapping("update/{post_no}")
+//	public String updateStudyPost(@ModelAttribute StudyPost studyPost) {
+//		studyPostService.updateStudyPost(studyPost);
+//		return "redirect:/post_detail/" + studyPost.getPost_no();
+//	}
 	
 	
 	// 조건 스터디 목록    

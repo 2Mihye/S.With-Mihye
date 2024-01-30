@@ -65,7 +65,7 @@ public interface StudyPostMapper {
 	StudyPost getStudyPostByPostNo(@Param("post_no") Long post_no);
 	
 	// 스터디 수정
-	void updateStudyPost (StudyPost studyPost);
+	//void updateStudyPost (StudyPost studyPost);
 	
 	// 스터디 삭제
 	void deleteStudyPost (@Param("post_no") Long post_no);
