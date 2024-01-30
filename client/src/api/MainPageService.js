@@ -1,3 +1,4 @@
 import { apiClient } from "./ApiClient";
-
-export const RetrieveAllPostsForPostApi = () => apiClient.get(`/boards`);
+export default function RetrieveAllPostsForPostApi() {
+  apiClient.get(`/post_list`);
+}

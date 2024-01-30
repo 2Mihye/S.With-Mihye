@@ -2,14 +2,28 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/KakaoMap.css";
 import usersUserinfoAxios from "../token/tokenAxios";
+import home from "./img/home.png";
+import swithmarker from "./img/swithmarker.png";
+import { useParams, Link, useNavigate } from "react-router-dom";
+
 const KakaoMap = () => {
-  const [userData, setUserData] = useState("");
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState([]); //주소값
+  const [bplcnms, setBplcnms] = useState([]); // 여러 개의 first_study를 저장할 배열
+  const [markers, setMarkers] = useState([]); // 마커 배열 상태 추가
+  const { post_no } = useParams(); // 동적 라우트 매개변수 가져오기
+  const [postNo, setPostNo] = useState([]);
+
+  const [detailPages, setDetailPage] = useState([]);
+
+  const [comments, setComments] = useState([]);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         // 서버에 사용자 정보를 가져오는 요청
         const response = await usersUserinfoAxios.get("/users/userinfo");
-        setUserData(response.data);
+        setUserData(response.data); // 로그인한 토큰 이용해서 해당 유저 데이터 가져오는거
         console.log(userData);
       } catch (error) {
         console.error("Failed to fetch user data.", error);
@@ -18,6 +32,38 @@ const KakaoMap = () => {
 
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    const fetchFirstStudy = async () => {
+      try {
+        // 서버에 first_study 정보를 가져오는 요청
+        const response = await usersUserinfoAxios.get("/post_list");
+        setBplcnms(response.data.map((item) => item.first_study)); // first_study의 bplcnm 설정
+        setPostNo(response.data.map((item) => item.post_no));
+        console.log(response.data.map((item) => item.first_study));
+      } catch (error) {
+        console.error("Failed to fetch first study data.", error);
+      }
+    };
+
+    fetchFirstStudy();
+  }, []);
+
+  useEffect(() => {
+    const fetchStudyDetail = async () => {
+      try {
+        const response = await usersUserinfoAxios.get(
+          `/post_detail/${post_no}`
+        );
+        setDetailPage(response.data);
+        setComments(response.data.comments);
+      } catch (error) {
+        console.log("Error fetching study detail: ", error);
+      }
+    };
+
+    fetchStudyDetail();
+  }, [post_no]); // post_no가 변경될 때마다 실행
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -30,60 +76,105 @@ const KakaoMap = () => {
     script.onload = () => {
       window.kakao.maps.load(() => {
         const mapContainer = document.getElementById("map");
+
         const mapOption = {
-          center: new window.kakao.maps.LatLng(37.502, 127.026581),
+          // default
+          //맵
+          center: new window.kakao.maps.LatLng(37.5665, 126.978),
           level: 4,
         };
-        const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
-        var content =
-          '<div class="overlaybox">' +
-          '    <div class="boxtitle">금주 영화순위</div>' +
-          '    <div class="first">' +
-          '        <div class="triangle text">1</div>' +
-          '        <div class="movietitle text">드래곤 길들이기2</div>' +
-          "    </div>" +
-          "    <ul>" +
-          '        <li class="up">' +
-          '            <span class="number">2</span>' +
-          '            <span class="title">명량</span>' +
-          '            <span class="arrow up"></span>' +
-          '            <span class="count">2</span>' +
-          "        </li>" +
-          "        <li>" +
-          '            <span class="number">3</span>' +
-          '            <span class="title">해적(바다로 간 산적)</span>' +
-          '            <span class="arrow up"></span>' +
-          '            <span class="count">6</span>' +
-          "        </li>" +
-          "        <li>" +
-          '            <span class="number">4</span>' +
-          '            <span class="title">해무</span>' +
-          '            <span class="arrow up"></span>' +
-          '            <span class="count">3</span>' +
-          "        </li>" +
-          "        <li>" +
-          '            <span class="number">5</span>' +
-          '            <span class="title">안녕, 헤이즐</span>' +
-          '            <span class="arrow down"></span>' +
-          '            <span class="count">1</span>' +
-          "        </li>" +
-          "    </ul>" +
-          "</div>";
+        const map = new window.kakao.maps.Map(mapContainer, mapOption); // 지도 생성
+        const geocoder = new window.kakao.maps.services.Geocoder(); //주소- 좌표 변환 객체
 
-        const position = new window.kakao.maps.LatLng(37.49887, 127.026581);
+        // userData.useraddress 로그인한 유저의 DB에저장된 Address 부분
+        geocoder.addressSearch(userData.useraddress, (result, status) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            //정상적으로 검색이 완료 되면
+            const coords = new window.kakao.maps.LatLng(
+              result[0].y,
+              result[0].x
+            ); //좌표 받기
 
-        const customOverlay = new window.kakao.maps.CustomOverlay({
-          position: position,
-          content: content,
-          xAnchor: 0.3,
-          yAnchor: 0.91,
+            const imageSrc = home;
+            const imageSize = new window.kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+            const imageOption = {
+              offset: new window.kakao.maps.Point(27, 69),
+            }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+            const markerImage = new window.kakao.maps.MarkerImage(
+              imageSrc,
+              imageSize,
+              imageOption
+            );
+
+            // 마커를 생성합니다
+            const marker = new window.kakao.maps.Marker({
+              map: map,
+              position: coords,
+              image: markerImage, // 마커이미지 설정
+            });
+            marker.setMap(map, marker); // 홈 마커 지도에 표시
+            map.setCenter(coords); // 사용자의 집 위치를 중심으로 지도 표시
+
+            // 마커를 생성하고 post_no를 연결하는 부분
+            const cafeMarkers = bplcnms.map((bplcnm) => {
+              return new Promise((resolve) => {
+                geocoder.addressSearch(bplcnm, (result, status) => {
+                  if (status === window.kakao.maps.services.Status.OK) {
+                    const cafeCoords = new window.kakao.maps.LatLng(
+                      result[0].y,
+                      result[0].x
+                    );
+
+                    const imageSrc = swithmarker;
+                    const imageSize = new window.kakao.maps.Size(64, 64);
+                    const imageOption = {
+                      offset: new window.kakao.maps.Point(27, 69),
+                    };
+
+                    const markerImage = new window.kakao.maps.MarkerImage(
+                      imageSrc,
+                      imageSize,
+                      imageOption
+                    );
+
+                    const cafeMarker = new window.kakao.maps.Marker({
+                      map: map,
+                      position: cafeCoords,
+                      image: markerImage,
+                    });
+
+                    cafeMarker.setMap(map);
+
+                    window.kakao.maps.event.addListener(
+                      cafeMarker,
+                      "click",
+                      () => {
+                        // 클릭된 마커의 post_no를 가져오기 위해 해당 마커의 인덱스를 사용합니다.
+                        const clickedMarkerIndex = bplcnms.findIndex(
+                          (item) => item === bplcnm
+                        );
+                        const clickedPostNo = postNo[clickedMarkerIndex];
+                        navigate(`/post_detail/${clickedPostNo}`);
+                      }
+                    );
+
+                    resolve(cafeMarker);
+                  } else {
+                    resolve(null);
+                  }
+                });
+              });
+            });
+            Promise.all(cafeMarkers).then((resolvedMarkers) => {
+              setMarkers(resolvedMarkers.filter((marker) => marker !== null));
+            });
+          }
         });
-
-        customOverlay.setMap(map);
       });
     };
-  }, []);
+  }, [userData.useraddress, bplcnms]);
 
   return (
     <div className="container">

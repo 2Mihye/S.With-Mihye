@@ -436,7 +436,7 @@
 	
 	
 	<!-- 댓글 등록 -->
-	<insert id="addCommentWithNickname" parameterType="lm.swith.main.model.Comments">
+	<insert id="insertComment" parameterType="lm.swith.main.model.Comments">
         INSERT INTO COMMENTS (COMMENT_NO, USER_NO, POST_NO, COMMENT_CONTENT, NICKNAME, COMMENT_POST_TIME)
         VALUES COMMENTS_NO_SEQ.NEXTVAL, #{USER_NO}, #{post_no}, #{comment_content}, (SELECT NICKNAME FROM USERS WHERE USER_NO = #{user_no}), #{comment_post_time}
     </insert>

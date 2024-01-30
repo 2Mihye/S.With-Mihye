@@ -255,6 +255,7 @@
   grid-gap: 10px;
   gap: 10px;
   margin-top: 10px;
+  padding: 10px;
   margin-bottom: 10px;
 }
 
@@ -311,9 +312,13 @@
   gap: 10px;
 }
 
-.skillToggle:hover {
+.skillToggle:hover,
+.seoulToggle:hover,
+.recuritToggle:hover {
   background-color: #ffffb5;
   cursor: pointer;
+  transform: scale(1.1); /* 10% 확대 */
+  transition: transform 0.3s ease; /* 변화에 대한 transition 효과 적용 */
 }
 
 .seoulToggle:hover {
@@ -396,4 +401,11 @@
 .delete_img {
   width: 20px;
   height: 20px;
+}
+
+.arraySpan {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 10px; /* 최대 길이를 지정할 수 있습니다. */
 }

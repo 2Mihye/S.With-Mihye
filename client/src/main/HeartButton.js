@@ -9,7 +9,7 @@ const HeartButton = ({ like, onClick }) => {
       src={like ? HeartImg : EmptyHeartImg}
       onClick={onClick}
       alt="Heart"
-      style={{ width: "25px", height: "25px", marginLeft: "130px" }}
+      style={{ width: "25px", height: "25px", marginLeft: "140px" }}
     />
   );
 };

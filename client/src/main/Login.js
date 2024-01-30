@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../security/AuthContext";
 import Header from "./Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/LoginTest.css";
@@ -8,9 +7,8 @@ import LoginAxios from "../token/tokenAxios";
 
 function Login() {
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-
+  const [userData, setUserData] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -24,17 +22,50 @@ function Login() {
 
       localStorage.setItem("token", token);
       console.log("Login successful. Token:", token);
+      checkLoginStatus();
       navigate("/"); // 이동 경로 수정
     } catch (error) {
-      console.error("Login failed.", error.response.data.error);
+      if (error.response && error.response.status === 401) {
+        // 401 Unauthorized 에러가 발생한 경우에 대한 처리
+
+        // 또는 에러 메시지를 사용자에게 표시할 수 있습니다.
+        // setUserMessage("로그인 실패: 유저가 인증되지 않았습니다.");
+      } else {
+        // 다른 에러에 대한 처리
+  
+      }
+    }
+  };
+  const checkLoginStatus = async () => {
+    try {
+      // 서버에 현재 인증된 사용자의 정보를 가져오는 요청을 보냅니다.
+      const response = await LoginAxios.get('/userinfo');
+  
+      // 서버에서 반환된 사용자 정보를 가져옵니다.
+      const user = response.data;
+  
+      // 사용자 정보를 상태로 업데이트합니다.
+      setUserData(user);
+  
+      console.log('User info retrieved successfully:', user);
+    } catch (error) {
+      // 서버에서 현재 인증된 사용자의 정보를 가져오는 데 실패한 경우에 대한 처리
+      if (error.response && error.response.status === 401) {
+
+        // 또는 에러 메시지를 사용자에게 표시할 수 있습니다.
+        // setUserMessage("로그인 실패: 유저가 인증되지 않았습니다.");
+      } else {
+        // 다른 에러에 대한 처리
+
+      }
     }
   };
 
   return (
     <div>
       <Header />
-      <div class="wrap">
-        <div class="login">
+      <div className="wrap">
+        <div className="login">
           <form
             className="LoginForm"
             style={{
@@ -47,7 +78,7 @@ function Login() {
             <h1 className="title">로그인 후 S.With을 이용해보세요.</h1>
             <br />
 
-            <div class="login_id">
+            <div className="login_id">
               <h4 className="s_text">Email</h4>
               <label className=""></label>
               <input
@@ -58,7 +89,8 @@ function Login() {
                 placeholder="이메일을 입력하세요"
               />
             </div>
-            <div class="login_pw">
+
+            <div className="login_pw">
               <h4 className="s_text">Password</h4>
               <label className=""></label>
               <input
