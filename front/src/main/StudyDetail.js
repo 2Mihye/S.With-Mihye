@@ -10,7 +10,7 @@ function StudyDetail() {
   const { post_no } = useParams(); // 동적 라우트 매개변수 가져오기
 
   const [detailPages, setDetailPage] = useState([]);
-  const [swithUser, setSwithUser] = useState("");
+  const [swithUser, setSwithUser] = useState('');
   useEffect(() => {
     const fetchStudyDetail = async () => {
       try {
@@ -38,9 +38,10 @@ function StudyDetail() {
             `/users/info/${detailPages.user_no}`
           );
           setSwithUser(response.data);
-        } catch (error) {}
+        } catch (error) {
+        }
       };
-
+  
       fetchStudyDetailUserNo();
     }
   }, [detailPages]);
@@ -131,14 +132,6 @@ function StudyDetail() {
                   {detailPages.study_location}
                 </span>
               </li>
-              {detailPages.study_method === "온라인" ? null : (
-                <li className="studyContent_contentWrapper">
-                  <span className="studyInfo_title">첫모임장소</span>
-                  <span className="studyInfo_title_a">
-                    {detailPages.first_study}
-                  </span>
-                </li>
-              )}
               <li className="studyContent_contentWrapper">
                 <span className="studyInfo_title">기술스택</span>
                 <span className="studyInfo_title_a">

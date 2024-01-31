@@ -119,7 +119,7 @@
 	<!-- 조건 sort 해서 검색 -->
 	<select id="getStudiesBySelect" parameterType="java.util.Map" resultType="lm.swith.main.model.StudyPost">
 	    SELECT DISTINCT * FROM (
-	        SELECT sp.*, s.skill_name, s.skill_img
+	        SELECT sp.*, s.skill_name, s.skill_img, s.skill_no
 	        FROM study_post sp
 	        JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	        LEFT JOIN skill s ON pts.skill_no = s.skill_no
@@ -438,8 +438,10 @@
 	
 	<!-- 댓글 등록 -->
 	<insert id="insertComment" parameterType="lm.swith.main.model.Comments">
-        INSERT INTO COMMENTS (COMMENT_NO, USER_NO, POST_NO, COMMENT_CONTENT, NICKNAME, COMMENT_POST_TIME)
-        VALUES COMMENTS_NO_SEQ.NEXTVAL, #{USER_NO}, #{post_no}, #{comment_content}, (SELECT NICKNAME FROM USERS WHERE USER_NO = #{user_no}), #{comment_post_time}
+        INSERT INTO COMMENTS (COMMENT_NO, USER_NO, POST_NO, COMMENT_CONTENT, NICKNAME, USER_PROFILE)
+        VALUES (COMMENTS_NO_SEQ.NEXTVAL, #{USER_NO}, #{post_no}, #{comment_content},
+        (SELECT NICKNAME FROM USERS WHERE USER_NO = #{user_no}),
+        (SELECT USER_PROFILE FROM USERS WHERE USER_NO = #{user_no}))
     </insert>
 
 

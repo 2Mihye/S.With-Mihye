@@ -30,6 +30,7 @@ public class StudyPost {
     private int mentee_count; // mentee에서 status가 '승인'인 user count
     private int application_count; // study_application에서 status가 '승인'인 user count
     private int likes_count; // likes count
+    private int skill_no;
     private String skill_name; // join 했을 때 skill 이름 받을 곳
     private String skill_img; // join 했을 때 skill img 받을 곳
 	

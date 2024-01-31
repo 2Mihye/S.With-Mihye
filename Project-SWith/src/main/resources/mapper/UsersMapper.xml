@@ -4,16 +4,16 @@
 <mapper namespace="lm.swith.user.mapper.UsersMapper">
 	<!-- 회원등록 -->
 	<insert id ="insertUser" parameterType="lm.swith.user.model.SwithUser">
-		INSERT INTO USERS (EMAIL, PASSWORD, USERNAME, NICKNAME, USER_PROFILE, USERADDRESS, USER_INTRODUCTION)
-		VALUES(#{email}, #{password}, #{username}, #{nickname}, #{user_profile}, #{useraddress}, #{user_introduction})
+		INSERT INTO USERS (EMAIL, PASSWORD, USERNAME, NICKNAME, USER_PROFILE, USERADDRESS, USER_INTRODUCTION, USER_ROLE)
+		VALUES(#{email}, #{password}, #{username}, #{nickname}, #{user_profile}, #{useraddress}, #{user_introduction}, #{role})
 	</insert>
 	
-	<select id="findByUserNo" parameterType="lm.swith.user.model.SwithUser">
-		SELECT * FROM Users WHERE USER_NO = #{user_no}
-	</select>
 	
 	<select id="findByEmail" parameterType="lm.swith.user.model.SwithUser">
         SELECT * FROM Users WHERE EMAIL = #{email}
+    </select>
+    <select id="findByNickname" parameterType="lm.swith.user.model.SwithUser">
+        SELECT * FROM Users WHERE NICKNAME = #{nickname}
     </select>
     
 	
@@ -28,6 +28,34 @@
 	<select id = "findUsersAll" parameterType="lm.swith.user.model.SwithUser">
 		SELECT * FROM Users
 	</select>
+	 
+	 <!-- 원정연 파트
+	 <update id="updateIntroduction" parameterType="lm.swith.user.model.SwithUser">
+         UPDATE users
+            SET user_introduction = #{user_introduction}
+            WHERE email = #{email}
+    </update> -->
+	
+	<!--update userinfo-->
+	<update id = "updateUser" parameterType="lm.swith.user.model.SwithUser">
+		UPDATE USERS SET NICKNAME = #{nickname}, USERADDRESS = #{useraddress}, USER_INTRODUCTION = #{user_introduction} WHERE email = #{email}
+	</update>
+	
+	<!--update user profile-->
+	<update id = "updateUserProfile" parameterType="lm.swith.user.model.SwithUser">
+		UPDATE USERS SET USER_PROFILE=#{user_profile}  WHERE email = #{email}
+	</update>
+	
+	<!--update user password-->
+	<update id = "updatePassword" parameterType="lm.swith.user.model.SwithUser">
+		UPDATE USERS SET PASSWORD = #{password} WHERE email = #{email}
+	</update>
+	
+	<!-- delete user -->
+	<delete id = "deleteUser" parameterType="lm.swith.user.model.SwithUser">
+		DELETE FROM USERS WHERE EMAIL = #{email}
+	</delete>
+	
 	
 	
 </mapper>

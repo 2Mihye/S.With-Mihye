@@ -1,17 +1,17 @@
 // lemon.js
 //npm i oracledb
-//node lemon.js
-const fs = require("fs");
-const oracledb = require("oracledb");
+//node Cafe.js
+const fs = require('fs');
+const oracledb = require('oracledb');
 
 // 정보 수정해서 넣기
 const dbConfig = {
-  user: "tmddo",
-  password: "tmddo",
-  connectString: "localhost:1521/XE",
+  user: 'swith',
+  password: 'swith',
+  connectString: 'localhost:1521/XE',
 };
 
-const jsonData = fs.readFileSync("lemon.json");
+const jsonData = fs.readFileSync('lemon.json');
 const data = JSON.parse(jsonData);
 
 async function tableExists(connection, tableName) {
@@ -29,7 +29,7 @@ async function insertDataIntoOracle() {
   try {
     connection = await oracledb.getConnection(dbConfig);
 
-    const tableExistsFlag = await tableExists(connection, "cafes");
+    const tableExistsFlag = await tableExists(connection, 'cafes');
 
     if (!tableExistsFlag) {
       const createTableQuery = `
@@ -41,37 +41,37 @@ async function insertDataIntoOracle() {
         )`;
 
       await connection.execute(createTableQuery);
-      console.log("테이블 생성!");
+      console.log('테이블 생성!');
     } else {
-      console.log("테이블 존재");
+      console.log('테이블 존재');
     }
 
     for (const record of data.DATA) {
       const keywords = [
-        "까페",
-        "카페",
-        "커피",
-        "coffee",
-        "스타벅스",
-        "이디야",
-        "파스쿠찌",
-        "매머드",
-        "커피베이",
-        "메가",
-        "디저트",
-        "컴포즈",
-        "커피빈",
-        "텐퍼센트",
-        "banapresso",
-        "바나프레소",
-        "투썸",
-        "빽다방",
-        "폴바셋",
-        "PAUL",
-        "엔제리너스",
-        "angel",
-        "할리스",
-        "HOLLY",
+        '까페',
+        '카페',
+        '커피',
+        'coffee',
+        '스타벅스',
+        '이디야',
+        '파스쿠찌',
+        '매머드',
+        '커피베이',
+        '메가',
+        '디저트',
+        '컴포즈',
+        '커피빈',
+        '텐퍼센트',
+        'banapresso',
+        '바나프레소',
+        '투썸',
+        '빽다방',
+        '폴바셋',
+        'PAUL',
+        '엔제리너스',
+        'angel',
+        '할리스',
+        'HOLLY',
       ];
       //BPLCNM에 위 키워드가 포함된 내용만 넣기
       if (keywords.some((keyword) => record.bplcnm.includes(keyword))) {
@@ -90,13 +90,13 @@ async function insertDataIntoOracle() {
         const result = await connection.execute(insertQuery, bindParams, {
           autoCommit: true,
         });
-        console.log("데이터 삽입 완료:", result);
+        console.log('데이터 삽입 완료:', result);
       }
     }
 
-    console.log("모든 데이터 삽입이 완료되었습니다.");
+    console.log('모든 데이터 삽입이 완료되었습니다.');
   } catch (error) {
-    console.error("오류 발생:", error);
+    console.error('오류 발생:', error);
   } finally {
     if (connection) {
       await connection.close();

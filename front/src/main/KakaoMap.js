@@ -4,10 +4,9 @@ import "../css/KakaoMap.css";
 import usersUserinfoAxios from "../token/tokenAxios";
 import home from "./img/home.png";
 import swithmarker from "./img/swithmarker.png";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const KakaoMap = () => {
-  const navigate = useNavigate();
   const [userData, setUserData] = useState([]); //주소값
   const [bplcnms, setBplcnms] = useState([]); // 여러 개의 first_study를 저장할 배열
   const [markers, setMarkers] = useState([]); // 마커 배열 상태 추가
@@ -57,6 +56,7 @@ const KakaoMap = () => {
         );
         setDetailPage(response.data);
         setComments(response.data.comments);
+        setPostNo(response.data.post_no);
       } catch (error) {
         console.log("Error fetching study detail: ", error);
       }
@@ -117,64 +117,79 @@ const KakaoMap = () => {
             marker.setMap(map, marker); // 홈 마커 지도에 표시
             map.setCenter(coords); // 사용자의 집 위치를 중심으로 지도 표시
 
-            // 마커를 생성하고 post_no를 연결하는 부분
-            const cafeMarkers = bplcnms.map((bplcnm) => {
-              return new Promise((resolve) => {
-                geocoder.addressSearch(bplcnm, (result, status) => {
-                  if (status === window.kakao.maps.services.Status.OK) {
-                    const cafeCoords = new window.kakao.maps.LatLng(
-                      result[0].y,
-                      result[0].x
-                    );
+            const fetchMarkers = async () => {
+              try {
+                const cafeMarkers = await Promise.all(
+                  detailPages.map(async (item) => {
+                    return new Promise((resolve) => {
+                      geocoder.addressSearch(
+                        item.first_study,
+                        (result, status) => {
+                          if (status === window.kakao.maps.services.Status.OK) {
+                            const cafeCoords = new window.kakao.maps.LatLng(
+                              result[0].y,
+                              result[0].x
+                            );
 
-                    const imageSrc = swithmarker;
-                    const imageSize = new window.kakao.maps.Size(64, 64);
-                    const imageOption = {
-                      offset: new window.kakao.maps.Point(27, 69),
-                    };
+                            console.log("Marker Position:", cafeCoords);
 
-                    const markerImage = new window.kakao.maps.MarkerImage(
-                      imageSrc,
-                      imageSize,
-                      imageOption
-                    );
+                            const swithMarkerImage =
+                              new window.kakao.maps.MarkerImage(
+                                swithmarker,
+                                new window.kakao.maps.Size(64, 64),
+                                {
+                                  offset: new window.kakao.maps.Point(27, 69),
+                                }
+                              );
 
-                    const cafeMarker = new window.kakao.maps.Marker({
-                      map: map,
-                      position: cafeCoords,
-                      image: markerImage,
+                            const cafeMarker = new window.kakao.maps.Marker({
+                              map: map,
+                              position: cafeCoords,
+                              image: swithMarkerImage,
+                            });
+
+                            console.log("Marker Created:", cafeMarker);
+
+                            // Use a function to capture the value of item.post_no
+                            const handleClick = (postNo) => {
+                              return () => {
+                                const url = `/post_detail/${postNo}`;
+                                window.location.href = url;
+                              };
+                            };
+
+                            // Add click event with the captured item.post_no
+                            window.kakao.maps.event.addListener(
+                              cafeMarker,
+                              "click",
+                              handleClick(item.post_no)
+                            );
+
+                            resolve(cafeMarker);
+                          } else {
+                            console.error("Geocoding failed:", status);
+                            resolve(null);
+                          }
+                        }
+                      );
                     });
+                  })
+                );
 
-                    cafeMarker.setMap(map);
+                console.log("All Markers:", cafeMarkers);
 
-                    window.kakao.maps.event.addListener(
-                      cafeMarker,
-                      "click",
-                      () => {
-                        // 클릭된 마커의 post_no를 가져오기 위해 해당 마커의 인덱스를 사용합니다.
-                        const clickedMarkerIndex = bplcnms.findIndex(
-                          (item) => item === bplcnm
-                        );
-                        const clickedPostNo = postNo[clickedMarkerIndex];
-                        navigate(`/post_detail/${clickedPostNo}`);
-                      }
-                    );
+                setMarkers(cafeMarkers.filter((marker) => marker !== null));
+              } catch (error) {
+                console.error("Error fetching cafe markers: ", error);
+              }
+            };
 
-                    resolve(cafeMarker);
-                  } else {
-                    resolve(null);
-                  }
-                });
-              });
-            });
-            Promise.all(cafeMarkers).then((resolvedMarkers) => {
-              setMarkers(resolvedMarkers.filter((marker) => marker !== null));
-            });
+            fetchMarkers();
           }
         });
       });
     };
-  }, [userData.useraddress, bplcnms]);
+  }, [userData.useraddress, bplcnms, post_no]);
 
   return (
     <div className="container">

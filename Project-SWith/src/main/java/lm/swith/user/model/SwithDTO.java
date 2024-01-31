@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+//token 
 @Getter 
 @Setter
 @Builder
@@ -21,4 +21,5 @@ public class SwithDTO {
 	private String useraddress;
 	private String nickname;
 	private Long user_no;
+	
 }

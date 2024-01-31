@@ -293,23 +293,19 @@ const StudyProject = ({ handleDataFromChild }) => {
               onChange={(e) => setRegion(e.target.value)}
               onBlur={handleDataChange}
             >
-              <option value="강남/역삼/삼성">강남/역삼/삼성</option>
-              <option value="신사/청담/압구정">신사/청담/압구정</option>
-              <option value="서초/교대/사당">서초/교대/사당</option>
-              <option value="잠실/송파/강동">잠실/송파/강동</option>
-              <option value="을지로/명동/중구/동대문">
-                을지로/명동/중구/동대문
-              </option>
-              <option value="서울역/이태원/용산">서울역/이태원/용산</option>
-              <option value="종로/인사동">종로/인사동</option>
-              <option value="홍대/합정/마포/서대문">
-                홍대/합정/마포/서대문
-              </option>
-              <option value="여의도">여의도</option>
-              <option value="구로/신도림/금천">구로/신도림/금천</option>
-              <option value="건대입구/성수/왕십리">건대입구/성수/왕십리</option>
-              <option value="성북/강북/노원/도봉">성북/강북/노원/도봉</option>
-              <option value="기타">기타</option>
+              <option value="Gangnam">강남/역삼/삼성</option>
+              <option value="Sinsa">신사/청담/압구정</option>
+              <option value="Seocho">서초/교대/사당</option>
+              <option value="Jamsil">잠실/송파/강동</option>
+              <option value="Euljiro">을지로/명동/중구/동대문</option>
+              <option value="SeoulStation">서울역/이태원/용산</option>
+              <option value="Jonro">종로/인사동</option>
+              <option value="Hongdae">홍대/합정/마포/서대문</option>
+              <option value="Yeouido">여의도</option>
+              <option value="Guro">구로/신도림/금천</option>
+              <option value="KonkukUniversity">건대입구/성수/왕십리</option>
+              <option value="Seongbuk">성북/강북/노원/도봉</option>
+              <option value="Etc">기타</option>
             </select>
           </label>
           {selectedItem2 === "오프라인" || selectedItem2 === "온/오프병행" ? (

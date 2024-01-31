@@ -32,11 +32,11 @@ public class UserService {
 
 	public SwithUser signUpUser(SwithUser swithUser) { //save the register user  
 		SwithUser user = new SwithUser();
-		
 		user.setEmail(swithUser.getEmail());
 		user.setPassword(passwordEncoder.encode(swithUser.getPassword()));
 		user.setUsername(swithUser.getUsername());
 		user.setNickname(swithUser.getNickname());
+		user.setUser_profile(swithUser.getUser_profile());
 		user.setUseraddress(swithUser.getUseraddress());
 		user.setUser_introduction(swithUser.getUser_introduction());
 		user.setRole(swithUser.getRole());
@@ -60,8 +60,7 @@ public class UserService {
 	public SwithUser getByCredentials(final String email, final String password) {
 		return usersMapper.findByEmailAndPassword(email, password);
 	}
-
-
+	
 	public SwithUser getByCredentials(final String email, final String password, final PasswordEncoder encoder) {
 		final SwithUser originalUser = usersMapper.findByEmail(email);
 		// matches 메서드를 이용해 패스워드가 같은지 확인
@@ -74,7 +73,37 @@ public class UserService {
 	public SwithUser getUserByEmail(String email) {
         return usersMapper.findByEmail(email);
     }
-
+	public SwithUser getUserByNickname(String nickname) {
+        return usersMapper.findByNickname(nickname);
+    }
+	//원정연 파트 (update)
+	//public void updateIntroduction(String email, String newIntroduction) {
+        //usersMapper.updateIntroduction(email, newIntroduction);
+    //}
 	
+	//update user profile
+	public void updateUserProfile(SwithUser swithUser) {
+		usersMapper.updateUserProfile(swithUser);
+	}
+	
+	//update user info
+	public void updateUser(SwithUser swithUser) {
+		usersMapper.updateUser(swithUser);
+	}
 
+	//update user password
+	public void updatePassword(SwithUser swithUser) {
+		swithUser.setPassword(passwordEncoder.encode(swithUser.getPassword()));
+		usersMapper.updatePassword(swithUser);
+	}
+	
+	//delete user by Email
+	public void deleteUser(SwithUser swithUser) {
+		usersMapper.deleteUser(swithUser);
+	}
+	
+	// select user_no
+	public SwithUser findByUserNo(Long user_no) {
+		return usersMapper.findByUserNo(user_no);
+	}
 }
