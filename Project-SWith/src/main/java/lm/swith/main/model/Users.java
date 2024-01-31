@@ -9,8 +9,8 @@ public class Users {
 	private String nickname;
 	private String password;
 	private String username;
-	private String user_profile;
+	private byte[] user_profile;
 	private String useraddress;
 	private String user_introduction;
-	private String user_role; 
+	private String user_role;
 }

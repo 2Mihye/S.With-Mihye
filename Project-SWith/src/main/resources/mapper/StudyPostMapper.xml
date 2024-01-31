@@ -47,12 +47,14 @@
     </resultMap>
     
 	<resultMap  type="lm.swith.main.model.Comments" id="commentWithUser">
-	    <result property="comment_no" column="COMMENT_NO"/>
+	    <id property="comment_no" column="COMMENT_NO"/>
 	    <result property="post_no" column="POST_NO"/>
 	    <result property="user_no" column="USER_NO"/>
 	    <result property="comment_content" column="COMMENT_CONTENT"/>
+	  	<result property="nickname" column="NICKNAME"/>
+	    <result property="user_profile" column="USER_PROFILE" />
 	    <result property="comment_post_time" column="COMMENT_POST_TIME"/>
-	    <result property="nickname" column="NICKNAME"/>
+	    <association property="user" resultMap="UsersResult"/>
 	</resultMap>
 	
 	<resultMap type="lm.swith.main.model.Users" id="userResult">
@@ -155,13 +157,13 @@
 	
 	
 	
-	<!-- 스터디 등록 -->
+	<!-- 스터디 등록
 	<insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
 	    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
 	        SELECT STUDY_POST_SEQ.NEXTVAL FROM DUAL
 	    </selectKey>
 	
-	    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 삽입 -->
+	    첫 번째 쿼리: study_post 테이블에 스터디 정보 삽입
 	    INSERT INTO study_post (
 	        POST_NO, USER_NO, NICKNAME, STUDY_TITLE, STUDY_CONTENT,
 	        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD,
@@ -175,13 +177,13 @@
 	        #{study_likes}, #{study_location}, #{first_study}
 	    )
 	
-	    <!-- 두 번째 쿼리: post_tech_stacks 테이블에 기술 스택 정보 삽입 -->
+	    두 번째 쿼리: post_tech_stacks 테이블에 기술 스택 정보 삽입
 	    <foreach collection="skills" item="skill" separator=";">
 	        INSERT INTO post_tech_stacks (post_no, skill_no)
 	        VALUES (#{post_no}, #{skill_no})
 	    </foreach>
 	
-	    <!-- 세 번째 쿼리: study_application 테이블에 정보 삽입 -->
+	    세 번째 쿼리: study_application 테이블에 정보 삽입
 	    <choose>
 	        <when test="recruit_type == '멘토/멘티'">
 	            INSERT INTO mentor (MENTOR_NO, POST_NO, MAX_MENTOR_APPLICANTS)
@@ -205,6 +207,51 @@
 	            )
 	        </otherwise>
 	    </choose>
+	</insert> -->
+	
+	
+	
+	<!-- 스터디 등록 -->
+	<!-- 스터디 정보 insert -->
+	<insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
+	    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
+	        SELECT STUDY_POST_SEQ.NEXTVAL FROM DUAL
+	    </selectKey>
+	    <!-- 첫 번째 쿼리: study_post 테이블에 스터디 정보 삽입 -->
+	    INSERT INTO study_post (
+	        POST_NO, USER_NO, NICKNAME, STUDY_TITLE, STUDY_CONTENT, RECRUIT_DEADLINE,
+	        STUDY_METHOD, RECRUIT_TYPE, STUDY_PERIOD, 
+	        STUDY_LOCATION, FIRST_STUDY, STUDY_START
+	    ) VALUES (
+	        #{post_no}, #{user_no}, (SELECT NICKNAME FROM USERS WHERE USER_NO = #{user_no}),
+	        #{study_title}, #{study_content}, #{recruit_deadline},
+	        #{study_method}, #{recruit_type}, #{study_period},
+	         #{study_location}, #{first_study}, #{study_start}
+	    )
+	</insert>
+
+    
+
+    <!-- skill 정보 insert -->
+	<insert id="insertSkill" parameterType="lm.swith.main.model.Skill">
+	    INSERT INTO skill (skill_no, skill_name)
+	    VALUES (#{skill_no}, #{skill_name})
+	</insert>
+
+
+
+	<!-- application 정보 insert -->
+    <insert id="insertStudyApplication" parameterType="lm.swith.main.model.StudyApplication" >
+    	 INSERT INTO STUDY_APPLICATION  (
+                POST_NO, USER_NO
+            ) VALUES (
+                #{post_no}, #{user_no}
+            )
+    </insert>
+	
+	<!-- 기술 스택 정보 insert -->
+	<insert id="insertPostTechStacks" parameterType="lm.swith.main.model.PostTechStacks">
+	    INSERT INTO POST_TECH_STACKS (POST_NO, SKILL_NO) VALUES (#{post_no}, #{skill_no})
 	</insert>
 	
 	
@@ -280,6 +327,7 @@
 		LEFT JOIN skill s ON pts.skill_no = s.skill_no
 		LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
 		WHERE sa.user_no = #{user_no} AND sa.status = '승인'
+		ORDER BY sp.study_start DESC
 	</select>
 	
 	
@@ -475,8 +523,10 @@
 
 	<!-- 유저 프로필 확인 -->
 	<select id="getUserByUserNo" resultMap="UsersResult">
-		SELECT * FROM USERS
+		SELECT nickname, user_profile, user_introduction FROM USERS
 		WHERE USER_NO = #{user_no}
 	</select>
+	
+	<!-- 유저가 참여했던 스터디 목록은 mypage의 getAllStudiesWithUserNo 사용 -->
 	
 </mapper>

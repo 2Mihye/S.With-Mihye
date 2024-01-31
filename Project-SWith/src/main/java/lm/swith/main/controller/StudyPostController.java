@@ -19,6 +19,7 @@ import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
+import lm.swith.main.model.Users;
 import lm.swith.main.service.StudyPostService;
 
 @RestController
@@ -105,6 +106,13 @@ public class StudyPostController {
     public String addComment(@ModelAttribute Comments comments) {
         studyPostService.insertComment(comments);
         return "redirect:/post_detail/" + comments.getPost_no();
+    }
+    
+    // 댓글 목록
+    @GetMapping("/comments_list/{post_no}")
+    public ResponseEntity<List<Comments>> getCommentsByPostNo(@PathVariable Long post_no) {
+    	List<Comments> comments = studyPostService.getCommentsByPostNo(post_no);
+    	return ResponseEntity.ok(comments);
     }
     
     // 댓글 삭제
@@ -226,6 +234,9 @@ public class StudyPostController {
     
     
     // 유저 프로필
-//    @GetMapping("/userProfile/{user_no}")
-//    public 
+    @GetMapping("/userProfile/{user_no}")
+    public ResponseEntity<Users> getUserByUserNo (@PathVariable Long user_no) {
+    	Users user = studyPostService.getUserByUserNo(user_no);
+    	return ResponseEntity.ok(user);
+    }
 }

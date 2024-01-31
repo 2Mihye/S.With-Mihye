@@ -11,6 +11,7 @@ import lm.swith.main.mapper.StudyPostMapper;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
+import lm.swith.main.model.PostTechStacks;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 import lm.swith.main.model.Users;
@@ -27,9 +28,36 @@ public class StudyPostService {
     
 	// Main Part
     // 스터디 등록하기
-	public void insertStudyPost (StudyPost studyPost) {
-		studyPostMapper.insertStudyPost(studyPost);
-	}
+    @Transactional
+    public void insertStudyPost(StudyPost studyPost) {
+        try {
+            // StudyPost 삽입
+            studyPostMapper.insertStudyPost(studyPost);
+
+            // PostTechStacks 삽입
+            System.out.println("Original skill_no list: " + studyPost.getSkill_no());
+            List<Long> postTechStacksList = studyPost.getSkills();
+            System.out.println("postTechStacksList size: " + postTechStacksList.size());
+            for (Long skill_no : postTechStacksList) {
+                System.out.println("Current skill_no: " + skill_no);
+                PostTechStacks postTechStacks = new PostTechStacks();
+                postTechStacks.setPost_no(studyPost.getPost_no());
+                postTechStacks.setSkill_no(skill_no);
+                System.out.println("PostTechStacks skill_no: " + postTechStacks.getSkill_no());
+                // PostTechStacks를 삽입
+                studyPostMapper.insertPostTechStacks(postTechStacks);
+            }
+
+            // StudyApplication 삽입
+            StudyApplication studyApplication = new StudyApplication();
+            studyApplication.setPost_no(studyPost.getPost_no());
+            studyApplication.setUser_no(studyPost.getUser_no());
+            studyPostMapper.insertStudyApplication(studyApplication);
+        } catch (Exception e) {
+            // 롤백 여부 확인을 위해 예외 발생
+            throw new RuntimeException("Transaction rolled back", e);
+        }
+    }
 	
 	// 스터디 게시글 작성 내 첫모임 장소 카페 리스트
     public List<Cafes> getAllCafes(String bplcnm, String sitewhladdr, String x, String y) {
@@ -160,7 +188,7 @@ public class StudyPostService {
     	studyPostMapper.insertComment(comments);
     }
     
-    // 댓글 불러오기
+    // 댓글 목록
     public List<Comments> getCommentsByPostNo(Long post_no) {
     	return studyPostMapper.getCommentsByPostNo(post_no);
     }

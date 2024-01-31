@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Param;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
+import lm.swith.main.model.PostTechStacks;
+import lm.swith.main.model.Skill;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 import lm.swith.main.model.Users;
@@ -26,7 +28,11 @@ public interface StudyPostMapper {
 	List<StudyPost> getStudiesByKeyword(String keyword);
 	
 	// 스터디 등록
-	void insertStudyPost (StudyPost studyPost);
+    void insertStudyPost(StudyPost studyPost);
+    void insertPostTechStacks(PostTechStacks postTechStacks);
+    
+    void insertSkill(List<Skill> skill);
+    void insertStudyApplication(StudyApplication studyApplication);
 	
 	// 카페 목록
 	List<Cafes> getAllCafes(String bplcnm, String sitewhladdr, String x, String y);
