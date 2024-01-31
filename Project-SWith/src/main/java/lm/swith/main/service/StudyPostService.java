@@ -158,7 +158,15 @@ public class StudyPostService {
         }
     }
     
-    // 스터디 찜
+    
+    // 스터디 찜 목록
+    public List<Likes> isLiked(Long post_no, Long user_no) {
+        return studyPostMapper.isLiked(post_no, user_no);
+    }
+    
+    
+    
+    // 스터디 찜 업데이트
     public void likesUpdate(Long user_no, Long post_no) {
         Likes likes = new Likes();
         likes.setUser_no(user_no);

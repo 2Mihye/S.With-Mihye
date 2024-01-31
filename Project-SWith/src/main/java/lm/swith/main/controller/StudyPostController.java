@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
+import lm.swith.main.model.Likes;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 import lm.swith.main.model.Users;
@@ -52,8 +53,16 @@ public class StudyPostController {
     }
 
     @GetMapping("/likesUpdate")
-    public String likesUpdateGet() {   
-        return "redirect:/post_list";
+    public ResponseEntity<Boolean> isLiked(
+            @RequestParam("user_no") Long user_no,
+            @RequestParam("post_no") Long post_no) {
+        
+        List<Likes> likesList = studyPostService.isLiked(post_no, user_no);
+
+        // 해당 post_no와 user_no에 대한 레코드가 존재하는지 여부 확인
+        boolean isLiked = !likesList.isEmpty();
+
+        return ResponseEntity.ok(isLiked);
     }
     
 
