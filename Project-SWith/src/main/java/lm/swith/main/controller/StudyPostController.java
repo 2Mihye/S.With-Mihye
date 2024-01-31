@@ -46,9 +46,14 @@ public class StudyPostController {
     
     // 찜하기
     @PostMapping("/likesUpdate")
-    public String likesUpdate(@RequestParam("user_no") Long user_no, @RequestParam("post_no") Long post_no) {
-    	studyPostService.likesUpdate(user_no, post_no);
-    	return "redirect:/post_list";
+    public String likesUpdate( @RequestParam("user_no") Long user_no, @RequestParam("post_no") Long post_no) {
+        studyPostService.likesUpdate(user_no, post_no);
+        return "redirect:/post_list";
+    }
+
+    @GetMapping("/likesUpdate")
+    public String likesUpdateGet() {   
+        return "redirect:/post_list";
     }
     
 

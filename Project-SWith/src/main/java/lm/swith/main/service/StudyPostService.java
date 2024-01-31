@@ -35,7 +35,7 @@ public class StudyPostService {
             studyPostMapper.insertStudyPost(studyPost);
 
             // PostTechStacks 삽입
-            System.out.println("Original skill_no list: " + studyPost.getSkill_no());
+            System.out.println("Original skill_no list: " + studyPost.getSkills());
             List<Long> postTechStacksList = studyPost.getSkills();
             System.out.println("postTechStacksList size: " + postTechStacksList.size());
             for (Long skill_no : postTechStacksList) {

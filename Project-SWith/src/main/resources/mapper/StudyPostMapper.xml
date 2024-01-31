@@ -486,16 +486,14 @@
 	
 	<!-- 댓글 등록 -->
 	<insert id="insertComment" parameterType="lm.swith.main.model.Comments">
-        INSERT INTO COMMENTS (COMMENT_NO, USER_NO, POST_NO, COMMENT_CONTENT, NICKNAME, USER_PROFILE)
-        VALUES (COMMENTS_NO_SEQ.NEXTVAL, #{USER_NO}, #{post_no}, #{comment_content},
-        (SELECT NICKNAME FROM USERS WHERE USER_NO = #{user_no}),
-        (SELECT USER_PROFILE FROM USERS WHERE USER_NO = #{user_no}))
+        INSERT INTO COMMENTS (COMMENT_NO, USER_NO, POST_NO, COMMENT_CONTENT)
+        VALUES (COMMENTS_NO_SEQ.NEXTVAL, #{USER_NO}, #{post_no}, #{comment_content})
     </insert>
 
 
 	<!-- 댓글 목록 -->
 	<select id="getCommentsByPostNo" resultMap="commentWithUser">
-	    SELECT * FROM COMMENTS WHERE POST_NO = #{post_no}
+	    SELECT * FROM COMMENTS WHERE POST_NO = #{post_no} ORDER BY comment_post_time DESC
 	</select>
 	
 	

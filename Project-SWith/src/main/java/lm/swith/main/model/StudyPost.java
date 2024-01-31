@@ -32,8 +32,8 @@ public class StudyPost {
     private int likes_count; // likes count
     private List<Long> skills;
     private List<PostTechStacks> postTechStacks; 
-    private String study_likes;
     private int skill_no;
+    private String study_likes;
     private String skill_name; // join 했을 때 skill 이름 받을 곳
     private String skill_img; // join 했을 때 skill img 받을 곳
 	
