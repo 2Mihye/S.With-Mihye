@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,6 +80,24 @@ public class StudyPostService {
     // 스터디 키워드 검색
     public List<StudyPost> getStudiesByKeyword(String keyword) {
         return studyPostMapper.getStudiesByKeyword(keyword);
+    }
+    
+    
+    // 마감기한 지난 스터디 상태 변경
+    @Transactional
+    public void updateStudyStatus() {
+        List<StudyPost> expiredPosts = studyPostMapper.findExpiredStudyStatus();
+
+        for (StudyPost post : expiredPosts) {
+            // 상태를 업데이트하는 작업 수행
+            studyPostMapper.updateStudyStatus();
+        }
+    }
+    
+    // 자정마다 마감기한 지난 스터디 상태 변경 실행 -> 백에서 자동 실행이기 때문에 controller 필요x
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정 실행
+    public void runUpdateStudyStatus() {
+    	updateStudyStatus();
     }
     
     

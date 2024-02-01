@@ -38,6 +38,12 @@ public interface StudyPostMapper {
 		List<Cafes> getAllCafes(String bplcnm, String sitewhladdr, String x, String y);
 		// 스터디 게시글 작성 내 카페 검색
 		List<Cafes> searchCafes(String keyword);
+		
+	// 마감 기한 지난 스터디 목록
+	List<StudyPost> findExpiredStudyStatus();
+	
+	// 마감 기한 지난 스터디 상태 업데이트
+	void updateStudyStatus();
 	
 	
 	

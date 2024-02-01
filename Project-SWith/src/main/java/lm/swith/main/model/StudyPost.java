@@ -20,7 +20,7 @@ public class StudyPost {
 	private String study_period; // 스터디 기간
 	private String study_start; // 스터디 시작일
 	private String recruit_deadline; // 스터디 모집 마감일
-	private String study_status; // 스터디 상태 (활성화/비활성화)
+	private String study_status; // 스터디 상태 (활성화 O /비활성화 X)
 	private String study_location; // 스터디 진행 구역
 	private String first_study; // 스터디 첫 모임 장소
 	private Timestamp study_post_time; // 스터디 게시글 입력일

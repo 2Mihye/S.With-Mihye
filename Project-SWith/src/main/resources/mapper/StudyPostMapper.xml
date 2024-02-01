@@ -424,11 +424,22 @@
 	    
 	</update>  -->
 	
+	<!-- 마감 기한 지난 스터디 목록 -->
+	<select id="findExpiredStudyStatus" parameterType="lm.swith.main.model.StudyPost">
+		<![CDATA[
+		   SELECT * FROM study_post
+		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O';
+		]]>
+	</select>
+	
+	<!-- 마감 기한 지난 스터디 상태 업데이트 -->
+	<update id="updateStudyStatus" parameterType="lm.swith.main.model.StudyPost">
+		<![CDATA[
+		   UPDATE study_post SET study_status = 'X'
+		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O';
+		]]>
+	</update>
 
-	
-	
-	
-	
 	<!-- 스터디 삭제 삭제 OK -->
 	<!-- 댓글 테이블에서 해당 post_no에 대한 댓글 정보 삭제 -->
 	<delete id="deleteComments" parameterType="Long">
