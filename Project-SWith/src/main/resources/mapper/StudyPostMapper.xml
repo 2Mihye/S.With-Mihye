@@ -119,8 +119,8 @@
 	
 	
 	<!-- 조건 sort 해서 검색 -->
-	<select id="getStudiesBySelect" parameterType="java.util.Map" resultType="lm.swith.main.model.StudyPost">
-	    SELECT DISTINCT * FROM (
+	<select id="getStudiesBySelect" parameterType="Map" resultType="lm.swith.main.model.StudyPost">
+	    SELECT * FROM (
 	        SELECT sp.*, s.skill_name, s.skill_img, s.skill_no
 	        FROM study_post sp
 	        JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
@@ -424,8 +424,12 @@
 	    
 	</update>  -->
 	
+
 	
-	<!-- 스터디 삭제 삭제되는 순서 댓글 - study application - post tech stack - studypost -->
+	
+	
+	
+	<!-- 스터디 삭제 삭제 OK -->
 	<!-- 댓글 테이블에서 해당 post_no에 대한 댓글 정보 삭제 -->
 	<delete id="deleteComments" parameterType="Long">
 		DELETE FROM COMMENTS WHERE POST_NO = #{post_no}
@@ -440,7 +444,7 @@
 	</delete>
 	<!-- 스터디(게시글) 테이블에서 해당 post_no에 대한 스터디 정보 삭제 -->
 	<delete id="deleteStudyPost" parameterType="Long">
-		DELETE FROM STUDY_POST WHERE POST_NO = #{post_no}
+		DELETE FROM STUDY_POST WHERE POST_NO = #{post_no} AND STUDY_STATUS = 'O'
 	</delete>
 	
 	
@@ -455,12 +459,20 @@
 	    VALUES (#{post_no}, #{user_no})
 	</insert>
 	
-	<!-- 스터디 참가 신청 목록 -->
+	<!-- 스터디 참가 신청자 목록 -->
 	<select id="getAllApplicantsByPostNo" resultMap="StudyApplicationResult">
 		SELECT sa.status, u.nickname
 	    FROM study_application sa
 	    LEFT JOIN users u ON sa.user_no = u.user_no
-	    WHERE sa.post_no = #{post_no} AND sa.status = '대기'
+	    WHERE sa.post_no = #{post_no} AND sa.status = '대기' OR sa.status = '승인'
+	</select>
+	
+	<!-- 스터디 확정 멤버 목록 -->
+	<select id="getAllMembersByPostNo" resultMap="StudyApplicationResult">
+		SELECT sa.status, u.nickname
+		FROM study_application sa
+		LEFT JOIN users u ON sa.user_no = u.user_no
+		WHERE sa.post_no = #{post_no} AND sa.status = '승인'
 	</select>
 	
 	<!-- 스터디 참가 승인 -->
@@ -484,14 +496,14 @@
 	
 	
 	
-	<!-- 댓글 등록 -->
+	<!-- 댓글 등록 OK -->
 	<insert id="insertComment" parameterType="lm.swith.main.model.Comments">
         INSERT INTO COMMENTS (COMMENT_NO, USER_NO, POST_NO, COMMENT_CONTENT)
         VALUES (COMMENTS_NO_SEQ.NEXTVAL, #{USER_NO}, #{post_no}, #{comment_content})
     </insert>
 
 
-	<!-- 댓글 목록 -->
+	<!-- 댓글 목록 OK -->
 	<select id="getCommentsByPostNo" resultMap="commentWithUser">
 	    SELECT * FROM COMMENTS WHERE POST_NO = #{post_no} ORDER BY comment_post_time DESC
 	</select>
@@ -513,13 +525,14 @@
 	    DELETE FROM COMMENTS
 	    WHERE POST_NO = #{post_no}
 	      AND USER_NO = #{user_no}
+	      AND COMMENT_NO = #{comment_no}
 	</delete>
 	
 	
 
 	<!-- ********************************************************** Users Part *********************************************************************** -->
 
-	<!-- 유저 프로필 확인 -->
+	<!-- 유저 프로필 확인 OK -->
 	<select id="getUserByUserNo" resultMap="UsersResult">
 		SELECT nickname, user_profile, user_introduction FROM USERS
 		WHERE USER_NO = #{user_no}

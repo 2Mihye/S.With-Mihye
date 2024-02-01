@@ -18,26 +18,26 @@ import lm.swith.main.model.Users;
 @Mapper
 public interface StudyPostMapper {
 	// Main Part
-	// 스터디 목록
+	// 스터디 목록 OK
 	List<StudyPost> getAllStudyPostWithSkills();
 	
 	// 스터디 조건 검색
 	List<StudyPost> getStudiesBySelect(Map<String, Object> params);
 		
-	// 스터디 제목+내용 검색
+	// 스터디 제목+내용 검색 OK
 	List<StudyPost> getStudiesByKeyword(String keyword);
 	
-	// 스터디 등록
+	// 스터디 등록 OK
     void insertStudyPost(StudyPost studyPost);
     void insertPostTechStacks(PostTechStacks postTechStacks);
     
     void insertSkill(List<Skill> skill);
     void insertStudyApplication(StudyApplication studyApplication);
 	
-	// 카페 목록
-	List<Cafes> getAllCafes(String bplcnm, String sitewhladdr, String x, String y);
-	// 스터디 게시글 작성 내 카페 검색
-	List<Cafes> searchCafes(String keyword);
+		// 카페 목록
+		List<Cafes> getAllCafes(String bplcnm, String sitewhladdr, String x, String y);
+		// 스터디 게시글 작성 내 카페 검색
+		List<Cafes> searchCafes(String keyword);
 	
 	
 	
@@ -67,13 +67,13 @@ public interface StudyPostMapper {
 	
 	
 	// Detail Part
-	// 스터디 상세 페이지
+	// 스터디 상세 페이지 OK
 	StudyPost getStudyPostByPostNo(@Param("post_no") Long post_no);
 	
 	// 스터디 수정
 	//void updateStudyPost (StudyPost studyPost);
 	
-	// 스터디 삭제
+	// 스터디 삭제 OK
 	void deleteStudyPost (@Param("post_no") Long post_no);
 	
 	// 댓글 삭제
@@ -96,30 +96,33 @@ public interface StudyPostMapper {
 	List<StudyApplication> getAllApplicantsByPostNo(Long post_no);
 	
 	// 스터디 승인
-	void acceptApplicant (@Param("post_no") Long post_no);
+	void acceptApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 	// 스터디 거절
 	void deleteApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
+	
+	// 스터디 확정 멤버
+	List<StudyApplication> getAllMembersByPostNo(@Param("post_no") Long post_no);
 
 	
 	
 	
 	// Comment Part
-	// 댓글 등록
+	// 댓글 등록 OK
 	void insertComment (Comments comments);
 	
-	// 댓글 불러오기
+	// 댓글 불러오기 OK
 	List<Comments> getCommentsByPostNo(Long post_no);
 	
 	// 댓글 수정
 	void updateComment (Comments comments);
 	
 	// 댓글 삭제
-	void deleteComment(@Param("post_no") Long post_no, @Param("user_no") Long user_no);
+	void deleteComment(@Param("post_no") Long post_no, @Param("user_no") Long user_no, @Param("comment_no") Long comment_no);
 
 	
 	
 	// Profile Part
-	// 유저 프로필 확인
+	// 유저 프로필 확인 OK
 	Users getUserByUserNo (@Param("user_no") Long user_no);
 }

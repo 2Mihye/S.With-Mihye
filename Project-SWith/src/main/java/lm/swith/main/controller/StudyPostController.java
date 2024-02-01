@@ -93,26 +93,31 @@ public class StudyPostController {
 		return "redirect:/post_detail/" + studyApplication.getPost_no();
 	}
 	
+	
+	// 스터디 신청자 목록
+//	@GetMapping("/application_update")
+//	public ResponseEntity<>
+	
 	// 스터디 신청 목록 업데이트 (승인/거절)
-    @PostMapping("/application_update")
-    public ResponseEntity<String> updateApplication(
-            @RequestParam("post_no") Long post_no,
-            @RequestParam("user_no") Long user_no,
-            @RequestParam("action") String action) { // action은 HTTP 요청에서 "action"이라는 이름의 파라미터를 String 타입으로 받아옴 (accept 혹은 reject로)
+	@PostMapping("/application_update")
+	public ResponseEntity<List<StudyApplication>> updateApplication(
+	        @RequestParam("post_no") Long post_no,
+	        @RequestParam("user_no") Long user_no,
+	        @RequestParam("action") String action) { // action은 HTTP 요청에서 "action"이라는 이름의 파라미터를 String 타입으로 받아옴 (accept 혹은 reject로)
+	    List<StudyApplication> studyApplication = studyPostService.getAllApplicants(post_no);
+	    try {
+	        boolean accept = "accept".equalsIgnoreCase(action); // 대소문자 상관없이 action으로 accept를 가져오면 수락
+	        if (accept || "reject".equalsIgnoreCase(action)) { // action으로 reject를 가져와서 accept이거나 reject라면
+	            studyPostService.acceptApplicant(user_no, post_no, accept); // service코드 실행
+	            return ResponseEntity.ok(studyApplication); // 처리 성공
+	        } else { // 값이 accept나 reject가 아닌 경우
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 bad request 반환
+	        }
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 예외인 경우 HTTP 500 서버 에러 오류 상태코드 반환
+	    }
+	}
 
-        try {
-            boolean accept = "accept".equalsIgnoreCase(action); // 대소문자 상관없이 action으로 accept를 가져오면 수락
-            if (accept || "reject".equalsIgnoreCase(action)) { // action으로 reject를 가져와서 accept이거나 reject라면
-                studyPostService.acceptApplicant(user_no, post_no, accept); // service코드 실행
-                return ResponseEntity.ok("Application " + (accept ? "accepted" : "rejected") + " successfully."); // 처리 성공 후 HTTP200 OK와 메세지 반환
-            } else { // 값이 accept나 reject가 아닌 경우
-                return ResponseEntity.badRequest().body("Invalid action specified."); // 400 bad request 반환
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 예외인 경우 HTTP 500 서버 에러 반환
-                    .body("Error processing application: " + e.getMessage());
-        }
-    }
 	
 	
 	// 댓글 등록
@@ -130,17 +135,17 @@ public class StudyPostController {
     }
     
     // 댓글 삭제
-    @PostMapping("/delete_comment/{post_no}/{user_no}")
-    public String deleteComment(@PathVariable Long post_no, @PathVariable Long user_no) {
-        studyPostService.deleteComment(post_no, user_no);
+    @PostMapping("/delete_comment/{post_no}/{user_no}/{comment_no}")
+    public String deleteComment(@PathVariable Long post_no, @PathVariable Long user_no, @PathVariable Long comment_no) {
+        studyPostService.deleteComment(post_no, user_no, comment_no);
         return "redirect:/post_detail/" + post_no;
     }
     
     // 댓글 수정
-    @PostMapping("/update_comment/{post_no}/{user_no}")
+    @PostMapping("/update_comment/{post_no}/{user_no}/{comment_no}")
     public String updateComment(@ModelAttribute Comments comments) {
-    	studyPostService.updateComment(comments);
-    	return "redirect:/post_detail/" + comments.getPost_no();
+        studyPostService.updateComment(comments);
+        return "redirect:/post_detail/" + comments.getPost_no();
     }
     
 	
