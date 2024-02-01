@@ -401,25 +401,25 @@
 	        STUDY_STATUS = #{study_status},
 	        STUDY_LOCATION = #{study_location},
 	        FRIST_STUDY = #{first_study}
-	    WHERE POST_NO = #{post_no} AND USER_NO = #{user_no};
+	    WHERE POST_NO = #{post_no} AND USER_NO = #{user_no}
 	    
 	
 	     두 번째 쿼리: 기술 스택 정보 업데이트 기존 스킬 정보를 삭제 후 다시 저장 
-	    DELETE FROM post_tech_stacks WHERE post_no = #{post_no};
+	    DELETE FROM post_tech_stacks WHERE post_no = #{post_no}
 	    <foreach collection="skills" item="skill" separator=";">
-	        INSERT INTO post_tech_stacks (post_no, skill_no) VALUES (#{post_no}, #{skill});
+	        INSERT INTO post_tech_stacks (post_no, skill_no) VALUES (#{post_no}, #{skill})
 	    </foreach>
 	
 	     세 번째 쿼리: users 테이블에서 nickname 정보 가져와서 업데이트 
 	    UPDATE study_post sp
 	    SET sp.nickname = (SELECT nickname FROM users u WHERE u.user_no = sp.user_no)
-	    WHERE sp.post_no = #{post_no};
+	    WHERE sp.post_no = #{post_no}
 	    
 	    <if test="mentor_check">
-		    UPDATE mentor SET USER_NO = #{user_no} WHERE POST_NO = #{post_no};
+		    UPDATE mentor SET USER_NO = #{user_no} WHERE POST_NO = #{post_no}
 		</if>
 		<if test="mentee_check">
-		    UPDATE mentee SET USER_NO = #{user_no} WHERE POST_NO = #{post_no};
+		    UPDATE mentee SET USER_NO = #{user_no} WHERE POST_NO = #{post_no}
 		</if>
 	    
 	</update>  -->
@@ -428,7 +428,7 @@
 	<select id="findExpiredStudyStatus" parameterType="lm.swith.main.model.StudyPost">
 		<![CDATA[
 		   SELECT * FROM study_post
-		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O';
+		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O'
 		]]>
 	</select>
 	
@@ -436,7 +436,7 @@
 	<update id="updateStudyStatus" parameterType="lm.swith.main.model.StudyPost">
 		<![CDATA[
 		   UPDATE study_post SET study_status = 'X'
-		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O';
+		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O'
 		]]>
 	</update>
 
