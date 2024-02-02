@@ -163,8 +163,15 @@ public class StudyPostService {
     }
     
     
+    // 스터디 승인 인원 카운트
+    public int getAcceptedApplicants(Long post_no) {
+        return studyPostMapper.getAcceptedApplicants(post_no);
+    }
+    
+    
     // 스터디 신청 상태 업데이트 (승인/거절)
-    public void acceptApplicant(Long user_no, Long post_no, boolean accept) {
+    public void updateApplicantsStatus(Long user_no, Long post_no, boolean accept) {
+    	
     	try {
     		if (accept) {
     			studyPostMapper.acceptApplicant(post_no, user_no);
@@ -214,7 +221,7 @@ public class StudyPostService {
     	studyPostMapper.insertComment(comments);
     }
     
-    // 댓글 목록 OK
+    // 댓글 목록
     public List<Comments> getCommentsByPostNo(Long post_no) {
     	return studyPostMapper.getCommentsByPostNo(post_no);
     }

@@ -28,10 +28,12 @@
     </resultMap>
     
     <resultMap type="lm.swith.main.model.StudyApplication" id="StudyApplicationResult">
+    	<result property="post_no" column="POST_NO" />
     	<result property="user_no" column="USER_NO" />
     	<result property="nickname" column="NICKNAME" />
     	<result property="status" column="STATUS" />
-    	<result property="max_study_applicants" column="MAX_STUDY_APPLICANTS" />    	
+    	<result property="max_study_applicants" column="MAX_STUDY_APPLICANTS" />
+    	<result property="accepted_applicants" column="ACCEPTED_APPLICANTS" />
     </resultMap>
     
     
@@ -54,12 +56,13 @@
 	  	<result property="nickname" column="NICKNAME"/>
 	    <result property="user_profile" column="USER_PROFILE" />
 	    <result property="comment_post_time" column="COMMENT_POST_TIME"/>
-	    <association property="user" resultMap="UsersResult"/>
+		<association property="user" resultMap="UserResult"/>
 	</resultMap>
 	
-	<resultMap type="lm.swith.main.model.Users" id="userResult">
+	<resultMap type="lm.swith.main.model.Users" id="UserResult">
 	    <id property="user_no" column="USER_NO"/>
 	    <result property="nickname" column="NICKNAME"/>
+	    <result property="user_profile" column="USER_PROFILE"/>
 	</resultMap>
 	
 	<resultMap type="lm.swith.main.model.Likes" id="LikesResult">
@@ -352,6 +355,10 @@
 	        sa.USER_NO AS application_user_no,
 	        sa.STATUS,
 	        sa.MAX_STUDY_APPLICANTS,
+	        c.comment_no,
+	        c.user_no,
+	        c.comment_content,
+	        c.comment_post_time,
 	        (
 	            SELECT COUNT(DISTINCT m.USER_NO)
 	            FROM mentor m
@@ -379,6 +386,7 @@
 	    LEFT JOIN mentee me ON sp.post_no = me.POST_NO
 	    LEFT JOIN study_application sa ON sp.post_no = sa.POST_NO
 	    LEFT JOIN likes l ON sp.post_no = l.post_no
+	    LEFT JOIN comments c ON c.post_no = sp.post_no
 	    WHERE sp.post_no = #{post_no}
 	</select>
 	
@@ -471,19 +479,16 @@
 	</insert>
 	
 	<!-- 스터디 참가 신청자 목록 -->
-	<select id="getAllApplicantsByPostNo" resultMap="StudyApplicationResult">
-		SELECT sa.status, u.nickname
+	<select id="getAllApplicantsByPostNo" resultMap="StudyApplicationResult" parameterType="Long">
+		SELECT sa.*, u.nickname
 	    FROM study_application sa
 	    LEFT JOIN users u ON sa.user_no = u.user_no
 	    WHERE sa.post_no = #{post_no} AND sa.status = '대기' OR sa.status = '승인'
 	</select>
 	
-	<!-- 스터디 확정 멤버 목록 -->
-	<select id="getAllMembersByPostNo" resultMap="StudyApplicationResult">
-		SELECT sa.status, u.nickname
-		FROM study_application sa
-		LEFT JOIN users u ON sa.user_no = u.user_no
-		WHERE sa.post_no = #{post_no} AND sa.status = '승인'
+	<!-- 스터디 승인 인원 카운트 -->
+	<select id="getAcceptedApplicants" resultMap="StudyApplicationResult" parameterType="Long">
+		SELECT COUNT(USER_NO) FROM STUDY_POST WHERE POST_NO = #{POST_NO} AND STATUS = '승인'
 	</select>
 	
 	<!-- 스터디 참가 승인 -->
@@ -514,9 +519,11 @@
     </insert>
 
 
-	<!-- 댓글 목록 OK -->
+	<!-- 댓글 목록 -->
 	<select id="getCommentsByPostNo" resultMap="commentWithUser">
-	    SELECT * FROM COMMENTS WHERE POST_NO = #{post_no} ORDER BY comment_post_time DESC
+	    SELECT c.*, u.nickname, u.user_profile FROM COMMENTS c 
+	    LEFT JOIN users u ON c.user_no = u.user_no
+	    WHERE POST_NO = #{post_no} ORDER BY comment_post_time DESC
 	</select>
 	
 	
