@@ -246,9 +246,9 @@
 	<!-- application 정보 insert -->
     <insert id="insertStudyApplication" parameterType="lm.swith.main.model.StudyApplication" >
     	 INSERT INTO STUDY_APPLICATION  (
-                POST_NO, USER_NO
+                POST_NO, USER_NO, STATUS
             ) VALUES (
-                #{post_no}, #{user_no}
+                #{post_no}, #{user_no}, '승인'
             )
     </insert>
 	
@@ -283,9 +283,9 @@
 	</insert>
 
 	
-	<!-- 스터디 찜 여부 확인 -->
+	<!-- 스터디 찜 목록 -->
 	<select id="isLiked" resultType="lm.swith.main.model.Likes">
-		SELECT is_liked FROM LIKES WHERE user_no = #{user_no} AND post_no = #{post_no}
+		SELECT * FROM LIKES WHERE user_no = #{user_no} AND post_no = #{post_no}
 	</select>
 	
 	
@@ -489,6 +489,12 @@
 	<!-- 스터디 승인 인원 카운트 -->
 	<select id="getAcceptedApplicants" resultMap="StudyApplicationResult" parameterType="Long">
 		SELECT COUNT(USER_NO) FROM STUDY_POST WHERE POST_NO = #{POST_NO} AND STATUS = '승인'
+	</select>
+	
+	
+	<!-- 스터디 최대 인원 조회 -->
+	<select id="getMaxApplicants" resultMap="StudyApplicationResult" parameterType="Long">
+		SELECT max_study_applicants FROM STUDY_POST WHERE POST_NO = #{POST_NO} AND MAX_STUDY_APPLICANTS IS NOT NULL
 	</select>
 	
 	<!-- 스터디 참가 승인 -->

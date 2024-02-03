@@ -168,19 +168,28 @@ public class StudyPostService {
         return studyPostMapper.getAcceptedApplicants(post_no);
     }
     
+    // 스터디 최대 인원 조회
+    public int getMaxApplicants(Long post_no) {
+    	return studyPostMapper.getMaxApplicants(post_no);
+    }
+    
     
     // 스터디 신청 상태 업데이트 (승인/거절)
     public void updateApplicantsStatus(Long user_no, Long post_no, boolean accept) {
+    	int acceptedApplicants = getAcceptedApplicants(post_no); // 승인 인원 수
+    	int maxApplicants = getMaxApplicants(post_no); // 최대 인원 수
     	
-    	try {
-    		if (accept) {
-    			studyPostMapper.acceptApplicant(post_no, user_no);
-    		} else {
-    			studyPostMapper.deleteApplicant(post_no, user_no);
-    		}
-    	} catch (Exception e) {
-    		throw new RuntimeException(e.getMessage());
-    	}
+        try {
+            if (acceptedApplicants < maxApplicants) { // 대기 인원이 최대 지원 가능 인원을 초과하는지 확인하고 적다면 아래 if문 실행
+                if (accept) { // accept가 true라면 승인 
+                    studyPostMapper.acceptApplicant(post_no, user_no);
+                } else {
+                	studyPostMapper.deleteApplicant(post_no, user_no);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
     
     

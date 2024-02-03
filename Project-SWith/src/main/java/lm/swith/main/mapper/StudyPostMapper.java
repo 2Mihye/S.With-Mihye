@@ -51,7 +51,7 @@ public interface StudyPostMapper {
 	// 스터디 찜
 	void addLikes (Likes likes);
 	
-	// 스터디 찜 확인
+	// 스터디 찜 목록
 	List<Likes> isLiked (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 	// 스터디 찜 삭제
@@ -103,15 +103,15 @@ public interface StudyPostMapper {
 	
     // 스터디 승인 인원 카운트
     int getAcceptedApplicants (Long post_no);
+
+    // 스터디 최대 인원 조회
+    int getMaxApplicants(Long post_no);
+    
 	// 스터디 승인
 	void acceptApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 	// 스터디 거절
 	void deleteApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
-	
-	// 스터디 확정 멤버
-	List<StudyApplication> getAllMembersByPostNo(@Param("post_no") Long post_no);
-
 	
 	
 	

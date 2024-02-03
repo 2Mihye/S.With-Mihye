@@ -7,10 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +27,7 @@ import lm.swith.main.service.StudyPostService;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin(origins="http://localhost:3000", allowCredentials="true", allowedHeaders="*")
+@CrossOrigin(origins="http://1.221.120.194:3000", allowCredentials="true", allowedHeaders="*")
 public class StudyPostController {
 	private final StudyPostService studyPostService;
 	
@@ -128,15 +130,22 @@ public class StudyPostController {
 	
 	
 	// 댓글 등록
-    @PostMapping("/add_comment")
-    public String addComment(@ModelAttribute Comments comments) {
-        studyPostService.insertComment(comments);
-        return "redirect:/post_detail/" + comments.getPost_no();
+    @PostMapping("/add_comment/{post_no}/{user_no}")
+    public ResponseEntity<?> addComment(@PathVariable Long post_no, @PathVariable Long user_no, @RequestBody Comments comment) {
+        Comments comm = new Comments();
+        comm.setUser_no(user_no);
+        comm.setPost_no(post_no);
+        comm.setComment_no(user_no);
+        comm.setComment_content(comment.getComment_content());
+        studyPostService.insertComment(comm);
+        System.out.println(comment.getComment_content());
+
+        return ResponseEntity.ok("댓글이 등록되었습니다.");
     }
     
     
     // 댓글 삭제
-    @PostMapping("/delete_comment/{post_no}/{user_no}/{comment_no}")
+    @DeleteMapping("/delete_comment/{post_no}/{user_no}/{comment_no}")
     public String deleteComment(@PathVariable Long post_no, @PathVariable Long user_no, @PathVariable Long comment_no) {
         studyPostService.deleteComment(post_no, user_no, comment_no);
         return "redirect:/post_detail/" + post_no;
@@ -168,10 +177,12 @@ public class StudyPostController {
     
     // 스터디 생성 처리
     @PostMapping("/create")
-    public String insertStudyPost(@ModelAttribute StudyPost studyPost) {
+    public String insertStudyPost(@RequestBody StudyPost studyPost) {
         studyPostService.insertStudyPost(studyPost);
         return "redirect:/";
     }
+    
+    
     
     // 내가 쓴 스터디 목록
     @GetMapping("/my_own_studies/{user_no}")
