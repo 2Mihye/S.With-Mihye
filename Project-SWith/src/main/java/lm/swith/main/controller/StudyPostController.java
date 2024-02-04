@@ -82,11 +82,6 @@ public class StudyPostController {
         }
     }
 	
-	// 스터디 등록 페이지
-	@GetMapping("/post")
-	public String showPostForm (Model model) {
-		return "/post_form";
-	}
 	
 	// 스터디 신청
 	@PostMapping("/add_applicants")
