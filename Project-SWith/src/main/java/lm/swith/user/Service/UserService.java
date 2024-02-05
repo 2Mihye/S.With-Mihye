@@ -48,6 +48,17 @@ public class UserService {
 	public SwithUser login(String email, String password) {
 		return usersMapper.findByEmailAndPassword(email, password);
 	}
+	
+	//admin
+	public SwithUser findByPassword(final String password, final PasswordEncoder encoder, String role) {
+		final SwithUser originalUser = usersMapper.findByPassword(password, role);
+		// matches 메서드를 이용해 패스워드가 같은지 확인
+		if (originalUser != null && encoder.matches(password, originalUser.getPassword())) {
+	        return originalUser;
+	    }
+		return null;
+		
+	}
 	//find role
 	public SwithUser findUserRole(String role) {
 		return usersMapper.findUserRole(role);

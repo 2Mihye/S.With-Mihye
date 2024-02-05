@@ -508,4 +508,30 @@
 	
 	<!-- 유저가 참여했던 스터디 목록은 mypage의 getAllStudiesWithUserNo 사용 -->
 	
+	
+	<!-- ********************************************************* Admin Part ************************************************************************ -->
+	
+	<!-- 닉네임으로 게시글 검색 -->
+	<select id="getStudiesByNickname" resultType="lm.swith.main.common.model.StudyPost">
+		SELECT sp.*, s.skill_name, s.skill_img 
+	    FROM study_post sp
+	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	    WHERE sp.nickname = #{nickname}
+	</select>
+	
+	<!-- 닉네임으로 댓글 검색 -->
+	<select id="getCommentsByNickname" resultType="lm.swith.main.common.model.StudyPost">
+		SELECT c.*, u.nickname
+		FROM comments c
+		LEFT JOIN comments c ON c.user_no = u.user_no
+		WHERE u.nickname = #{nickname}
+	</select>
+	
+	<!-- 유저 삭제 -->
+	<delete id="deleteUser" parameterType="String">
+		DELETE FROM USERS WHERE USER_NO = #{user_no}
+	</delete>
+	
+	
 </mapper>

@@ -20,6 +20,8 @@ public interface UsersMapper {
 	SwithUser findByEmail(String email);
 	
 	SwithUser findByNickname(String nickname);
+	
+	SwithUser findByPassword(String password, String role);
 
 	SwithUser findByEmailAndPassword(String email, String password);
 	
