@@ -106,4 +106,8 @@ public class UserService {
 	public SwithUser findByUserNo(Long user_no) {
 		return usersMapper.findByUserNo(user_no);
 	}
+	
+	public List<SwithUser> findByUserNoList(Long user_no){
+		return usersMapper.findByUserNoList(user_no);
+	}
 }

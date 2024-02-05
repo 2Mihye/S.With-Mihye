@@ -8,7 +8,7 @@ import LoginAxios from "../token/tokenAxios";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState('');
+  const [userData, setUserData] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -27,36 +27,32 @@ function Login() {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         // 401 Unauthorized 에러가 발생한 경우에 대한 처리
-
         // 또는 에러 메시지를 사용자에게 표시할 수 있습니다.
         // setUserMessage("로그인 실패: 유저가 인증되지 않았습니다.");
       } else {
         // 다른 에러에 대한 처리
-  
       }
     }
   };
   const checkLoginStatus = async () => {
     try {
       // 서버에 현재 인증된 사용자의 정보를 가져오는 요청을 보냅니다.
-      const response = await LoginAxios.get('/userinfo');
-  
+      const response = await LoginAxios.get("/users/userinfo");
+
       // 서버에서 반환된 사용자 정보를 가져옵니다.
       const user = response.data;
-  
+
       // 사용자 정보를 상태로 업데이트합니다.
       setUserData(user);
-  
-      console.log('User info retrieved successfully:', user);
+
+      console.log("User info retrieved successfully:", user);
     } catch (error) {
       // 서버에서 현재 인증된 사용자의 정보를 가져오는 데 실패한 경우에 대한 처리
       if (error.response && error.response.status === 401) {
-
         // 또는 에러 메시지를 사용자에게 표시할 수 있습니다.
         // setUserMessage("로그인 실패: 유저가 인증되지 않았습니다.");
       } else {
         // 다른 에러에 대한 처리
-
       }
     }
   };

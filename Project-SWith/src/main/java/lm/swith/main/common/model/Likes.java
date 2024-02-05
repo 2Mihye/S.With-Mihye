@@ -1,0 +1,10 @@
+package lm.swith.main.common.model;
+
+import lombok.*;
+
+@Getter @Setter
+public class Likes {
+	private Long post_no;
+	private Long user_no;
+	private String is_liked; 
+}

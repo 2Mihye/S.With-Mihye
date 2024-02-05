@@ -1,29 +1,15 @@
 package lm.swith.main.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import lm.swith.main.model.Cafes;
-import lm.swith.main.model.Comments;
-import lm.swith.main.model.Likes;
-import lm.swith.main.model.StudyApplication;
-import lm.swith.main.model.StudyPost;
-import lm.swith.main.model.Users;
-import lm.swith.main.service.StudyPostService;
+import lm.swith.main.common.model.*;
+import lm.swith.main.common.service.*;
 
 @RestController
 @RequestMapping("/")
@@ -39,6 +25,8 @@ public class StudyPostController {
     @GetMapping("/post_list")
     public ResponseEntity<List<StudyPost>> getAllStudyPostWithSkills() {
         List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
+        studyPostService.runUpdateStudyStatus();
+        studyPostService.updateStudyStatus();
         if (!studyPost.isEmpty()) {
             return ResponseEntity.ok(studyPost);
         } else {
@@ -85,9 +73,9 @@ public class StudyPostController {
 	
 	// 스터디 신청
 	@PostMapping("/add_applicants")
-	public String addUsersByPostNo (@ModelAttribute StudyApplication studyApplication) {
-		studyPostService.addUsersByPostNo(studyApplication);
-		return "redirect:/post_detail/" + studyApplication.getPost_no();
+	public String addUsersByPostNo ( @RequestParam("user_no") Long user_no, @RequestParam("post_no") Long post_no) {
+		studyPostService.addUsersByPostNo(post_no, user_no);
+		return "redirect:/post_detail/" + post_no;
 	}
 	
 	
@@ -133,7 +121,6 @@ public class StudyPostController {
         comm.setComment_no(user_no);
         comm.setComment_content(comment.getComment_content());
         studyPostService.insertComment(comm);
-        System.out.println(comment.getComment_content());
 
         return ResponseEntity.ok("댓글이 등록되었습니다.");
     }
@@ -143,14 +130,23 @@ public class StudyPostController {
     @DeleteMapping("/delete_comment/{post_no}/{user_no}/{comment_no}")
     public String deleteComment(@PathVariable Long post_no, @PathVariable Long user_no, @PathVariable Long comment_no) {
         studyPostService.deleteComment(post_no, user_no, comment_no);
+//        System.out.println(post_no);
+//        System.out.println(user_no);
+//        System.out.println(comment_no);
         return "redirect:/post_detail/" + post_no;
     }
     
+    
+    
     // 댓글 수정
     @PostMapping("/update_comment/{post_no}/{user_no}/{comment_no}")
-    public String updateComment(@ModelAttribute Comments comments) {
-        studyPostService.updateComment(comments);
-        return "redirect:/post_detail/" + comments.getPost_no();
+    public String updateComment(@PathVariable Long post_no, @PathVariable Long user_no, @PathVariable Long comment_no ,@RequestBody Comments comments) {
+//    	System.out.println(comment_no + " comment_no");
+//    	System.out.println(post_no + " post");
+//    	System.out.println(user_no + " user");
+//    	System.out.println(comments.getComment_content() + " 내용!!!");
+        studyPostService.updateComment(post_no, user_no, comment_no, comments.getComment_content());
+        return "redirect:/post_detail/";
     }
     
 	
@@ -172,9 +168,26 @@ public class StudyPostController {
     
     // 스터디 생성 처리
     @PostMapping("/create")
-    public String insertStudyPost(@RequestBody StudyPost studyPost) {
-        studyPostService.insertStudyPost(studyPost);
-        return "redirect:/";
+    public ResponseEntity<?> insertStudyPost(@RequestBody StudyPost studyPost) {
+    	  LocalDate now = LocalDate.now(); // now(현재날짜) 
+			LocalDate recruitDeadline = LocalDate.parse(studyPost.getRecruit_deadline()); // 문자열을 날짜 형식으로 가져옴
+			int comparison = recruitDeadline.compareTo(now); //  recruitDeadline이  now랑같으면 0 을반환
+															// recruitDeadline이 now 보다 작으면 음수 반환
+															//recruitDeadline 이 now  보다 크면 큰 많큼 값을 반환		
+			if (comparison == 0) {
+				System.out.println("두 날짜는 같습니다.");
+				return ResponseEntity.ok("같다");
+			} else if (comparison < 0) {
+				System.out.println("recruitDeadline은 현재 날짜 이전입니다.");
+				
+				return ResponseEntity.ok("success"); 
+			} else {
+				System.out.println("recruitDeadline은 현재 날짜 이후입니다.");
+				studyPostService.insertStudyPost(studyPost);
+				System.out.println(comparison + " 크기");
+				
+				return ResponseEntity.ok("false1");
+			}
     }
     
     
@@ -193,9 +206,10 @@ public class StudyPostController {
     
     // 찜한 스터디 목록
     @GetMapping("/liked_studies/{user_no}")
-    public ResponseEntity<List<StudyPost>> getAllStudiesWithLikes(@PathVariable Long user_no) {
-    	List<StudyPost> studyPost = studyPostService.getAllStudiesWithLikes(user_no);
-        if (studyPost != null ) {
+    public ResponseEntity<List<StudyPost>> getAllStudiesWithLikes(@PathVariable("user_no") Long user_no) {
+        List<StudyPost> studyPost = studyPostService.getAllStudiesWithLikes(user_no);
+        
+        if (studyPost != null && !studyPost.isEmpty()) {
             return ResponseEntity.ok(studyPost);
         } else {
             return ResponseEntity.noContent().build();

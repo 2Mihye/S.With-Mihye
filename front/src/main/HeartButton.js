@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import usersUserinfoAxios from "../token/tokenAxios";
 import HeartImg from "./img/yesheart.png";
 import EmptyHeartImg from "./img/noheart.png";
 
@@ -9,7 +9,7 @@ const HeartButton = ({ like, onClick }) => {
       src={like ? HeartImg : EmptyHeartImg}
       onClick={onClick}
       alt="Heart"
-      style={{ width: "25px", height: "25px", marginLeft: "130px" }}
+      style={{ width: "25px", height: "25px", marginLeft: "140px" }}
     />
   );
 };

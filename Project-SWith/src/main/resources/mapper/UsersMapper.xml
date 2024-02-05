@@ -56,6 +56,13 @@
 		DELETE FROM USERS WHERE EMAIL = #{email}
 	</delete>
 	
+	<select id="findByUserNo" parameterType="lm.swith.user.model.SwithUser">
+		SELECT * FROM Users WHERE USER_NO = #{user_no}
+	</select>
+	
+	<select id="findByUserNoList" parameterType="lm.swith.user.model.SwithUser">
+		SELECT * FROM Users WHERE USER_NO = #{user_no}
+	</select>
 	
 	
 </mapper>

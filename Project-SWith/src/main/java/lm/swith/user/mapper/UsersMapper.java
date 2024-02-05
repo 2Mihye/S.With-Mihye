@@ -33,4 +33,6 @@ public interface UsersMapper {
 	void deleteUser(SwithUser swithUser);
 	
 	SwithUser findByUserNo(Long user_no);
+	
+	List<SwithUser> findByUserNoList(Long user_no);
 }
