@@ -153,9 +153,20 @@
 
 .commentInput_comment {
   margin-bottom: 15px;
-  font-size: 18px;
-  font-weight: 700;
+  width: 100%;
   display: flex;
+  font-family: "SUITE-Regular";
+  text-align: left;
+  flex-direction: column;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #e1e1e1;
+}
+
+.commentItem_avatarWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
 }
 
 .commentInput_count {
@@ -163,6 +174,7 @@
   font-size: 18px;
   line-height: 24px;
   color: #939393;
+  margin-left: 50px;
 }
 
 .commentInput_container {
@@ -176,6 +188,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
+  margin-right: 16px;
+  object-fit: cover;
 }
 
 .commentInput_commentText {
@@ -204,4 +218,134 @@
   font-family: "SUITE-Regular";
   padding: 0 20px;
   border: 0px;
+}
+
+.commentDelete_buttonComplete {
+  height: 20px;
+  background: #8ee3ff;
+  border-radius: 50px;
+  color: #525252;
+  font-size: 13px;
+  font-family: "SUITE-Regular";
+  padding: 0 20px;
+  border: 0px;
+  text-align: right;
+  margin-left: 550px;
+}
+
+.commentItem_CommentList {
+  display: flex;
+  justify-content: space-between;
+}
+
+.commentItem_userNickname {
+  color: #333;
+  font-family: "SUITE-Regular";
+  font-weight: 700;
+}
+
+.commentItem_registeredDate {
+  font-size: 14px;
+  line-height: 126.5%;
+  letter-spacing: -0.005em;
+  color: #9f9f9f;
+}
+
+.commentItem_userImg {
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin-right: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.commentInput_comment_Header {
+  display: flex;
+}
+
+.commentList_CommentList {
+  width: 100%;
+}
+
+.studyApplication {
+  border: 1px solid #ccc; /* 테두리 선 스타일 및 색상 */
+  border-radius: 5px; /* 테두리 선의 모서리를 둥글게 만듦 */
+  padding: 10px; /* 내부 여백 */
+  width: 250px; /* 가로 너비 */
+  height: 300px; /* 세로 높이 */
+  background-color: #ffffb5; /* 배경색 */
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  overflow: auto; /* 내용이 넘칠 경우 스크롤 생성 */
+  margin-left: 40px;
+}
+
+.studyApplication_title {
+  margin-top: 10px;
+  font-family: "SejonghospitalBold", sans-serif;
+  font-size: 18px;
+}
+
+.studyApplaction_user {
+  width: 200px;
+}
+.studyApplaction_user_content {
+  margin-bottom: 10px; /* Adjust the margin as needed */
+}
+
+.studyApplaction_user_p {
+  display: flex;
+  font-family: "SUITE-Regular";
+  font-size: 18px;
+  text-align: left;
+  margin-left: 40px;
+  align-items: center; /* 세로 정렬 */
+  margin-top: 4px;
+  justify-content: space-between;
+}
+.studyApplication button {
+  border: none; /* 테두리 제거 */
+  background-color: transparent; /* 배경색 제거 */
+  padding: 0; /* 내부 여백 제거 */
+  cursor: pointer; /* 커서 스타일 설정 (선택 사항) */
+  display: inline-block;
+}
+
+.accept_img {
+  display: flex;
+  width: 23px;
+  height: 23px;
+  margin-left: 20px;
+  margin-top: 5px;
+}
+
+.reject_img {
+  display: flex;
+  width: 18px;
+  height: 18px;
+  margin-left: 10px;
+  margin-right: 30px;
+  margin-bottom: 2px;
+}
+
+.register_swithButton {
+  text-align: right;
+  display: inline-block;
+  margin-left: auto;
+}
+
+.application_totalWrapper {
+  position: relative;
+}
+
+.application_totalWrapper_2 {
+  position: absolute;
+  left: 100%;
+}
+
+.application_totalWrapper_3 {
+  display: flex;
+  margin-left: 2rem;
+  position: fixed;
+  top: 350px;
 }

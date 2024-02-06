@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import lm.swith.main.common.model.*;
-import lm.swith.main.common.service.*;
+import lm.swith.main.model.*;
+import lm.swith.main.service.*;
 
 @RestController
 @RequestMapping("/")
@@ -279,4 +279,25 @@ public class StudyPostController {
     	Users user = studyPostService.getUserByUserNo(user_no);
     	return ResponseEntity.ok(user);
     }
+    
+    
+    // Admin Part
+	// 닉네임 검색 스터디 목록
+	@GetMapping("/nicknameStudies")
+	public List<StudyPost> getStudiesByNickname(@RequestParam(required = false) String nickname) {
+		return studyPostService.getStudiesByNickname(nickname);
+	}
+	
+	// 닉네임 검색 댓글 목록
+	@GetMapping("/nicknameComments")
+	public List<Comments> getCommentsByNickname(@RequestParam(required = false) String nickname) {
+		return studyPostService.getCommentsByNickname(nickname);
+	}
+	
+	// 유저 삭제
+	@DeleteMapping("/delete_comment/{nickname}")
+	public String deleteUser(@PathVariable String nickname) {
+		studyPostService.deleteUser(nickname);
+		return "redirect:/nicknameStudies/" + nickname;
+	}
 }

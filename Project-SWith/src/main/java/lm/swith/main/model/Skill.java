@@ -1,4 +1,4 @@
-package lm.swith.main.common.model;
+package lm.swith.main.model;
 
 import lombok.*;
 

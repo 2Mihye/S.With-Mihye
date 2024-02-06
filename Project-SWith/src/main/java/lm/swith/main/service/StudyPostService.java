@@ -1,4 +1,4 @@
-package lm.swith.main.common.service;
+package lm.swith.main.service;
 
 import java.util.List;
 import java.util.Map;
@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lm.swith.main.common.mapper.StudyPostMapper;
-import lm.swith.main.common.model.*;
+import lm.swith.main.mapper.StudyPostMapper;
+import lm.swith.main.model.*;
 
 @Service
 public class StudyPostService {
@@ -46,6 +46,7 @@ public class StudyPostService {
             StudyApplication studyApplication = new StudyApplication();
             studyApplication.setPost_no(studyPost.getPost_no());
             studyApplication.setUser_no(studyPost.getUser_no());
+            studyApplication.setMax_study_applicants(studyPost.getMax_study_applicants());
             studyPostMapper.insertStudyApplication(studyApplication);
         } catch (Exception e) {
             // 롤백 여부 확인을 위해 예외 발생
@@ -246,5 +247,23 @@ public class StudyPostService {
     public Users getUserByUserNo(Long user_no) {
     	Users users = studyPostMapper.getUserByUserNo(user_no);
     	return users;
+    }
+    
+    
+    
+    // Admin Part
+    // 닉네임으로 게시글 검색
+    public List<StudyPost> getStudiesByNickname(String nickname) {
+    	return studyPostMapper.getStudiesByNickname(nickname);
+    }
+    
+    // 닉네임으로 댓글 검색
+    public List<Comments> getCommentsByNickname(String nickname) {
+    	return studyPostMapper.getCommentsByNickname(nickname);
+    }
+    
+    // 유저 삭제(탈퇴)
+    public void deleteUser(String nickname) {
+    	studyPostMapper.deleteUser(nickname);
     }
 }

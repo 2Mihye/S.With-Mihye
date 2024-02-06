@@ -61,6 +61,10 @@ function MainContent() {
 
         // Fetch user data
         const userResponse = await usersUserinfoAxios.get("/users/userinfo");
+        if (userResponse.data === null) {
+          return;
+        }
+
         setUserData(userResponse.data);
 
         Zzim(userData.user_no, boards.post_no);
@@ -172,15 +176,16 @@ function MainContent() {
     "Flask",
     "Flutter",
     "Git",
-    "Flask",
     "Go",
     "GraphQL",
     "Java Script",
     "Java",
+    "Kotlin",
     "Kubernetes",
     "MongoDB",
     "mySql",
     "NestJS",
+    "NextJS",
     "NodeJS",
     "Php",
     "Python",
@@ -414,6 +419,9 @@ function MainContent() {
   const [zzimUser, setZzimUser] = useState([]);
 
   const Zzim = async (user_no) => {
+    if (user_no === undefined) {
+      return;
+    }
     try {
       const response = await usersUserinfoAxios.get(
         `/liked_studies/${userData.user_no}`

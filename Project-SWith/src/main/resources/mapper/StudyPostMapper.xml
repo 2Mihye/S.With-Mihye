@@ -1,33 +1,33 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace = "lm.swith.main.common.mapper.StudyPostMapper">
+<mapper namespace = "lm.swith.main.mapper.StudyPostMapper">
 
 	<!-- 스터디 포스트 및 기술 스택 정보 조회 -->	
-    <resultMap type="lm.swith.main.common.model.Skill" id="SkillResult">
+    <resultMap type="lm.swith.main.model.Skill" id="SkillResult">
         <id property="skill_no" column="skill_no"/>
         <result property="skill_name" column="skill_name"/>
         <result property="skill_img" column="skill_img"/>
     </resultMap>
 
-    <resultMap type="lm.swith.main.common.model.PostTechStacks" id="PostTechStackResult">
+    <resultMap type="lm.swith.main.model.PostTechStacks" id="PostTechStackResult">
         <result property="post_no" column="POST_NO" />
         <result property="skill_no" column="SKILL_NO" />
     </resultMap>
     
-    <resultMap type="lm.swith.main.common.model.Mentor" id="MentorResult">
+    <resultMap type="lm.swith.main.model.Mentor" id="MentorResult">
     	<result property="user_no" column="USER_NO" />
     	<result property="mentor_status" column="MENTOR_STATUS" />
     	<result property="max_mentor_applicants" column="MAX_MENTOR_APPLICANTS" />
     </resultMap>
     
-    <resultMap type="lm.swith.main.common.model.Mentee" id="MenteeResult">
+    <resultMap type="lm.swith.main.model.Mentee" id="MenteeResult">
     	<result property="user_no" column="USER_NO" />
     	<result property="mentee_status" column="MENTEE_STATUS" />
     	<result property="max_mentee_applicants" column="MAX_MENTEE_APPLICANTS" />
     </resultMap>
     
-    <resultMap type="lm.swith.main.common.model.StudyApplication" id="StudyApplicationResult">
+    <resultMap type="lm.swith.main.model.StudyApplication" id="StudyApplicationResult">
     	<result property="post_no" column="POST_NO" />
     	<result property="user_no" column="USER_NO" />
     	<result property="nickname" column="NICKNAME" />
@@ -37,7 +37,7 @@
     </resultMap>
     
     
-    <resultMap type="lm.swith.main.common.model.Users" id="UsersResult">
+    <resultMap type="lm.swith.main.model.Users" id="UsersResult">
     	<id property="user_no" column="user_no" />
     	<result property="email" column="email" />
     	<result property="nickname" column="nickname" />
@@ -48,7 +48,7 @@
     	<result property="user_role" column="user_role" />
     </resultMap>
     
-	<resultMap  type="lm.swith.main.common.model.Comments" id="commentWithUser">
+	<resultMap  type="lm.swith.main.model.Comments" id="commentWithUser">
 	    <id property="comment_no" column="COMMENT_NO"/>
 	    <result property="post_no" column="POST_NO"/>
 	    <result property="user_no" column="USER_NO"/>
@@ -59,19 +59,19 @@
 		<association property="user" resultMap="UserResult"/>
 	</resultMap>
 	
-	<resultMap type="lm.swith.main.common.model.Users" id="UserResult">
+	<resultMap type="lm.swith.main.model.Users" id="UserResult">
 	    <id property="user_no" column="USER_NO"/>
 	    <result property="nickname" column="NICKNAME"/>
 	    <result property="user_profile" column="USER_PROFILE"/>
 	</resultMap>
 	
-	<resultMap type="lm.swith.main.common.model.Likes" id="LikesResult">
+	<resultMap type="lm.swith.main.model.Likes" id="LikesResult">
 		<result property="post_no" column="POST_NO" />
 		<result property="user_no" column="USER_NO" />
 		<result property="likes" column="LIKES" />
 	</resultMap>
 
-    <resultMap type="lm.swith.main.common.model.StudyPost" id="studyPostWithSkills">
+    <resultMap type="lm.swith.main.model.StudyPost" id="studyPostWithSkills">
         <id property="post_no" column="POST_NO" />
         <result property="user_no" column="USER_NO" />
         <result property="nickname" column="NICKNAME" />
@@ -122,7 +122,7 @@
 	
 	
 	<!-- 조건 sort 해서 검색 -->
-	<select id="getStudiesBySelect" parameterType="Map" resultType="lm.swith.main.common.model.StudyPost">
+	<select id="getStudiesBySelect" parameterType="Map" resultType="lm.swith.main.model.StudyPost">
 	    SELECT * FROM (
 	        SELECT sp.*, s.skill_name, s.skill_img, s.skill_no
 	        FROM study_post sp
@@ -148,7 +148,7 @@
 	
 	
 	<!-- 키워드 검색결과 스터디 목록 OK -->
-	<select id="getStudiesByKeyword" resultType="lm.swith.main.common.model.StudyPost">
+	<select id="getStudiesByKeyword" resultType="lm.swith.main.model.StudyPost">
 	    SELECT sp.*, s.skill_name, s.skill_img 
 	    FROM study_post sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
@@ -162,7 +162,7 @@
 	
 	<!-- 스터디 등록 -->
 	<!-- 스터디 정보 insert -->
-	<insert id="insertStudyPost" parameterType="lm.swith.main.common.model.StudyPost">
+	<insert id="insertStudyPost" parameterType="lm.swith.main.model.StudyPost">
 	    <selectKey keyProperty="post_no" resultType="Long" order="BEFORE">
 	        SELECT STUDY_POST_SEQ.NEXTVAL FROM DUAL
 	    </selectKey>
@@ -182,7 +182,7 @@
     
 
     <!-- skill 정보 insert -->
-	<insert id="insertSkill" parameterType="lm.swith.main.common.model.Skill">
+	<insert id="insertSkill" parameterType="lm.swith.main.model.Skill">
 	    INSERT INTO skill (skill_no, skill_name)
 	    VALUES (#{skill_no}, #{skill_name})
 	</insert>
@@ -190,7 +190,7 @@
 
 
 	<!-- application 정보 insert -->
-    <insert id="insertStudyApplication" parameterType="lm.swith.main.common.model.StudyApplication" >
+    <insert id="insertStudyApplication" parameterType="lm.swith.main.model.StudyApplication" >
     	 INSERT INTO STUDY_APPLICATION  (
                 POST_NO, USER_NO, STATUS, MAX_STUDY_APPLICANTS
             ) VALUES (
@@ -199,13 +199,13 @@
     </insert>
 	
 	<!-- 기술 스택 정보 insert -->
-	<insert id="insertPostTechStacks" parameterType="lm.swith.main.common.model.PostTechStacks">
+	<insert id="insertPostTechStacks" parameterType="lm.swith.main.model.PostTechStacks">
 	    INSERT INTO POST_TECH_STACKS (POST_NO, SKILL_NO) VALUES (#{post_no}, #{skill_no})
 	</insert>
 	
 	
 	<!-- 게시글 작성시 카페 목록 검색 -->
-	<select id="searchCafes" resultType="lm.swith.main.common.model.Cafes">
+	<select id="searchCafes" resultType="lm.swith.main.model.Cafes">
 	    SELECT * FROM cafes 
 	    WHERE bplcnm LIKE '%' || #{keyword} || '%'
 	    OR sitewhladdr LIKE '%' || #{keyword} || '%'
@@ -213,7 +213,7 @@
 	
 	
 	<!-- 카페목록 모두 가져오기 -->
-	<select id="getAllCafes" resultType="lm.swith.main.common.model.Cafes">
+	<select id="getAllCafes" resultType="lm.swith.main.model.Cafes">
 	    SELECT * FROM CAFES 
 	</select>
 	
@@ -223,20 +223,20 @@
 	
 	
 	<!-- 스터디 찜 -->
-	<insert id="addLikes" parameterType="lm.swith.main.common.model.Likes">
+	<insert id="addLikes" parameterType="lm.swith.main.model.Likes">
 		INSERT INTO LIKES ( POST_NO, USER_NO)
 		VALUES ( #{post_no}, #{user_no} )
 	</insert>
 
 	
 	<!-- 스터디 찜 목록 -->
-	<select id="isLiked" resultType="lm.swith.main.common.model.Likes">
+	<select id="isLiked" resultType="lm.swith.main.model.Likes">
 		SELECT * FROM LIKES WHERE user_no = #{user_no} AND post_no = #{post_no}
 	</select>
 	
 	
 	<!-- 스터디 찜 삭제 -->
-	<delete id="deleteLikes" parameterType="lm.swith.main.common.model.Likes">
+	<delete id="deleteLikes" parameterType="lm.swith.main.model.Likes">
 		DELETE FROM LIKES WHERE post_no = #{post_no} AND user_no = #{user_no}
 	</delete>
 	
@@ -379,7 +379,7 @@
 	</update>  -->
 	
 	<!-- 마감 기한 지난 스터디 목록 -->
-	<select id="findExpiredStudyStatus" parameterType="lm.swith.main.common.model.StudyPost">
+	<select id="findExpiredStudyStatus" parameterType="lm.swith.main.model.StudyPost">
 		<![CDATA[
 		   SELECT * FROM study_post
 		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O'
@@ -387,7 +387,7 @@
 	</select>
 	
 	<!-- 마감 기한 지난 스터디 상태 업데이트 -->
-	<update id="updateStudyStatus" parameterType="lm.swith.main.common.model.StudyPost">
+	<update id="updateStudyStatus" parameterType="lm.swith.main.model.StudyPost">
 		<![CDATA[
 		   UPDATE study_post SET study_status = 'X'
 		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O'
@@ -419,7 +419,7 @@
 	
 	
 	<!-- 스터디 참가 신청 -->
-	<insert id="addUsersByPostNo" parameterType="lm.swith.main.common.model.StudyPost">
+	<insert id="addUsersByPostNo" parameterType="lm.swith.main.model.StudyPost">
 	    INSERT INTO study_application (POST_NO, USER_NO)
 	    VALUES (#{post_no}, #{user_no})
 	</insert>
@@ -465,7 +465,7 @@
 	
 	
 	<!-- 댓글 등록 OK -->
-	<insert id="insertComment" parameterType="lm.swith.main.common.model.Comments">
+	<insert id="insertComment" parameterType="lm.swith.main.model.Comments">
         INSERT INTO COMMENTS (COMMENT_NO, USER_NO, POST_NO, COMMENT_CONTENT)
         VALUES (COMMENTS_NO_SEQ.NEXTVAL, #{USER_NO}, #{post_no}, #{comment_content})
     </insert>
@@ -480,7 +480,7 @@
 	
 	
 	<!-- 댓글 수정 -->
-	<update id="updateComment" parameterType="lm.swith.main.common.model.Comments">
+	<update id="updateComment" parameterType="lm.swith.main.model.Comments">
 	    UPDATE COMMENTS
 	    SET COMMENT_CONTENT = #{comment_content}
 	    WHERE POST_NO = #{post_no}
@@ -512,19 +512,19 @@
 	<!-- ********************************************************* Admin Part ************************************************************************ -->
 	
 	<!-- 닉네임으로 게시글 검색 -->
-	<select id="getStudiesByNickname" resultType="lm.swith.main.common.model.StudyPost">
-		SELECT sp.*, s.skill_name, s.skill_img 
-	    FROM study_post sp
-	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
-	    WHERE sp.nickname = #{nickname}
+	<select id="getStudiesByNickname" resultType="lm.swith.main.model.StudyPost">
+		SELECT sp.*, s.skill_name
+		FROM study_post sp
+		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+		LEFT JOIN skill s ON pts.skill_no = s.skill_no
+		WHERE sp.nickname = #{nickname}
 	</select>
 	
 	<!-- 닉네임으로 댓글 검색 -->
-	<select id="getCommentsByNickname" resultType="lm.swith.main.common.model.StudyPost">
+	<select id="getCommentsByNickname" resultType="lm.swith.main.model.Comments">
 		SELECT c.*, u.nickname
 		FROM comments c
-		LEFT JOIN comments c ON c.user_no = u.user_no
+		LEFT JOIN users u ON c.user_no = u.user_no
 		WHERE u.nickname = #{nickname}
 	</select>
 	

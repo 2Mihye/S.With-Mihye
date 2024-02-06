@@ -1,11 +1,11 @@
-package lm.swith.main.common.mapper;
+package lm.swith.main.mapper;
 
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.*;
 
-import lm.swith.main.common.model.*;
+import lm.swith.main.model.*;
 
 
 @Mapper

@@ -90,7 +90,7 @@ function NewBoard() {
           study_status: studyStatus,
           mentor_count: mentorCount,
           mentee_count: menteeCount,
-          application_count: applicationCount,
+          max_study_applicants: applicationCount,
           // 나머지 데이터도 추가
           // FormFour에서 온 데이터
           recruit_type: selectedItem1,
