@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
+import lm.swith.main.model.Pagination;
 import lm.swith.main.model.PostTechStacks;
 import lm.swith.main.model.Skill;
 import lm.swith.main.model.StudyApplication;
@@ -50,119 +51,128 @@ public interface StudyPostMapper {
 	void updateStudyStatus();
 	
 	// Study Likes==================================================================================================================================================
-		// 스터디 찜
-		void addLikes (Likes likes);
+	// 스터디 찜
+	void addLikes (Likes likes);
+	
+	// 스터디 찜 목록
+	List<Likes> isLiked (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 		
-		// 스터디 찜 목록
-		List<Likes> isLiked (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
-		
-		// 스터디 찜 삭제
-		void deleteLikes (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
+	// 스터디 찜 삭제
+	void deleteLikes (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 	
 
 	// My page Part=================================================================================================================================================
-		// 마이페이지 내가 쓴 게시물 목록 OK
-		List<StudyPost> getOwnStudiesWithUserNo(@Param("user_no") Long user_no);
+	// 마이페이지 내가 쓴 게시물 목록 OK
+	List<StudyPost> getOwnStudiesWithUserNo(@Param("user_no") Long user_no);
 		
-		// 마이페이지 찜한 게시물 목록
-		List<StudyPost> getAllStudiesWithLikes(@Param("user_no") Long user_no);
+	// 마이페이지 찜한 게시물 목록
+	List<StudyPost> getAllStudiesWithLikes(@Param("user_no") Long user_no);
 		
-		// 내가 참여한 스터디 목록 OK
-		List<StudyPost> getAllStudiesWithUserNo(@Param("user_no") Long user_no);
+	// 내가 참여한 스터디 목록 OK
+	List<StudyPost> getAllStudiesWithUserNo(@Param("user_no") Long user_no);
 		
 		
 
 	// Detail Part==================================================================================================================================================
-		// 스터디 상세 페이지 OK
+	//스터디 상세 페이지 OK
 		StudyPost getStudyPostByPostNo(@Param("post_no") Long post_no);
 		
-		// 스터디 수정
-		void updateStudyPost (StudyPost studyPost);
-		void deletePostTechStacksUpdate(PostTechStacks postTechStacks);
-		void updateSkill(List<Skill> skill);
-		void upadateStudyApplication(StudyApplication studyApplication);
-		void insertPostTechStacksUpdate(PostTechStacks postTechStacks);
-		void updateStudyPostUser(@Param("user_no") Long user_no);
+	// 스터디 수정
+	void updateStudyPost (StudyPost studyPost);
+	void deletePostTechStacksUpdate(PostTechStacks postTechStacks);
+	void updateSkill(List<Skill> skill);
+	void upadateStudyApplication(StudyApplication studyApplication);
+	void insertPostTechStacksUpdate(PostTechStacks postTechStacks);
+	void updateStudyPostUser(@Param("user_no") Long user_no);
 		
 
 		
-		// 스터디 삭제 OK
-		void deleteStudyPost (@Param("post_no") Long post_no);
+	// 스터디 삭제 OK
+	void deleteStudyPost (@Param("post_no") Long post_no);
 		
-		// 스터디에 달린 모든 댓글 삭제
-		void deleteComments(@Param("post_no") Long post_no);
+	// 스터디에 달린 모든 댓글 삭제
+	void deleteComments(@Param("post_no") Long post_no);
 		
-		// 스터디 모든 지원자들 삭제
-		void deleteStudyApplication(@Param("post_no") Long post_no);
+	// 스터디 모든 지원자들 삭제
+	void deleteStudyApplication(@Param("post_no") Long post_no);
 		
-		// 스터디 기술스텍 삭제
-		void deletePostTechStacks(@Param("post_no") Long post_no);
+	// 스터디 기술스텍 삭제
+	void deletePostTechStacks(@Param("post_no") Long post_no);
 
 	
 	
 		
 
 	// Study Application Part======================================================================================================================================
-		// 스터디 신청
-		void addUsersByPostNo (Long post_no, Long user_no);
+	// 스터디 신청
+	void addUsersByPostNo (Long post_no, Long user_no);
 		
-		// 스터디 신청 목록 OK
-		List<StudyApplication> getAllApplicantsByPostNo(Long post_no);
-		
-	    // 스터디 승인 인원 카운트
-	    int getAcceptedApplicants (Long post_no);
+	// 스터디 신청 목록 OK
+	List<StudyApplication> getAllApplicantsByPostNo(Long post_no);
+	
+	// 스터디 승인 인원 카운트
+	int getAcceptedApplicants (Long post_no);
 
-	    // 스터디 최대 인원 조회
-	    int getMaxApplicants(Long post_no);
+	// 스터디 최대 인원 조회
+	int getMaxApplicants(Long post_no);
 	    
-		// 스터디 승인
-		void acceptApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
+	// 스터디 승인
+	void acceptApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 		
-		// 스터디 거절
-		void deleteApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
+	// 스터디 거절
+	void deleteApplicant (@Param("post_no") Long post_no, @Param("user_no") Long user_no);
 		
-		// 스터디 확정 멤버
-		List<StudyApplication> getAllMembersByPostNo(@Param("post_no") Long post_no);
+	// 스터디 확정 멤버
+	List<StudyApplication> getAllMembersByPostNo(@Param("post_no") Long post_no);
 		
 
 	
 	// Comment Part
-		// 댓글 등록
-		void insertComment (Comments comments);
+	// 댓글 등록
+	void insertComment (Comments comments);
 		
-		// 댓글 목록
-		List<Comments> getCommentsByPostNo(@Param("post_no") Long post_no);
+	// 댓글 목록
+	List<Comments> getCommentsByPostNo(@Param("post_no") Long post_no);
 		
-		// 댓글 수정
-		void updateComment (Long post_no, Long user_no , Long comment_no, String comment_content);
+	// 댓글 수정
+	void updateComment (Long post_no, Long user_no , Long comment_no, String comment_content);
 		
-		// 댓글 삭제
-		void deleteComment(@Param("post_no") Long post_no, @Param("user_no") Long user_no, @Param("comment_no") Long comment_no);
+	// 댓글 삭제
+	void deleteComment(@Param("post_no") Long post_no, @Param("user_no") Long user_no, @Param("comment_no") Long comment_no);
 
 
 	// Profile Part================================================================================================================================================
-		// 유저 프로필 확인 OK
-		SwithUser getUserByUserNo (@Param("user_no") Long user_no);
+	// 유저 프로필 확인 OK
+	SwithUser getUserByUserNo (@Param("user_no") Long user_no);
 		
 		
 	// Admin part =================================================================================================================================================
-		// 닉네임으로 게시글 검색
-		List<StudyPost> getStudiesByNickname(String nickname);
+	// 닉네임으로 게시글 검색
+	List<StudyPost> getStudiesByNickname(String nickname);
 		
-		// 닉네임으로 댓글 검색
-		List<Comments> getCommentsByNickname(String nickname);
+	// 닉네임으로 댓글 검색
+	List<Comments> getCommentsByNickname(String nickname);
 		
-		// 유저 리스트
-		List<SwithUser> getAllUserList(String nickname);
+	// 유저 리스트
+	List<SwithUser> getAllUserList(String nickname);
 		
-		// 유저 삭제		
-		void deleteUserComment(@Param("user_no") Long user_no);
-		void deleteUserStudyApplication(@Param("user_no") Long user_no);
-		void deleteUserPostTechStacks(@Param("user_no") Long user_no);
-		void deleteUserLikes(@Param("user_no") Long user_no);
-		void deleteUserMoment(@Param("user_no") Long user_no);
-		void deleteUserRoomNotice(@Param("user_no") Long user_no);
+	// 유저 삭제		
+	void deleteUserComment(@Param("user_no") Long user_no);
+	void deleteUserStudyApplication(@Param("user_no") Long user_no);
+	void deleteUserPostTechStacks(@Param("user_no") Long user_no);
+	void deleteUserLikes(@Param("user_no") Long user_no);
+	void deleteUserMoment(@Param("user_no") Long user_no);
+	void deleteUserRoomNotice(@Param("user_no") Long user_no);
 //		void deleteUserMystudiesByUserNo(@Param("user_no") Long user_no);
-		void deleteUserStudyPost(@Param("user_no") Long user_no);
-		void deleteUser(@Param("user_no") Long user_no);
+	void deleteUserStudyPost(@Param("user_no") Long user_no);
+	void deleteUser(@Param("user_no") Long user_no);
+	
+	
+	
+	// Pagination part ==============================================================================================================================================
+	// 모든 게시글 불러오기
+	List<StudyPost> getAllStudies(Pagination pagination);
+	
+	// 모든 게시글 수
+	int studyCount();
 	}

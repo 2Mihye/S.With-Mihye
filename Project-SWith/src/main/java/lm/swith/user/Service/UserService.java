@@ -39,7 +39,7 @@ public class UserService {
 		user.setUser_profile(swithUser.getUser_profile());
 		user.setUseraddress(swithUser.getUseraddress());
 		user.setUser_introduction(swithUser.getUser_introduction());
-		user.setRole(swithUser.getRole());
+		user.setUser_role(swithUser.getUser_role());
 		
 		usersMapper.insertUser(user);
 		return user;
@@ -47,17 +47,6 @@ public class UserService {
 	//login
 	public SwithUser login(String email, String password) {
 		return usersMapper.findByEmailAndPassword(email, password);
-	}
-	
-	//admin
-	public SwithUser findByPassword(final String password, final PasswordEncoder encoder, String role) {
-		final SwithUser originalUser = usersMapper.findByPassword(password, role);
-		// matches 메서드를 이용해 패스워드가 같은지 확인
-		if (originalUser != null && encoder.matches(password, originalUser.getPassword())) {
-	        return originalUser;
-	    }
-		return null;
-		
 	}
 	//find role
 	public SwithUser findUserRole(String role) {
@@ -116,9 +105,5 @@ public class UserService {
 	// select user_no
 	public SwithUser findByUserNo(Long user_no) {
 		return usersMapper.findByUserNo(user_no);
-	}
-	
-	public List<SwithUser> findByUserNoList(Long user_no){
-		return usersMapper.findByUserNoList(user_no);
 	}
 }

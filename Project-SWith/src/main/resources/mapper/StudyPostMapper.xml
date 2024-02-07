@@ -107,18 +107,15 @@
     
 	<!-- 스터디 전체 목록 OK -->
 	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
-	    SELECT sp.*, s.skill_name, s.skill_img, u.*,
-	    ( 
-	    	SELECT COUNT(*)
-	    	FROM likes l
-	    	WHERE post_no = sp.post_no
-	    ) AS likes_count
+	    SELECT sp.*, s.skill_name, u.*,
+	    COUNT(l.post_no) AS likes_count
 	    FROM STUDY_POST sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
 	    LEFT JOIN likes l ON sp.post_no = l.post_no
 	    LEFT JOIN users u ON sp.user_no = u.user_no
 	    WHERE sp.study_status = 'O'
+	    GROUP BY sp.*, s.skill_name, u.*
 	    ORDER BY study_post_time DESC
 	</select>
 	

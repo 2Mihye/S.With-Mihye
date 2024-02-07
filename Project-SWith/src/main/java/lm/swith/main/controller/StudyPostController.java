@@ -1,6 +1,7 @@
 package lm.swith.main.controller;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
+import lm.swith.main.model.Pagination;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 import lm.swith.main.service.StudyPostService;
@@ -37,15 +39,28 @@ public class StudyPostController {
     }
     
 	
-	// 스터디 목록
+    // 스터디 목록
     @GetMapping("/post_list")
-    public ResponseEntity<List<StudyPost>> getAllStudyPostWithSkills() {
-        List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
-        
+    public ResponseEntity<Map<String, Object>> getAllStudyPostWithSkills(
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "6") int size) {
+
+        Pagination pagination = new Pagination();
+        pagination.setPage(page);
+        pagination.setSize(size);
+
+        List<StudyPost> studyPost = studyPostService.getAllStudies(pagination);
         studyPostService.runUpdateStudyStatus();
         studyPostService.updateStudyStatus();
+
         if (!studyPost.isEmpty()) {
-            return ResponseEntity.ok(studyPost);
+            Map<String, Object> response = new HashMap<>();
+            response.put("studies", studyPost);
+            response.put("page", pagination.getPage());
+            response.put("size", pagination.getSize());
+            response.put("total", studyPostService.studyCount());
+
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.noContent().build();
         }

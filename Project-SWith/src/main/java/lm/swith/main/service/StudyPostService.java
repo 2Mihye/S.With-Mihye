@@ -3,7 +3,6 @@ package lm.swith.main.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import lm.swith.main.mapper.StudyPostMapper;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
+import lm.swith.main.model.Pagination;
 import lm.swith.main.model.PostTechStacks;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
@@ -329,6 +329,18 @@ public class StudyPostService {
     	studyPostMapper.deleteUserRoomNotice(user_no);
     	studyPostMapper.deleteUserStudyPost(user_no);
     	studyPostMapper.deleteUser(user_no);
+    }
+    
+    
+    // Pagination Part
+    // 페이지네이션 스터디 목록
+    public List<StudyPost> getAllStudies(Pagination pagination) {
+        return studyPostMapper.getAllStudies(pagination);
+    }
+    
+    // 모든 스터디 수
+    public int studyCount() {
+    	return studyPostMapper.studyCount();
     }
     
 }

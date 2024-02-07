@@ -20,8 +20,6 @@ public interface UsersMapper {
 	SwithUser findByEmail(String email);
 	
 	SwithUser findByNickname(String nickname);
-	
-	SwithUser findByPassword(String password, String role);
 
 	SwithUser findByEmailAndPassword(String email, String password);
 	
@@ -35,6 +33,4 @@ public interface UsersMapper {
 	void deleteUser(SwithUser swithUser);
 	
 	SwithUser findByUserNo(Long user_no);
-	
-	List<SwithUser> findByUserNoList(Long user_no);
 }

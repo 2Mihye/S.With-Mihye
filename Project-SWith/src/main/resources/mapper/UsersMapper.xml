@@ -12,12 +12,6 @@
 	<select id="findByEmail" parameterType="lm.swith.user.model.SwithUser">
         SELECT * FROM Users WHERE EMAIL = #{email}
     </select>
-    
-	<!-- 패스워드 일치 admin -->
-    <select id ="findByPassword" parameterType="lm.swith.user.model.SwithUser">
-    	SELECT * FROM USERS WHERE PASSWORD = #{password} AND ROLE = ADMIN
-    </select>
-    
     <select id="findByNickname" parameterType="lm.swith.user.model.SwithUser">
         SELECT * FROM Users WHERE NICKNAME = #{nickname}
     </select>
@@ -29,7 +23,7 @@
 	</select>
 	
 	<select id = "findUserRole" parameterType="lm.swith.user.model.SwithUser">
-		SELECT * FROM Users WHERE ROLE = #{role}
+		SELECT * FROM Users WHERE USER_ROLE = #{role}
 	</select>
 	<select id = "findUsersAll" parameterType="lm.swith.user.model.SwithUser">
 		SELECT * FROM Users
@@ -63,10 +57,6 @@
 	</delete>
 	
 	<select id="findByUserNo" parameterType="lm.swith.user.model.SwithUser">
-		SELECT * FROM Users WHERE USER_NO = #{user_no}
-	</select>
-	
-	<select id="findByUserNoList" parameterType="lm.swith.user.model.SwithUser">
 		SELECT * FROM Users WHERE USER_NO = #{user_no}
 	</select>
 	

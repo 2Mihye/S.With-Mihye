@@ -20,7 +20,7 @@ public class TokenProvider {
 	    // AccessToken 생성
 	    public String createAccessToken(SwithUser swithUser) {
 	        // 현재 시간을 기준으로 1일 후의 만료 시간을 설정
-	        Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+	        Date expiryDate = Date.from(Instant.now().plus(8, ChronoUnit.HOURS));
 
 	        return Jwts.builder()
 	                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)

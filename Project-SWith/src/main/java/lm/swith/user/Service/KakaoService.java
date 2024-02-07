@@ -49,7 +49,7 @@ public class KakaoService {
 					return KAKAO_AUTH_URI + "/oauth/authorize?client_id=" + KAKAO_CLIENT_ID + "&redirect_uri=" + KAKAO_REDIRECT_URL + "&response_type=code"; // 카카오 개발자 공식문서에 적혀있는 주소임
 				}
 				
-				public SwithUser getKakaoInfo(String code, String password, String userName, byte[] userProfile, String userAddress, String userIntroduction, String role) throws Exception {
+				public SwithUser getKakaoInfo(String code, String password, String userName, byte[] userProfile, String userAddress, String userIntroduction, String user_role) throws Exception {
 				        
 					if(code == null) throw new Exception("존재하는 인증코드가 없습니다.");
 					
@@ -82,11 +82,11 @@ public class KakaoService {
 						throw new Exception("api를 불러오지 못했습니다.");
 					}
 					
-					return getUserInfoWithToken(accessToken,password, userName,userProfile,userAddress, userIntroduction,role);
+					return getUserInfoWithToken(accessToken,password, userName,userProfile,userAddress, userIntroduction,user_role);
 				}
 				
 				// 회사에서 카카오로부터 로그인 할 수 있도록 허용받은 받은 로그인 허용 토큰을 사용하여 카카오 API에서 사용자 정보를 가져오는 메서드 (개인 사용자가 아님)
-				private SwithUser getUserInfoWithToken(String accessToken, String password, String userName, byte[] userProfile, String userAddress, String userIntroduction, String role) throws Exception {
+				private SwithUser getUserInfoWithToken(String accessToken, String password, String userName, byte[] userProfile, String userAddress, String userIntroduction, String user_role) throws Exception {
 					// 토큰용 HTTPHeader 생성
 					HttpHeaders headers = new HttpHeaders();
 					// Bearer : Http 요청에서 인증할 때 특정 형태로 변환하여 토큰 타입을 나타내는 것
@@ -120,7 +120,7 @@ public class KakaoService {
 		                .user_profile(userProfile)
 		                .useraddress(userAddress) 
 		                .user_introduction(userIntroduction)
-		                .role(role)
+		                .user_role(user_role)
 		                .build();
 		    }
 				   public SwithUser signUpUser(SwithUser swithUser)  {
@@ -132,7 +132,7 @@ public class KakaoService {
 						user.setUser_profile(swithUser.getUser_profile());
 						user.setUseraddress(swithUser.getUseraddress());
 						user.setUser_introduction(swithUser.getUser_introduction());
-						user.setRole(swithUser.getRole());
+						user.setUser_role(swithUser.getUser_role());
 						
 						usersMapper.insertUser(swithUser);
 						return user;

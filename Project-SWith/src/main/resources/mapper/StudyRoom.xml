@@ -37,7 +37,7 @@
 	
 	
 	<!-- delete notice, moment -->
-	<delete id="deleteStudyRoomNotice" parameterType="lm.swith.studyroom.model.StudyRoomNotice">
+	<delete id="deleteStudyRoomNotice" parameterType="lm.swith.studyroom.model.StudyRoomNotice">g
 		DELETE FROM STUDY_ROOM_NOTICE WHERE NOTICE_NO = #{notice_no} AND NOTICE_PASSWORD = #{notice_password}
 	</delete>
 	

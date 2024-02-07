@@ -58,11 +58,13 @@ public class RegisterController {
 	@GetMapping("/info/{user_no}")
 	public ResponseEntity<?> findByUserNo(@PathVariable Long user_no) {
 	    SwithUser user = userService.findByUserNo(user_no);
+
 	    if (user != null) {
 	        System.out.println(user.getEmail());
 	        System.out.println(user.getUser_no());
 	        System.out.println(user.getNickname());
 	        System.out.println(user.getUser_profile());
+	        System.out.println("getRole" + user.getUser_role());
 	        return ResponseEntity.ok(user);
 	    } else {
 	        return ResponseEntity.notFound().build();
@@ -95,32 +97,7 @@ public class RegisterController {
 			return ResponseEntity.badRequest().body(responseDTO);
 		}
 		
-	} 
-	//admin
-	@PostMapping("/adminPassword")
-	  public ResponseEntity<?> findByAdminPassword(@RequestBody SwithUser swithUser){
-	  	
-	  	SwithUser user = userService.findByPassword(swithUser.getPassword(), passwordEncoder, swithUser.getRole()); 
-	  
-	  	//넣은 값이 db에 존재하는지, 넣은 값이 null이 아닌 
-	  	if(user != null && user.getRole() == "ADMIN") {
-	  		final SwithUser responseUserDTO = SwithUser.builder()
-	  				.password(user.getPassword())
-	  				.role(user.getRole())
-	  				.build();
-	  		return ResponseEntity.ok().body(responseUserDTO);
-	     
-	  	 }else {
-				ResponseDTO responseDTO = ResponseDTO.builder()
-						.error("faild.")
-						.build();
-				return ResponseEntity.badRequest().body(responseDTO);
-			
-	  	 }
-	  }
-	
-
-	
+	}
 	
 	@GetMapping("/userinfo")
 	public ResponseEntity<?> getUserInfo() {
@@ -155,7 +132,6 @@ public class RegisterController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-
 	
 	  @GetMapping("/")
 	  public String MailPage(){
@@ -250,9 +226,7 @@ public class RegisterController {
 			SwithUser createUser = userService.signUpUser(swithUser);
 			return ResponseEntity.ok(createUser);
 		}
-	//원정연 파트 (update)
-		
-	//update 하은이 파트 
+
 	    
 	    //update user profile
 	    @PostMapping("/updateUserProfile")
@@ -346,7 +320,7 @@ public class RegisterController {
                 .user_profile(userProfile)
                 .useraddress(userAddress)
                 .user_introduction(userIntroduction)
-                .role(role)
+                .user_role(role)
                 .build();
 
         SwithUser registeredUser = userService.signUpUser(swithUser);
