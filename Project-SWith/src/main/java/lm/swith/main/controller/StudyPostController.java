@@ -82,13 +82,14 @@ public class StudyPostController {
 	// 스터디 신청자 목록
 	@GetMapping("/application_update/{post_no}")
     public ResponseEntity<List<StudyApplication>> getAllApplicantsByPostNo(@PathVariable Long post_no) {
-        List<StudyApplication> studyApplicants = studyPostService.getAllApplicants(post_no);
+        List<StudyApplication> studyApplicants = studyPostService.getAllApplicants2(post_no);
         if (!studyApplicants.isEmpty()) {
             return ResponseEntity.ok(studyApplicants);
         } else {
             return ResponseEntity.noContent().build();
         }
     }
+
 	
 	// 스터디 신청 목록 업데이트 (승인/거절)
 	@PostMapping("/application_update/{post_no}")

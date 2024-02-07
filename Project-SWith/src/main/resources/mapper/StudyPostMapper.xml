@@ -433,8 +433,8 @@
 	</select>
 	
 	<!-- 스터디 승인 인원 카운트 -->
-	<select id="getAcceptedApplicants" resultMap="StudyApplicationResult" parameterType="Long">
-		SELECT COUNT(USER_NO) FROM STUDY_POST WHERE POST_NO = #{POST_NO} AND STATUS = '승인'
+	<select id="getAcceptedApplicants" resultType="java.lang.Integer" parameterType="Long">
+		SELECT COUNT(USER_NO) FROM STUDY_APPLICATION WHERE POST_NO = #{POST_NO} AND STATUS = '승인'
 	</select>
 	
 	

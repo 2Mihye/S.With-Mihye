@@ -164,47 +164,62 @@ function MainContent() {
     "기타",
   ];
 
-  const skills = [
-    "Angular",
-    "C",
-    "C++",
-    "Django",
-    "Docker",
-    "Express",
-    "Figma",
-    "Firebase",
-    "Flask",
-    "Flutter",
-    "Git",
-    "Go",
-    "GraphQL",
-    "Java Script",
-    "Java",
-    "Kotlin",
-    "Kubernetes",
-    "MongoDB",
-    "mySql",
-    "NestJS",
-    "NextJS",
-    "NodeJS",
-    "Php",
-    "Python",
-    "R",
-    "React",
-    "React Native",
-    "Spring",
-    "Svelte",
-    "Swift",
-    "Type Script",
-    "Unity",
-    "Vue",
-    "Zeplin",
+  const skills = [];
+
+  const skillInfo = [
+    { name: "Angular", imageId: "Angular.png" },
+    { name: "C", imageId: "C.png" },
+    { name: "C++", imageId: "C++.png" },
+    { name: "Django", imageId: "Django.png" },
+    { name: "Docker", imageId: "Docker.png" },
+    { name: "Express", imageId: "Express.png" },
+    { name: "Figma", imageId: "Figma.png" },
+    { name: "Firebase", imageId: "Firebase.png" },
+    { name: "Flask", imageId: "Flast.png" },
+    { name: "Flutter", imageId: "Flutter.png" },
+    { name: "Git", imageId: "Git.png" },
+    { name: "Go", imageId: "Go.png" },
+    { name: "GraphQL", imageId: "GRAPH_QL.png" },
+    { name: "Java Script", imageId: "JAVA_SCRIPT.png" },
+    { name: "Java", imageId: "Java.png" },
+    { name: "Kotlin", imageId: "Kotlin.png" },
+    { name: "Kubernetes", imageId: "Kubernetes.png" },
+    { name: "MongoDB", imageId: "MONGO_DB.png" },
+    { name: "mySql", imageId: "mySql.png" },
+    { name: "NestJS", imageId: "NEST_JS.png" },
+    { name: "NextJS", imageId: "NEXT_JS.png" },
+    { name: "NodeJS", imageId: "NODE_JS.png" },
+    { name: "Php", imageId: "Php.png" },
+    { name: "Python", imageId: "Python.png" },
+    { name: "R", imageId: "R.png" },
+    { name: "React", imageId: "react.png" },
+    { name: "React Native", imageId: "REACT_NATIVE.png" },
+    { name: "Spring", imageId: "Spring.png" },
+    { name: "Svelte", imageId: "Svelte.png" },
+    { name: "Swift", imageId: "Swift.png" },
+    { name: "Type Script", imageId: "Swift.png" },
+    { name: "Unity", imageId: "Unity.png" },
+    { name: "Vue", imageId: "Vue.png" },
+    { name: "Zeplin", imageId: "Zeplin.png" },
   ];
 
-  // 각 스킬에 대해 skill_no를 부여합니다.
-  skills.forEach((skill, index) => {
-    skills[index] = { skill_no: index + 1, skill_name: skill };
+  skillInfo.forEach((skill, index) => {
+    //const formattedSkillName = skill.name.replace(/\s/g, "");
+
+    const skillImgUrl = `https://2mihye.github.io/Skill_IMG/images/${skill.imageId}`;
+    console.log("************skillImgUrl*************** ", skillImgUrl);
+
+    skills.push({
+      skill_no: index + 1,
+      skill_name: skill.name,
+      image_url: skillImgUrl,
+    });
   });
+
+  // // 각 스킬에 대해 skill_no를 부여합니다.
+  // skills.forEach((skill, index) => {
+  //   skills[index] = { skill_no: index + 1, skill_name: skill };
+  // });
 
   console.log(skills);
 
@@ -470,6 +485,7 @@ function MainContent() {
       <div className="banner">
         <div className="banner_all">{!profile && <KakaoMap />}</div>
       </div>
+      <img src="https://2mihye.github.io/Skill_IMG/images/Java.png" />
       <br />
       <br />
       <br />
@@ -806,7 +822,14 @@ function MainContent() {
                       </div>
                       <ul className="skill_icon_section">
                         {board.studyPostWithSkills.map((skill, index) => (
-                          <li key={index}>{skill.skill_name.skill_name}</li>
+                          <li key={index}>
+                            <img
+                              src={skill.image_url}
+                              alt={skill.skill_name}
+                              width="20px"
+                              height="20px"
+                            />
+                          </li>
                         ))}
                       </ul>
                       <div className="board_content_border"></div>
@@ -882,7 +905,14 @@ function MainContent() {
                     </div>
                     <ul className="skill_icon_section">
                       {board.studyPostWithSkills.map((skill, index) => (
-                        <li key={index}>{skill.skill_name}</li>
+                        <li key={index}>
+                          <img
+                            src={skill.image_url}
+                            alt={skill.skill_name}
+                            width="20px"
+                            height="20px"
+                          />
+                        </li>
                       ))}
                     </ul>
                     <div className="board_content_border"></div>
