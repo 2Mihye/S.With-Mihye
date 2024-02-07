@@ -275,4 +275,11 @@ public class StudyPostService {
     public void deleteUser(String nickname) {
     	studyPostMapper.deleteUser(nickname);
     }
+    
+    
+    // Pagination Part
+    // 페이지네이션 스터디 목록
+    public List<StudyPost> getAllStudies(Pagination pagination) {
+        return studyPostMapper.getAllStudies(pagination);
+    }
 }

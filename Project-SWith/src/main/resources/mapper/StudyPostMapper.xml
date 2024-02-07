@@ -533,5 +533,14 @@
 		DELETE FROM USERS WHERE USER_NO = #{user_no}
 	</delete>
 	
+	<!-- ******************************************************* Pagination Part ******************************************************************** -->
+	<!-- 모든 스터디 찾기 -->
+	<select id="getAllStudies" resultType="lm.swith.main.model.StudyPost">
+		<bind name="start" value="(pg - 1)*sz" />
+		SELECT * FROM study_post
+		ORDER BY study_post_time DESC
+		LIMIT #{start}, #{size}
+	</select>
+	
 	
 </mapper>

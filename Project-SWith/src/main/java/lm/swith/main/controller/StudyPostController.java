@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import lm.swith.main.model.*;
@@ -300,5 +301,21 @@ public class StudyPostController {
 	public String deleteUser(@PathVariable String nickname) {
 		studyPostService.deleteUser(nickname);
 		return "redirect:/nicknameStudies/" + nickname;
+	}
+	
+	
+	
+	// Pagination Part
+	// 페이지네이션 스터디 목록
+	@GetMapping("/getAllStudies")
+	public String studyList(Model model, Pagination pagination) {
+		studyPostService.getAllStudies(pagination);
+		/* 마지막 페이지 번호 */
+		pagination.setRecordCount(studyPostMapper.count());
+		/* 전체 게시글 갯수 */
+		model.addAttribute("total" , boardMapper.count());
+		/* 한페이지 게시물 불러오기 */
+		model.addAttribute("boards" , boards);
+		return "board/list";
 	}
 }

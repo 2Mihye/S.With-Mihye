@@ -143,5 +143,8 @@ public interface StudyPostMapper {
 	// 유저 삭제
 	void deleteUser(@Param("nickname") String nickname);
 	
+	// Pagination part ==============================================================================================================================================
+	// 모든 게시글 불러오기
+	List<StudyPost> getAllStudies(Pagination pagination);
 	
 }
