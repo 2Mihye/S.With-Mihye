@@ -8,13 +8,15 @@ import Accept from "./img/accept.png";
 import Reject from "./img/reject.png";
 import usersUserinfoAxios from "../token/tokenAxios";
 
-export default function StudyApplication() {
+export default function StudyApplication({
+  userData,
+  user_no,
+  applicationKey,
+  swithUser,
+}) {
   const { post_no } = useParams(); // 동적 라우트 매개변수 가져오기
-  const [isEditing, setIsEditing] = useState(false);
 
-  function handleEditClick() {
-    setIsEditing((editing) => !editing);
-  }
+  const [adminUser, setAdminUser] = useState(false);
 
   const [applicantData, setApplicantData] = useState([]);
 
@@ -24,14 +26,31 @@ export default function StudyApplication() {
         `/application_update/${post_no}`
       );
       setApplicantData(response.data);
+      console.log("user_no: " + user_no);
+      console.log("userData.user_no: " + userData.user_no);
+      if (swithUser.user_no === userData.user_no) {
+        setAdminUser(true);
+      } else {
+        setAdminUser(false);
+      }
+
       console.log("보이니", response.data);
     } catch (error) {
       console.error("Failed applicant 데이터 가져오기 실패", error);
     }
   };
+
   useEffect(() => {
     fetchApplicantData();
-  }, [post_no]);
+
+    console.log("게시글작성자스윗유저: " + swithUser.user_no);
+    console.log("로그인유저: " + userData.user_no);
+    if (swithUser.user_no === userData.user_no) {
+      setAdminUser(true);
+    } else {
+      setAdminUser(false);
+    }
+  }, [post_no, applicationKey]);
 
   const handleAccept = async (accept, user_no) => {
     try {
@@ -46,9 +65,16 @@ export default function StudyApplication() {
     }
   };
 
+  console.log("adminUser: " + adminUser);
+
   return (
     <div className="studyApplication">
-      <p className="studyApplication_title">S.With 신청 현황 (2/5)</p>
+      <p className="studyApplication_title">
+        {applicantData.length > 0 &&
+          applicantData[0].accepted_applicants &&
+          applicantData[0].max_study_applicants &&
+          `S.With 신청 현황 (${applicantData[0].accepted_applicants}/${applicantData[0].max_study_applicants})`}
+      </p>
       <div className="studyApplaction_user">
         {applicantData &&
           applicantData.map((users, index) => (
@@ -60,7 +86,7 @@ export default function StudyApplication() {
               <div className="studyApplaction_user_p">
                 {users.nickname}
                 <div>
-                  {!isEditing && (
+                  {adminUser && users.status !== "승인" && (
                     <div className="register_swithButton">
                       <button
                         name="accept"
@@ -85,6 +111,23 @@ export default function StudyApplication() {
                       </button>
                     </div>
                   )}
+                  {users.user_no === userData.user_no &&
+                    users.status !== "승인" && (
+                      <div>
+                        <button
+                          style={{
+                            backgroundColor: "#8ee3ff",
+                            width: "80px",
+                            height: "27px",
+                            borderRadius: "50px",
+                          }}
+                          name="reject"
+                          onClick={() => handleAccept(false, users.user_no)}
+                        >
+                          <p style={{}}>취소하기</p>
+                        </button>
+                      </div>
+                    )}
                 </div>
               </div>
             </li>

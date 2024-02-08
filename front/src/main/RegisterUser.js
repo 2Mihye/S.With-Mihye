@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Header from './Header';
-import '../css/RegisterUser.css';
-import Required from './img/required.png';
-import sample6_execDaumPostcode from './KakaoAddress';
-import girl from '../main/img/girl.png';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Header from "./Header";
+import "../css/RegisterUser.css";
+import Required from "./img/required.png";
+import sample6_execDaumPostcode from "./KakaoAddress";
+import girl from "../main/img/girl.png";
 
 function RegisterUser() {
-  const [number, setNumber] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [number, setNumber] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
-  const [confirm, setConfirm] = useState('');
-  const [confirmNickname, setConfirmNickname] = useState('');
+  const [confirm, setConfirm] = useState("");
+  const [confirmNickname, setConfirmNickname] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isButtonDisabled1, setIsButtonDisabled1] = useState(false);
   const [swithUser, setNewUser] = useState({
-    email: '',
-    password: '',
-    username: '',
-    nickname: '',
-    img: '',
-    useraddress: '',
-    user_introduction: '',
-    role: '',
+    email: "",
+    password: "",
+    username: "",
+    nickname: "",
+    img: "",
+    useraddress: "",
+    user_introduction: "",
+    role: "",
   });
 
   const handleInputChange = (e) => {
@@ -39,7 +39,7 @@ function RegisterUser() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'http://localhost:8080/users/mail',
+        "http://localhost:8080/users/mail",
         swithUser,
         {
           withCredentials: true,
@@ -48,18 +48,18 @@ function RegisterUser() {
 
       setConfirm(response.data.toString());
       //db에 이메일이 존재하면 alert 이미 존재하는 아이디입니다. else 사용가능한 아이디입니다.
-      if (response.data !== 'exists') {
+      if (response.data !== "exists") {
         console.log(response.data);
-        console.log('서버 응답:', response);
-        console.log('ok');
-        alert('인증번호가 전송되었습니다.(사용가능)');
+        console.log("서버 응답:", response);
+        console.log("ok");
+        alert("인증번호가 전송되었습니다.(사용가능)");
       } else {
-        alert('이미 중복된 아이디입니다');
+        alert("이미 중복된 아이디입니다");
 
         console.log(response.data);
       }
     } catch (error) {
-      console.error('이메일이 부적합합니다.', error);
+      console.error("이메일이 부적합합니다.", error);
     }
   };
 
@@ -68,13 +68,13 @@ function RegisterUser() {
     e.preventDefault();
     const { nickname } = swithUser;
     const maxLength = 10;
-    if (nickname.length > maxLength) {
-      alert(`닉네임은 ${maxLength}자 이하로 입력해주세요.`);
+    if (nickname.length > maxLength || nickname.length === 0) {
+      alert(`닉네임은 ${maxLength}자 이하, 0자 이상으로 입력해주세요.`);
       return;
     }
     try {
       const response = await axios.post(
-        'http://localhost:8080/users/nickname',
+        "http://localhost:8080/users/nickname",
         swithUser,
         {
           withCredentials: true,
@@ -82,15 +82,15 @@ function RegisterUser() {
       );
 
       setConfirmNickname(response.data.toString());
-      if (response.data !== 'existsNick') {
-        alert('사용 가능한 닉네임입니다.');
-        setConfirmNickname('new');
-      } else if (response.data === 'existsNick') {
-        alert('이미 존재하는 닉네임입니다.');
-        setConfirmNickname('existsNick');
+      if (response.data !== "existsNick") {
+        alert("사용 가능한 닉네임입니다.");
+        setConfirmNickname("new");
+      } else if (response.data === "existsNick") {
+        alert("이미 존재하는 닉네임입니다.");
+        setConfirmNickname("existsNick");
       }
     } catch (error) {
-      console.error('닉네임이 부적합합니다.', error);
+      console.error("닉네임이 부적합합니다.", error);
     }
   };
 
@@ -100,34 +100,34 @@ function RegisterUser() {
     setNumber(value);
   };
   const handleConfirm = async () => {
-    console.log('number:', number);
-    console.log('confirm:', confirm);
+    console.log("number:", number);
+    console.log("confirm:", confirm);
     if (number === confirm) {
-      alert('인증 완료, 사용가능한 이메일입니다.');
+      alert("인증 완료, 사용가능한 이메일입니다.");
       setIsButtonDisabled(true);
       // 전송한 이메일 값을 a에 담아주기
     } else {
-      alert('인증 번호가 다릅니다.');
-      console.error('인증 실패');
+      alert("인증 번호가 다릅니다.");
+      console.error("인증 실패");
     }
   };
 
   //password
   const handleConfirmPassword = async (e) => {
-    console.log('swithUser.password', swithUser.password);
-    console.log('confirmPassword', confirmPassword);
+    console.log("swithUser.password", swithUser.password);
+    console.log("confirmPassword", confirmPassword);
     const passwordRegex =
       /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~?!@#$%^&*_-]).{8,}$/;
     if (swithUser.password === confirmPassword) {
       // Check if the password meets the regex pattern
       if (passwordRegex.test(confirmPassword)) {
-        alert('비밀번호가 일치하며 조건에 부합합니다.');
+        alert("비밀번호가 일치하며 조건에 부합합니다.");
         setIsButtonDisabled1(true);
       } else {
-        alert('비밀번호가 일치하지만 조건에 부합하지 않습니다.');
+        alert("비밀번호가 일치하지만 조건에 부합하지 않습니다.");
       }
     } else {
-      alert('비밀번호가 일치하지 않습니다.');
+      alert("비밀번호가 일치하지 않습니다.");
     }
   };
   const handlePasswordChange = (e) => {
@@ -139,40 +139,40 @@ function RegisterUser() {
     if (
       isButtonDisabled === true &&
       swithUser.password === confirmPassword &&
-      confirmNickname === 'new'
+      confirmNickname === "new"
     ) {
       try {
         //변경된 데이터 값 저장
 
         const response = await axios.post(
-          'http://localhost:8080/users/register',
+          "http://localhost:8080/users/register",
           swithUser,
           {
             withCredentials: true,
           }
         );
         //address
-        const address = document.getElementById('useraddress').value;
+        const address = document.getElementById("useraddress").value;
         setNewUser((prevUser) => ({ ...prevUser, useraddress: address }));
         setData((prevUser) => [...prevUser, response.data]);
         console.log(confirmNickname);
-        alert('회원가입이 완료되었습니다.');
-        navigate('/login');
+        alert("회원가입이 완료되었습니다.");
+        navigate("/login");
       } catch (error) {
-        console.error('데이터가 부적합합니다.', error);
+        console.error("데이터가 부적합합니다.", error);
       }
     } else if (
       isButtonDisabled === false &&
       swithUser.password !== confirmPassword
     ) {
-      alert('이메일 인증을 해주세요');
+      alert("이메일 인증을 해주세요");
     } else if (
       isButtonDisabled === true &&
       swithUser.password !== confirmPassword
     ) {
-      alert('비밀번호가 일치하지않습니다. 확인해주세요');
+      alert("비밀번호가 일치하지않습니다. 확인해주세요");
     } else {
-      alert('모든 인증을 확인해주세요');
+      alert("모든 인증을 확인해주세요");
       console.log(confirmNickname);
     }
   };
@@ -220,12 +220,12 @@ function RegisterUser() {
               onClick={handleEmail}
               className="btn round"
               style={{
-                backgroundColor: '#ffffb5',
-                width: '100px',
-                height: '50px',
-                margin: '10px',
-                marginTop: '5px',
-                borderRadius: '30px',
+                backgroundColor: "#ffffb5",
+                width: "100px",
+                height: "50px",
+                margin: "10px",
+                marginTop: "5px",
+                borderRadius: "30px",
               }}
             >
               인증하기
@@ -243,12 +243,12 @@ function RegisterUser() {
               onClick={handleConfirm}
               className="btn round"
               style={{
-                backgroundColor: '#ffffb5',
-                width: '100px',
-                height: '50px',
-                margin: '10px',
-                marginTop: '5px',
-                borderRadius: '30px',
+                backgroundColor: "#ffffb5",
+                width: "100px",
+                height: "50px",
+                margin: "10px",
+                marginTop: "5px",
+                borderRadius: "30px",
               }}
             >
               인증확인
@@ -288,12 +288,12 @@ function RegisterUser() {
               onClick={handleConfirmPassword}
               className="btn round"
               style={{
-                backgroundColor: '#ffffb5',
-                width: '100px',
-                height: '50px',
-                margin: '10px',
-                marginTop: '5px',
-                borderRadius: '30px',
+                backgroundColor: "#ffffb5",
+                width: "100px",
+                height: "50px",
+                margin: "10px",
+                marginTop: "5px",
+                borderRadius: "30px",
               }}
             >
               비밀번호 일치확인
@@ -337,12 +337,12 @@ function RegisterUser() {
               onClick={handleNickname}
               className="btn round"
               style={{
-                backgroundColor: '#ffffb5',
-                width: '100px',
-                height: '50px',
-                margin: '10px',
-                marginTop: '5px',
-                borderRadius: '30px',
+                backgroundColor: "#ffffb5",
+                width: "100px",
+                height: "50px",
+                margin: "10px",
+                marginTop: "5px",
+                borderRadius: "30px",
               }}
             >
               닉네임 중복확인
@@ -385,12 +385,12 @@ function RegisterUser() {
               name="useraddress"
               className="btn round"
               style={{
-                backgroundColor: '#ffffb5',
-                width: '150px',
-                height: '50px',
-                margin: '10px',
-                marginTop: '5px',
-                borderRadius: '30px',
+                backgroundColor: "#ffffb5",
+                width: "150px",
+                height: "50px",
+                margin: "10px",
+                marginTop: "5px",
+                borderRadius: "30px",
               }}
               type="button"
               value="주소 찾기"
@@ -428,13 +428,13 @@ function RegisterUser() {
             name="login"
             className="btn round"
             style={{
-              backgroundColor: '#75ddff',
-              width: '200px',
-              height: '50px',
-              margin: '10px',
-              marginTop: '20px',
-              marginBottom: '10px',
-              borderRadius: '30px',
+              backgroundColor: "#75ddff",
+              width: "200px",
+              height: "50px",
+              margin: "10px",
+              marginTop: "20px",
+              marginBottom: "10px",
+              borderRadius: "30px",
             }}
           >
             회원가입 완료
@@ -446,12 +446,12 @@ function RegisterUser() {
             name="login"
             className="btn round"
             style={{
-              backgroundColor: '#ffffb5',
-              width: '150px',
-              height: '50px',
-              margin: '10px',
-              marginTop: '20px',
-              borderRadius: '30px',
+              backgroundColor: "#ffffb5",
+              width: "150px",
+              height: "50px",
+              margin: "10px",
+              marginTop: "20px",
+              borderRadius: "30px",
             }}
           >
             카카오 로그인
@@ -462,11 +462,11 @@ function RegisterUser() {
             name="login"
             className="btn round"
             style={{
-              backgroundColor: '#ffffb5',
-              width: '150px',
-              height: '50px',
-              margin: '10px',
-              borderRadius: '30px',
+              backgroundColor: "#ffffb5",
+              width: "150px",
+              height: "50px",
+              margin: "10px",
+              borderRadius: "30px",
             }}
           >
             Github 로그인

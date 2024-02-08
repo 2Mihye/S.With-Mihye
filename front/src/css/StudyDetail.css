@@ -220,6 +220,18 @@
   border: 0px;
 }
 
+.commentInput_buttonComplete_done {
+  height: 40px;
+  background: #ff7057;
+  border-radius: 50px;
+  font-weight: 700;
+  color: #525252;
+  font-size: 16px;
+  font-family: "SUITE-Regular";
+  padding: 0 20px;
+  border: 0px;
+}
+
 .commentDelete_buttonComplete {
   height: 20px;
   background: #8ee3ff;

@@ -9,7 +9,6 @@ import org.apache.ibatis.annotations.Param;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
-import lm.swith.main.model.Pagination;
 import lm.swith.main.model.PostTechStacks;
 import lm.swith.main.model.Skill;
 import lm.swith.main.model.StudyApplication;
@@ -131,7 +130,7 @@ public interface StudyPostMapper {
 	// 댓글 등록
 	void insertComment (Comments comments);
 		
-	// 댓글 목록
+	// 게시글 댓글 목록
 	List<Comments> getCommentsByPostNo(@Param("post_no") Long post_no);
 		
 	// 댓글 수정
@@ -139,6 +138,9 @@ public interface StudyPostMapper {
 		
 	// 댓글 삭제
 	void deleteComment(@Param("post_no") Long post_no, @Param("user_no") Long user_no, @Param("comment_no") Long comment_no);
+	
+	// 댓글 전체 목록
+	List<Comments> getCommentList();
 
 
 	// Profile Part================================================================================================================================================
@@ -166,13 +168,5 @@ public interface StudyPostMapper {
 //		void deleteUserMystudiesByUserNo(@Param("user_no") Long user_no);
 	void deleteUserStudyPost(@Param("user_no") Long user_no);
 	void deleteUser(@Param("user_no") Long user_no);
-	
-	
-	
-	// Pagination part ==============================================================================================================================================
-	// 모든 게시글 불러오기
-	List<StudyPost> getAllStudies(Pagination pagination);
-	
-	// 모든 게시글 수
-	int studyCount();
-	}
+
+}

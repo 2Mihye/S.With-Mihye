@@ -13,6 +13,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useParams, Link } from "react-router-dom";
 import Modal from "./Modal";
 import ProfileModal from "./ProfileModal";
+import Footer from "./Footer";
+import CommentIcon from "./img/comment.png";
+import { Pagination } from "react-bootstrap";
 
 function MainContent() {
   const [isSkillVisible, setSkillVisible] = useState(false);
@@ -31,7 +34,43 @@ function MainContent() {
 
   const [filteredBoards, setFilteredBoards] = useState([]);
   const modalEl = useRef();
-
+  const skills = [
+    "Angular",
+    "C",
+    "C++",
+    "Django",
+    "Docker",
+    "Express",
+    "Figma",
+    "Firebase",
+    "Flask",
+    "Flutter",
+    "Git",
+    "Go",
+    "GraphQL",
+    "Java Script",
+    "Java",
+    "Kubernetes",
+    "MongoDB",
+    "mySql",
+    "NestJS",
+    "NodeJS",
+    "Php",
+    "Python",
+    "R",
+    "React",
+    "React Native",
+    "Spring",
+    "Svelte",
+    "Swift",
+    "Type Script",
+    "Unity",
+    "Vue",
+    "Zeplin",
+  ]; // 각 스킬에 대해 skill_no를 부여합니다.
+  skills.forEach((skill, index) => {
+    skills[index] = { skill_no: index + 1, skill_name: skill };
+  });
   useEffect(() => {
     if (modalEl.current && isSkillVisible) {
       // modalEl이 정의되었고, isSkillVisible이 true일 때만 ref를 적용
@@ -53,11 +92,16 @@ function MainContent() {
   }, []);
   const [swithUser, setSwithUser] = useState("");
   const [boards, setBoards] = useState([]);
+  const [comments, setComments] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const boardsResponse = await usersUserinfoAxios.get("/post_list");
-        setBoards(boardsResponse.data);
+        if (!boardsResponse.data) {
+          return;
+        }
+        setBoards(boardsResponse.data.studyPosts);
+        setComments(boardsResponse.data.comments);
 
         // Fetch user data
         const userResponse = await usersUserinfoAxios.get("/users/userinfo");
@@ -75,6 +119,18 @@ function MainContent() {
 
     fetchData();
   }, []);
+
+  const getCommentCount = (postNo) => {
+    // 각 게시물에 해당하는 댓글 수를 계산
+    const postComments = comments.filter(
+      (comment) => comment.post_no === postNo
+    );
+    const commentCount = postComments.length;
+
+    console.log(`게시물 ${postNo}의 댓글 수: ${commentCount}`);
+
+    return commentCount;
+  };
 
   const toggleContentSkill = (skill) => {
     setSkillVisible(!isSkillVisible);
@@ -164,43 +220,6 @@ function MainContent() {
     "기타",
   ];
 
-  const skills = [
-    "Angular",
-    "C",
-    "C++",
-    "Django",
-    "Docker",
-    "Express",
-    "Figma",
-    "Firebase",
-    "Flask",
-    "Flutter",
-    "Git",
-    "Go",
-    "GraphQL",
-    "Java Script",
-    "Java",
-    "Kotlin",
-    "Kubernetes",
-    "MongoDB",
-    "mySql",
-    "NestJS",
-    "NextJS",
-    "NodeJS",
-    "Php",
-    "Python",
-    "R",
-    "React",
-    "React Native",
-    "Spring",
-    "Svelte",
-    "Swift",
-    "Type Script",
-    "Unity",
-    "Vue",
-    "Zeplin",
-  ];
-
   const skillInfo = [
     { name: "Angular", imageId: "Angular.png" },
     { name: "C", imageId: "C.png" },
@@ -227,7 +246,7 @@ function MainContent() {
     { name: "Php", imageId: "Php.png" },
     { name: "Python", imageId: "Python.png" },
     { name: "R", imageId: "R.png" },
-    { name: "React", imageId: "react.png" },
+    { name: "React", imageId: "React.png" },
     { name: "React Native", imageId: "REACT_NATIVE.png" },
     { name: "Spring", imageId: "Spring.png" },
     { name: "Svelte", imageId: "Svelte.png" },
@@ -483,25 +502,46 @@ function MainContent() {
   }, [userData.user_no]);
 
   // 나머지 코드는 zzimUser를 사용한 부분입니다.
-  const updatedBoards = boards.map((board) => {
-    // zzimUser가 비어있는지 확인 후 조건을 걸어줌
-    if (zzimUser.length > 0) {
-      const isZzim = zzimUser.some((zzim) => board.post_no === zzim.post_no);
 
-      console.log(isZzim);
+  // boards가 배열인지 확인 후 map 함수 사용
+  const updatedBoards = Array.isArray(boards)
+    ? boards.map((board) => {
+        // zzimUser가 비어있는지 확인 후 조건을 걸어줌
+        if (zzimUser.length > 0) {
+          const isZzim = zzimUser.some(
+            (zzim) => board.post_no === zzim.post_no
+          );
 
-      return {
-        ...board,
-        isZzim, // 혹은 isLiked 같은 상태를 추가하고 나중에 사용할 수 있도록 함
-      };
-    } else {
-      return board; // zzimUser가 비어있으면 보드를 그대로 반환
-    }
-  });
+          console.log(isZzim);
+
+          return {
+            ...board,
+            isZzim, // 혹은 isLiked 같은 상태를 추가하고 나중에 사용할 수 있도록 함
+          };
+        } else {
+          return board; // zzimUser가 비어있으면 보드를 그대로 반환
+        }
+      })
+    : []; // 만약 boards가 배열이 아니면 updatedBoards를 빈 배열로 설정
 
   ///////////////////////////////////////////////
   const [profile, setProfile] = useState(false);
   const [profileUserNo, setProfileUserNo] = useState(null);
+  ////////////////////////////////////////////////////////////////////////
+  //페이지네이션//
+  const [currentPage, setCurentPage] = useState(1); //현재 페이지
+  const [momentPerPage] = useState(12); //한 페이지당 보여줄 수
+  //페이지를 변경하기위한 핸들러 추가
+  const handlePageChange = (pageNumber) => {
+    setCurentPage(pageNumber);
+  };
+  const indexOfLastMoment = currentPage * momentPerPage;
+  const indexFirstMoment = indexOfLastMoment - momentPerPage;
+  const currentMoment = updatedBoards.slice(
+    indexFirstMoment,
+    indexOfLastMoment
+  );
+
   return (
     <div className="Welcome">
       <div className="banner">
@@ -836,7 +876,11 @@ function MainContent() {
                       <div className="study_schedule">
                         <p className="">마감일</p>
                         <p>|</p>
-                        <p>{board.recruit_deadline}</p>
+                        <p>
+                          {new Date(
+                            board.recruit_deadline
+                          ).toLocaleDateString()}
+                        </p>
                       </div>
                       <div>
                         <h1 className="board_title">{board.study_title}</h1>
@@ -844,7 +888,7 @@ function MainContent() {
                       <ul className="skill_icon_section">
                         {board.studyPostWithSkills.map((skill, index) => (
                           <img
-                            src={`https://2mihye.github.io/Skill_IMG/images/${skillInfo[index].imageId}`}
+                            src={`https://2mihye.github.io/Skill_IMG/images/${skill.skill_name}.png`}
                             alt={skill.skill_name}
                             width="30"
                             height="30"
@@ -855,22 +899,36 @@ function MainContent() {
                       <section className="board_info_section">
                         <div className="board_info_left">
                           <div className="user_profile_img">
-                            {board.user_profile && (
-                              <img
-                                className="user_img"
-                                width="30px"
-                                height="30px"
-                                src={`data:image/jpeg;base64,${board.user_profile}`}
-                                alt="Profile"
-                              />
-                            )}
+                            <img
+                              className="user_profile_img_set"
+                              width="30px"
+                              height="30px"
+                              src={`data:image/jpeg;base64,${board.user_profile}`}
+                              alt="Profile"
+                              onClick={(e) => {
+                                e.preventDefault(); // 기본 동작 막기 (링크 이동 방지)
+                                e.stopPropagation(); // 이벤트 전파 방지
+
+                                // 클릭한 유저의 user_no를 상태에 저장
+                                const clickedUserNo = board.user_no;
+
+                                // 모달 열기 및 user_no 전달
+                                setProfileUserNo(clickedUserNo);
+                                setProfile(!profile);
+                              }}
+                            />
                           </div>
                           <div>{board.nickname}</div>
                         </div>
                         <div className="board_info_right">
                           <div className="comment_count_section">
-                            <p>댓글아이콘</p>
-                            <p>{board.commentCount}</p>
+                            <img
+                              width="30px"
+                              height="30px"
+                              src={CommentIcon}
+                              alt="Comment"
+                            />
+                            <p> {getCommentCount(board.post_no)}</p>
                           </div>
                         </div>
                       </section>
@@ -882,7 +940,7 @@ function MainContent() {
               <p>조건에 해당하는 게시물이 없습니다.</p>
             )
           ) : (
-            updatedBoards.map((board) => (
+            currentMoment.map((board) => (
               <div key={board.post_no} onClick={(e) => e.stopPropagation()}>
                 <Link
                   className="board_box"
@@ -917,7 +975,9 @@ function MainContent() {
                     <div className="study_schedule">
                       <p className="">마감일</p>
                       <p>|</p>
-                      <p>{board.recruit_deadline}</p>
+                      <p>
+                        {new Date(board.recruit_deadline).toLocaleDateString()}
+                      </p>
                     </div>
                     <div>
                       <h1 className="board_title">{board.study_title}</h1>
@@ -925,7 +985,7 @@ function MainContent() {
                     <ul className="skill_icon_section">
                       {board.studyPostWithSkills.map((skill, index) => (
                         <img
-                          src={`https://2mihye.github.io/Skill_IMG/images/${skillInfo[index].imageId}`}
+                          src={`https://2mihye.github.io/Skill_IMG/images/${skill.skill_name}.png`}
                           alt={skill.skill_name}
                           width="30"
                           height="30"
@@ -959,8 +1019,15 @@ function MainContent() {
                       </div>
                       <div className="board_info_right">
                         <div className="comment_count_section">
-                          <p>댓글아이콘</p>
-                          <p>{board.commentCount}</p>
+                          <img
+                            width="30px"
+                            height="30px"
+                            src={CommentIcon}
+                            alt="Comment"
+                          />
+                          <p className="comment_count">
+                            {getCommentCount(board.post_no)}
+                          </p>
                         </div>
                       </div>
                     </section>
@@ -970,6 +1037,21 @@ function MainContent() {
             ))
           )}
         </ul>
+        <div className="main_pagenation">
+          <Pagination>
+            {[...Array(Math.ceil(boards.length / momentPerPage)).keys()].map(
+              (number) => (
+                <Pagination.Item
+                  key={number + 1}
+                  active={number + 1 === currentPage}
+                  onClick={() => handlePageChange(number + 1)}
+                >
+                  {number + 1}
+                </Pagination.Item>
+              )
+            )}
+          </Pagination>
+        </div>
       </main>
       {profile && (
         <Modal closeModal={() => setProfile(!profile)}>
@@ -982,6 +1064,7 @@ function MainContent() {
           />
         </Modal>
       )}
+      <Footer />
     </div>
   );
 }

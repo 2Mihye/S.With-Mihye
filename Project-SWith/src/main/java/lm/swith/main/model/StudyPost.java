@@ -3,6 +3,7 @@ package lm.swith.main.model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import lm.swith.user.model.SwithUser;
 import lombok.*;
 
 
@@ -12,6 +13,7 @@ public class StudyPost {
 	private Long user_no;
 	private Long comment_no;
 	private String nickname;
+	private byte[] user_profile;
 	private String study_title;
 	private String study_content;
 	private String study_method; // 스터디 방식 (오프라인/온라인/온.오프라인)
@@ -41,7 +43,9 @@ public class StudyPost {
 	
 	private List<Comments> comments; // 댓글들 담을 곳
 	
-	private Users user; // 유저 테이블
+	private SwithUser user; // 유저 테이블
+
+	
 	private Likes likes; // 찜 테이블
 	
     private Mentor mentor; // 멘토 테이블

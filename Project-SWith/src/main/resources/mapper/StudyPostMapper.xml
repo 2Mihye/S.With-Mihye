@@ -13,6 +13,7 @@
     <resultMap type="lm.swith.main.model.PostTechStacks" id="PostTechStackResult">
         <result property="post_no" column="POST_NO" />
         <result property="skill_no" column="SKILL_NO" />
+        <result property="user_no" column="USER_NO" />
     </resultMap>
     
     <resultMap type="lm.swith.main.model.Mentor" id="MentorResult">
@@ -44,6 +45,7 @@
     	<result property="password" column="password" />
     	<result property="username" column="username" />
     	<result property="user_profile" column="user_profile" />
+    	<result property="useraddress" column="useraddress" />
     	<result property="user_introduction" column="user_introduction" />
     	<result property="user_role" column="user_role" />
     </resultMap>
@@ -56,7 +58,6 @@
 	  	<result property="nickname" column="NICKNAME"/>
 	    <result property="user_profile" column="USER_PROFILE" />
 	    <result property="comment_post_time" column="COMMENT_POST_TIME"/>
-		<association property="user" resultMap="UserResult"/>
 	</resultMap>
 	
 	<resultMap type="lm.swith.user.model.SwithUser" id="UserResult">
@@ -68,7 +69,7 @@
 	<resultMap type="lm.swith.main.model.Likes" id="LikesResult">
 		<result property="post_no" column="POST_NO" />
 		<result property="user_no" column="USER_NO" />
-		<result property="likes" column="LIKES" />
+		<result property="lieks" column="LIKES" />
 	</resultMap>
 
     <resultMap type="lm.swith.main.model.StudyPost" id="studyPostWithSkills">
@@ -91,10 +92,11 @@
     	<result property="mentee_count" column="mentee_count"/>
     	<result property="application_count" column="application_count"/>
     	<result property="likes_count" column="likes_count" />
-        <association property="user" resultMap="UsersResult"/>
+        <association property="user" resultMap="UserResult"/>
         <association property="likes" resultMap="LikesResult" />
         <association property="mentor" resultMap="MentorResult" />
         <association property="mentee" resultMap="MenteeResult" />
+        <association property="comments" resultMap="commentWithUser" />
         <association property="studyApplication" resultMap="StudyApplicationResult" />
         <collection property="studyPostWithSkills" resultMap="SkillResult"/>
     </resultMap>
@@ -107,16 +109,19 @@
     
 	<!-- 스터디 전체 목록 OK -->
 	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
-	    SELECT sp.*, s.skill_name, u.*,
-	    COUNT(l.post_no) AS likes_count
+	    SELECT sp.*,s.skill_no, s.skill_name, s.skill_img, u.*, c.*,
+	    ( 
+	    	SELECT COUNT(*)
+	    	FROM likes l
+	    	WHERE post_no = sp.post_no
+	    ) AS likes_count
 	    FROM STUDY_POST sp
 	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
 	    LEFT JOIN likes l ON sp.post_no = l.post_no
 	    LEFT JOIN users u ON sp.user_no = u.user_no
+	    LEFT JOIN comments c ON sp.post_no = c.post_no
 	    WHERE sp.study_status = 'O'
-	    GROUP BY sp.*, s.skill_name, u.*
-	    ORDER BY study_post_time DESC
 	</select>
 	
 	
@@ -477,7 +482,7 @@
     </insert>
 
 
-	<!-- 댓글 목록 -->
+	<!-- 게시글 댓글 목록 -->
 	<select id="getCommentsByPostNo" resultMap="commentWithUser">
 	    SELECT c.*, u.nickname, u.user_profile FROM COMMENTS c 
 	   	LEFT JOIN users u ON c.user_no = u.user_no
@@ -502,6 +507,11 @@
 	      AND USER_NO = #{user_no}
 	      AND COMMENT_NO = #{comment_no}
 	</delete>
+	
+	<!-- 댓글 전체 목록 -->
+	<select id="getCommentList" parameterType="lm.swith.main.model.Comments">
+		SELECT * FROM COMMENTS
+	</select>
 	
 
 	<!-- ********************************************************** Users Part *********************************************************************** -->
@@ -577,17 +587,22 @@
 	
 	<!-- ******************************************************* Pagination Part ******************************************************************** -->
 	<!-- 모든 스터디 찾기 -->
-	<select id="getAllStudies" resultType="lm.swith.main.model.StudyPost">
+	<select id="getAllStudies" resultMap="studyPostWithSkills">
 	    <bind name="start" value="(page - 1) * size" />
 	    <bind name="end" value="page * size" />
 	    <!-- ROWNUM을 사용한 페이징 -->
-	    <![CDATA[
-	        SELECT * FROM (
-	            SELECT study_post.*, ROWNUM rnum
-	            FROM study_post
-	            ORDER BY study_post_time DESC
-	        ) WHERE rnum BETWEEN #{start} AND #{end}
-	    ]]>
+		<![CDATA[
+		    SELECT sp.*, s.skill_name, u.*
+		    FROM (
+		        SELECT study_post.*, ROWNUM rnum
+		        FROM study_post
+		        ORDER BY study_post_time DESC
+		    ) sp
+		    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+		    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+		    LEFT JOIN users u ON sp.user_no = u.user_no
+		    WHERE sp.rnum BETWEEN #{start} AND #{end}
+		]]>
 	</select>
 	
 	<!-- 모든 스터디 수 -->

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 import { useAuth } from "../security/AuthContext";
 import { useEffect, useState } from "react";
 import { logout, isTokenAvailable } from "../token/tokenAxios";
@@ -14,20 +14,16 @@ export default function Header() {
   const [userData, setUserData] = useState("");
   useEffect(() => {
     const fetchUserData = async () => {
-      // 토큰이 없으면 함수 실행 중단
-      if (!isTokenAvailable()) {
-        return;
-      }
-  
       try {
         // 서버에 사용자 정보를 가져오는 요청
         const response = await usersUserinfoAxios.get("/users/userinfo");
         setUserData(response.data);
+        console.log(userData);
       } catch (error) {
-        //console.error("Failed to fetch user data.", error);
+        console.error("Failed to fetch user data.", error);
       }
     };
-  
+
     fetchUserData();
   }, []);
   const [view, setView] = useState(false);
@@ -58,6 +54,22 @@ export default function Header() {
             </div>
 
             <ul className="navbar-nav_2">
+              {userData.user_role === "ADMIN" && isTokenAvailable() && (
+                <li className="nav-item">
+                  <div className="write">
+                    <div className="write_1">
+                      <a className="nav-link" href="/admin">
+                        <img
+                          className="write_img"
+                          src={process.env.PUBLIC_URL + "../img/setting.png"}
+                          alt="setting"
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              )}
+
               {isTokenAvailable() && (
                 <li className="nav-item">
                   <div className="write">

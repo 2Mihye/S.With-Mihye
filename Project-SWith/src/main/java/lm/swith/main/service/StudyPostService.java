@@ -12,7 +12,6 @@ import lm.swith.main.mapper.StudyPostMapper;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
-import lm.swith.main.model.Pagination;
 import lm.swith.main.model.PostTechStacks;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
@@ -203,7 +202,7 @@ public class StudyPostService {
     }
     
     
-    // 승인된 신청자 수를 가져와서 StudyApplication 모델에 설정
+    // 승인된 신청자 수를 가져오기
     public List<StudyApplication> getAllApplicants2(Long post_no) {
         List<StudyApplication> studyApplicants = studyPostMapper.getAllApplicantsByPostNo(post_no);
         for (StudyApplication studyApplication : studyApplicants) {
@@ -250,6 +249,8 @@ public class StudyPostService {
     
     
     
+    
+    
     // 스터디 찜 업데이트
     public void likesUpdate(Long user_no, Long post_no) {
         Likes likes = new Likes();
@@ -265,6 +266,19 @@ public class StudyPostService {
         }
     }
     
+    
+    //찜 카운트
+//    public List<Likes> likesCount(Long post_no) {
+//        List<Likes> likes = studyPostMapper.getLikesList(); // 알맞은 방법으로 Likes 목록을 가져와야 합니다.
+//
+//        for (Likes like : likes) {
+//            like.setLikesCount(studyPostMapper.likesCount(post_no));
+//        }
+//
+//        return likes;
+//    }
+  
+   
 
     // 스터디 게시글 작성 내 첫모임 장소 검색
     public List<Cafes> searchCafes(String keyword) {
@@ -293,6 +307,10 @@ public class StudyPostService {
     	studyPostMapper.deleteComment(post_no, user_no, comment_no);
     }
     
+    // 메인페이지 댓글 갯수
+    public List<Comments> getCommentList() {
+    	return studyPostMapper.getCommentList();
+    	}
     
     
     // Profile Part
@@ -329,18 +347,6 @@ public class StudyPostService {
     	studyPostMapper.deleteUserRoomNotice(user_no);
     	studyPostMapper.deleteUserStudyPost(user_no);
     	studyPostMapper.deleteUser(user_no);
-    }
-    
-    
-    // Pagination Part
-    // 페이지네이션 스터디 목록
-    public List<StudyPost> getAllStudies(Pagination pagination) {
-        return studyPostMapper.getAllStudies(pagination);
-    }
-    
-    // 모든 스터디 수
-    public int studyCount() {
-    	return studyPostMapper.studyCount();
     }
     
 }

@@ -5,6 +5,7 @@ import usersUserinfoAxios from "../token/tokenAxios";
 import axios from "axios";
 import Modal from "react-modal";
 import DeleteIcon from "./img/delete.png";
+import Footer from "./Footer";
 
 const StudyProject = ({ handleDataFromChild }) => {
   // formData에 저장된 데이터 사용
@@ -51,7 +52,7 @@ const StudyProject = ({ handleDataFromChild }) => {
     setStudy_place(cafe.sitewhladdr);
     closeModal();
   };
-  const [applicationCount, setApplicationCount] = useState("");
+  const [applicationCount, setApplicationCount] = useState();
 
   const [duration, setDuration] = useState("");
   const [techStack, setTechStack] = useState([]);
@@ -143,23 +144,25 @@ const StudyProject = ({ handleDataFromChild }) => {
     13: "GraphQL",
     14: "Java Script",
     15: "Java",
-    16: "Kubernetes",
-    17: "MongoDB",
-    18: "mySql",
-    19: "NestJS",
-    20: "NodeJS",
-    21: "Php",
-    22: "Python",
-    23: "R",
-    24: "React",
-    25: "React Native",
-    26: "Spring",
-    27: "Svelte",
-    28: "Swift",
-    29: "Type Script",
-    30: "Unity",
-    31: "Vue",
-    32: "Zeplin",
+    16: "Kotlin",
+    17: "Kubernetes",
+    18: "MongoDB",
+    19: "mySql",
+    20: "NestJS",
+    21: "NextJS",
+    22: "NodeJS",
+    23: "Php",
+    24: "Python",
+    25: "R",
+    26: "React",
+    27: "React Native",
+    28: "Spring",
+    29: "Svelte",
+    30: "Swift",
+    31: "Type Script",
+    32: "Unity",
+    33: "Vue",
+    34: "Zeplin",
   };
 
   console.log("스터디프로젝트js: " + studyMethod);
@@ -240,6 +243,7 @@ const StudyProject = ({ handleDataFromChild }) => {
               onChange={handleTechStackChange}
               onBlur={handleDataChange}
             >
+              <option value="0" style={{ display: "none" }}></option>
               {Object.entries(techStackOptions).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -293,6 +297,7 @@ const StudyProject = ({ handleDataFromChild }) => {
               onChange={(e) => setRegion(e.target.value)}
               onBlur={handleDataChange}
             >
+              <option value="0" style={{ display: "none" }}></option>
               <option value="강남/역삼/삼성">강남/역삼/삼성</option>
               <option value="신사/청담/압구정">신사/청담/압구정</option>
               <option value="서초/교대/사당">서초/교대/사당</option>
