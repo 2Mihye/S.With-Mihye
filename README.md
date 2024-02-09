@@ -43,25 +43,25 @@
 
 ### 기능 2
 
-<strong><img src="./img/main search.PNG"</strong><br/>
+<strong><img src="./img/main search.PNG"></strong><br/>
 
 <p>토글을 선택해 사용자가 원하는 방식의 스터디를 골라 볼 수 있고, 키워드를 검색하여 해당 키워드를 제목이나 내용에 포함하고 있는 스터디 목록을 볼 수 있다.</p><br/>
 
 ### 기능 3
 
-<strong><img src="./img/study detail.PNG"</strong><br/>
+<strong><img src="./img/study detail.PNG"></strong><br/>
 
 <p>스터디 목록에서 클릭하거나 지도에서 표시된 아이콘을 클릭하면 스터디의 상세 정보와 참여자와 신청자를 확인할 수 있고, 댓글로 문의사항을 묻고 답할 수 있습니다.</p></br>
 
 ### 기능 4
 
-<strong><img src="./img/create full.PNG"</strong><br>
+<strong><img src="./img/create full.PNG"></strong><br>
 
 <p>만들고자 하는 스터디의 특징과 진행방식 등을 적고 오프라인과 온오프라인 병행일 때 첫 모임 장소를 카페상호명이나 지역을 검색해 주소를 저장하고 메인화면의 지도에 표시합니다.</p><br/>
 
 ### 기능 5
 
-<strong><img src="./img/admin page.PNG"</strong><br>
+<strong><img src="./img/admin page.PNG"></strong><br>
 
 <p>관리자로 로그인하면 관리자 페이지에서 사용자의 닉네임을 검색하여 사용자의 모든 게시물과 댓글을 관리하고 탈퇴시킬 수 있습니다.</p><br/>
 
