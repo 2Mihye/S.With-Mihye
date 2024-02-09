@@ -90,7 +90,7 @@ function MainContent() {
       window.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  const [swithUser, setSwithUser] = useState("");
+
   const [boards, setBoards] = useState([]);
   const [comments, setComments] = useState([]);
   useEffect(() => {
@@ -876,17 +876,13 @@ function MainContent() {
                       <div className="study_schedule">
                         <p className="">마감일</p>
                         <p>|</p>
-                        <p>
-                          {new Date(
-                            board.recruit_deadline
-                          ).toLocaleDateString()}
-                        </p>
+                        <p>{board.recruit_deadline}</p>
                       </div>
                       <div>
                         <h1 className="board_title">{board.study_title}</h1>
                       </div>
                       <ul className="skill_icon_section">
-                        {board.studyPostWithSkills.map((skill, index) => (
+                        {board.studyPostWithSkills.map((skill) => (
                           <img
                             src={`https://2mihye.github.io/Skill_IMG/images/${skill.skill_name}.png`}
                             alt={skill.skill_name}
@@ -975,21 +971,21 @@ function MainContent() {
                     <div className="study_schedule">
                       <p className="">마감일</p>
                       <p>|</p>
-                      <p>
-                        {new Date(board.recruit_deadline).toLocaleDateString()}
-                      </p>
+                      <p>{board.recruit_deadline}</p>
                     </div>
                     <div>
                       <h1 className="board_title">{board.study_title}</h1>
                     </div>
                     <ul className="skill_icon_section">
-                      {board.studyPostWithSkills.map((skill, index) => (
-                        <img
-                          src={`https://2mihye.github.io/Skill_IMG/images/${skill.skill_name}.png`}
-                          alt={skill.skill_name}
-                          width="30"
-                          height="30"
-                        />
+                      {board.studyPostWithSkills.map((skill) => (
+                        <li key={skill.skill_no}>
+                          <img
+                            src={`https://2mihye.github.io/Skill_IMG/images/${skill.skill_name}.png`}
+                            alt={skill.skill_name}
+                            width="30"
+                            height="30"
+                          />
+                        </li>
                       ))}
                     </ul>
                     <div className="board_content_border"></div>

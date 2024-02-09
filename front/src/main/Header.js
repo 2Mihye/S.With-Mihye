@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 import { logout, isTokenAvailable } from "../token/tokenAxios";
 import { useNavigate } from "react-router-dom";
 import usersUserinfoAxios from "../token/tokenAxios";
-
+import Modal from "./Modal";
 import "../css/Header.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Dropdown from "./Dropdown";
+import AlarmModal from "./AlarmModal";
 
 export default function Header() {
   const [userData, setUserData] = useState("");
@@ -42,6 +43,9 @@ export default function Header() {
       console.error("로그아웃 실패");
     }
   };
+  /////////////////////////////////////////////////////////////
+  const [alarm, setAlarm] = useState(false);
+  const [alarmUserNo, setAlarmUserNo] = useState(null);
   return (
     <header className="border-bottom border-light border-5 mb-5 p-2">
       <div className="container">
@@ -142,6 +146,15 @@ export default function Header() {
           </nav>
         </div>
       </div>
+      {/* <Modal closeModal={() => setAlarm(!alarm)}>
+        <AlarmModal
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          userNo={alarmUserNo}
+        />
+      </Modal> */}
     </header>
   );
 }

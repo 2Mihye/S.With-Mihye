@@ -86,31 +86,32 @@ export default function StudyApplication({
               <div className="studyApplaction_user_p">
                 {users.nickname}
                 <div>
-                  {adminUser && users.status !== "승인" && (
-                    <div className="register_swithButton">
-                      <button
-                        name="accept"
-                        onClick={() => handleAccept(true, users.user_no)}
-                      >
-                        <img
-                          className="accept_img"
-                          src={Accept}
-                          alt="accepr_img"
-                        />
-                      </button>
-                      <button
-                        name="reject"
-                        onClick={() => handleAccept(false, users.user_no)}
-                      >
-                        {" "}
-                        <img
-                          className="reject_img"
-                          src={Reject}
-                          alt="reject_img"
-                        />
-                      </button>
-                    </div>
-                  )}
+                  {swithUser.user_no === userData.user_no &&
+                    users.status !== "승인" && (
+                      <div className="register_swithButton">
+                        <button
+                          name="accept"
+                          onClick={() => handleAccept(true, users.user_no)}
+                        >
+                          <img
+                            className="accept_img"
+                            src={Accept}
+                            alt="accepr_img"
+                          />
+                        </button>
+                        <button
+                          name="reject"
+                          onClick={() => handleAccept(false, users.user_no)}
+                        >
+                          {" "}
+                          <img
+                            className="reject_img"
+                            src={Reject}
+                            alt="reject_img"
+                          />
+                        </button>
+                      </div>
+                    )}
                   {users.user_no === userData.user_no &&
                     users.status !== "승인" && (
                       <div>
