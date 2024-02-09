@@ -431,7 +431,7 @@ function StudyDetail() {
               <li className="studyContent_contentWrapper">
                 <span className="studyInfo_title">시작예정일</span>
                 <span className="studyInfo_title_a">
-                  {detailPages.study_start}
+                  {new Date(detailPages.study_start).toLocaleDateString()}
                 </span>
               </li>
               <li className="studyContent_contentWrapper">
@@ -443,7 +443,7 @@ function StudyDetail() {
               <li className="studyContent_contentWrapper">
                 <span className="studyInfo_title">모집마감</span>
                 <span className="studyInfo_title_a">
-                  {detailPages.recruit_deadline}
+                  {new Date(detailPages.recruit_deadline).toLocaleDateString()}
                 </span>
               </li>
               <li className="studyContent_contentWrapper">
@@ -473,7 +473,6 @@ function StudyDetail() {
           </section>
         </section>
         <div className="postContent_wrapper">
-          <h2 className="postInfo">{detailPages.study_title}</h2>
           <p className="postContent">{detailPages.study_content}</p>
         </div>
 

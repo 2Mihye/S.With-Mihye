@@ -876,7 +876,11 @@ function MainContent() {
                       <div className="study_schedule">
                         <p className="">마감일</p>
                         <p>|</p>
-                        <p>{board.recruit_deadline}</p>
+                        <p>
+                          {new Date(
+                            board.recruit_deadline
+                          ).toLocaleDateString()}
+                        </p>
                       </div>
                       <div>
                         <h1 className="board_title">{board.study_title}</h1>
@@ -971,7 +975,9 @@ function MainContent() {
                     <div className="study_schedule">
                       <p className="">마감일</p>
                       <p>|</p>
-                      <p>{board.recruit_deadline}</p>
+                      <p>
+                        {new Date(board.recruit_deadline).toLocaleDateString()}
+                      </p>
                     </div>
                     <div>
                       <h1 className="board_title">{board.study_title}</h1>
