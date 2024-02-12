@@ -126,32 +126,51 @@
 	
 	
 	
-	<!-- 조건 sort 해서 검색 -->
-	<select id="getStudiesBySelect" parameterType="Map" resultType="lm.swith.main.model.StudyPost">
-		SELECT * FROM (
-		SELECT sp.*, s.skill_name, s.skill_no
-		FROM study_post sp
-		JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-		LEFT JOIN skill s ON pts.skill_no = s.skill_no
-		WHERE
-		1=1
-		<if test="skill_no != null and skill_no.size() > 0">
-		    AND pts.skill_no IN
-		    <foreach item="item" collection="skill_no" open="(" separator="," close=")">
-		        #{item}
-		    </foreach>
-		</if>
-		<if test="recruit_type != null">
-			AND sp.recruit_type = #{recruit_type}
-		</if>
-		<if test="study_method != null">
-			AND sp.study_method = #{study_method}
-		</if>
-		<if test="study_location != null">
-			AND sp.study_location = #{study_location}
-		</if>
-		) uniqueStudies
-	</select>
+<!-- getAllStudies에 대한 구현 -->
+<select id="getAllStudies" resultType="lm.swith.main.model.StudyPost">
+    SELECT sp.*, s.skill_name, s.skill_no, u.*, c.*,
+    (
+        SELECT COUNT(*)
+        FROM likes l
+        WHERE post_no = sp.post_no
+    ) AS likes_count
+    FROM study_post sp
+    JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+    LEFT JOIN likes l ON sp.post_no = l.post_no
+    LEFT JOIN users u ON sp.user_no = u.user_no
+    LEFT JOIN comments c ON sp.post_no = c.post_no
+</select>
+
+<!-- getFilteredStudies에 대한 구현 -->
+<select id="getFilteredStudies" parameterType="Map" resultType="lm.swith.main.model.StudyPost">
+    SELECT * FROM (
+        SELECT result.*, ROW_NUMBER() OVER() as RNUM FROM (
+            <include refid="getAllStudies" />
+        ) result
+        WHERE
+        1=1
+        <!-- 추가적인 조건들 -->
+        <if test="skill_no != null and skill_no.size() > 0">
+            AND skill_no IN
+            <foreach item="item" collection="skill_no" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="recruit_type != null">
+            AND recruit_type = #{recruit_type}
+        </if>
+        <if test="study_method != null">
+            AND study_method = #{study_method}
+        </if>
+        <if test="study_location != null">
+            AND study_location = #{study_location}
+        </if>
+    ) filteredResult
+</select>
+
+
+
 	
 	
 	
@@ -589,11 +608,11 @@
 	</delete>
 	
 	<!-- ******************************************************* Pagination Part ******************************************************************** -->
-	<!-- 모든 스터디 찾기 -->
+	<!-- 모든 스터디 찾기
 	<select id="getAllStudies" resultMap="studyPostWithSkills">
 	    <bind name="start" value="(page - 1) * size" />
 	    <bind name="end" value="page * size" />
-	    <!-- ROWNUM을 사용한 페이징 -->
+	    ROWNUM을 사용한 페이징
 		<![CDATA[
 		    SELECT sp.*, s.skill_name, u.*
 		    FROM (
@@ -608,9 +627,9 @@
 		]]>
 	</select>
 	
-	<!-- 모든 스터디 수 -->
+	모든 스터디 
 	<select id="studyCount" resultType="int">
 		SELECT COUNT(*) FROM study_post
-	</select>
+	</select>수 -->
 	
 </mapper>

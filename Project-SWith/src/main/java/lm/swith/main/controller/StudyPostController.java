@@ -305,14 +305,35 @@ public class StudyPostController {
 	}
 	
 	
-	
-	// 조건 스터디 목록  
-	@GetMapping("/getSelectedList")
-	public ResponseEntity<List<StudyPost>> getStudiesBySelect(
-	    @RequestParam(value = "skill_no", required = false) List<Long> skill_nos,
-	    @RequestParam(value = "recruit_type", required = false) String recruit_type,
-	    @RequestParam(value = "study_method", required = false) String study_method,
-	    @RequestParam(value = "study_location", required = false) String study_location) {
+//	
+//	// 조건 스터디 목록  
+//	@GetMapping("/getSelectedList")
+//	public ResponseEntity<List<StudyPost>> getStudiesBySelect(
+//	    @RequestParam(value = "skill_no", required = false) List<Long> skill_nos,
+//	    @RequestParam(value = "recruit_type", required = false) String recruit_type,
+//	    @RequestParam(value = "study_method", required = false) String study_method,
+//	    @RequestParam(value = "study_location", required = false) String study_location) {
+//
+//	    Map<String, Object> params = new HashMap<>();
+//	    params.put("skill_no", skill_nos);
+//	    params.put("recruit_type", recruit_type);
+//	    params.put("study_method", study_method);
+//	    params.put("study_location", study_location);
+//
+//	    List<StudyPost> studyPost = studyPostService.getStudiesBySelect(params);
+//
+//	    if (!studyPost.isEmpty()) {
+//	        return ResponseEntity.ok(studyPost);
+//	    } else {
+//	        return ResponseEntity.noContent().build();
+//	    }
+//	}
+	@GetMapping("/getFilteredStudies")
+	public ResponseEntity<List<StudyPost>> getFilteredStudies(
+	        @RequestParam(value = "skill_no", required = false) List<Long> skill_nos,
+	        @RequestParam(value = "recruit_type", required = false) String recruit_type,
+	        @RequestParam(value = "study_method", required = false) String study_method,
+	        @RequestParam(value = "study_location", required = false) String study_location) {
 
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("skill_no", skill_nos);
@@ -320,14 +341,17 @@ public class StudyPostController {
 	    params.put("study_method", study_method);
 	    params.put("study_location", study_location);
 
-	    List<StudyPost> studyPost = studyPostService.getStudiesBySelect(params);
+	    List<StudyPost> filteredStudies = studyPostService.getFilteredStudies(params);
 
-	    if (!studyPost.isEmpty()) {
-	        return ResponseEntity.ok(studyPost);
+	    if (!filteredStudies.isEmpty()) {
+	        return ResponseEntity.ok(filteredStudies);
 	    } else {
 	        return ResponseEntity.noContent().build();
 	    }
 	}
+	
+	
+	
     
     // 검색 스터디 목록
     @GetMapping("/KeywordStudy")

@@ -79,9 +79,16 @@ public class StudyPostService {
     
 
     // 스터디 조건 검색
-    public List<StudyPost> getStudiesBySelect(Map<String, Object> params) {
-    	return studyPostMapper.getStudiesBySelect(params);
+//    public List<StudyPost> getStudiesBySelect(Map<String, Object> params) {
+//    	return studyPostMapper.getStudiesBySelect(params);
+//    }
+    public List<StudyPost> getFilteredStudies(Map<String, Object> params) {
+        return studyPostMapper.getFilteredStudies(params);
     }
+
+    
+    
+    
     
     // 스터디 키워드 검색
     public List<StudyPost> getStudiesByKeyword(String keyword) {
