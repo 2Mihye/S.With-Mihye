@@ -129,14 +129,17 @@
 	<!-- 조건 sort 해서 검색 -->
 	<select id="getStudiesBySelect" parameterType="Map" resultType="lm.swith.main.model.StudyPost">
 		SELECT * FROM (
-		SELECT sp.*, s.skill_name, s.skill_img, s.skill_no
+		SELECT sp.*, s.skill_name, s.skill_no
 		FROM study_post sp
 		JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 		LEFT JOIN skill s ON pts.skill_no = s.skill_no
 		WHERE
 		1=1
-		<if test="skill_no != null">
-			AND pts.skill_no = #{skill_no}
+		<if test="skill_no != null and skill_no.size() > 0">
+		    AND pts.skill_no IN
+		    <foreach item="item" collection="skill_no" open="(" separator="," close=")">
+		        #{item}
+		    </foreach>
 		</if>
 		<if test="recruit_type != null">
 			AND sp.recruit_type = #{recruit_type}

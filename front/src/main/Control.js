@@ -14,6 +14,7 @@ import StudyRoom from "./StudyRoom";
 import ModifyPage from "./ModifyPage";
 import StudyApplication from "./StudyApplication";
 import Admin from "./Admin";
+import FindUser from "./FindUser";
 // function AuthenticatedRoute({ children }) {
 //   const authContext = useAuth();
 
@@ -37,6 +38,7 @@ export default function Control() {
             path="/StudyDetailUpdate/:post_no"
             element={<StudyDetailUpdate />}
           />
+          <Route path="find" element={<FindUser />} />
           <Route path="/KeywordStudy?:keyword" element={<MainContent />} />
           <Route path="/post_detail/:post_no" component={KakaoMap} />
           <Route path="/mypage" element={<MyPage />} />

@@ -154,6 +154,9 @@ function Login() {
             <li>
               <a href="/register">S.With 회원가입하기</a>
             </li>
+            <li>
+              <a href="/find">S.With 아이디/비밀번호 찾기</a>
+            </li>
           </div>
         </div>
       </div>

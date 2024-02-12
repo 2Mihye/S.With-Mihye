@@ -336,4 +336,27 @@ public class RegisterController {
                 .body(responseMsg);
                 */
     }
+    
+    @ResponseBody
+	  @PostMapping("/findPassword")
+	  public ResponseEntity<String> findPassword(@RequestBody SwithUser swithUser){
+		  MailService mailService = new MailService(javaMailSender);
+		  int number = mailService.sendMail(swithUser.getEmail());
+		     String num = "" + number;
+		     return ResponseEntity.ok(num);
+	  }
+    
+    //email(아이디)찾기
+	  @PostMapping("/ExistEmail")
+	  public ResponseEntity<String> checkEmail(@RequestBody SwithUser swithUser){
+		  SwithUser user = userService.getUserByEmail(swithUser.getEmail());
+		  //값이 db에 존재하는지 아닌지
+		  if(user != null && user.getEmail()==null) { // 존재한다면
+			  String existsEmail = "existsEmail";
+			  return ResponseEntity.ok(existsEmail);
+		  }else {
+			  String None = "none";
+			  return ResponseEntity.ok(None);
+		  }
+	  }
 }
