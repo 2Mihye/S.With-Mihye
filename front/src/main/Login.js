@@ -4,6 +4,7 @@ import Header from "./Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/LoginTest.css";
 import LoginAxios from "../token/tokenAxios";
+import Footer from "./Footer";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -109,6 +110,8 @@ function Login() {
                   height: "50px",
                   margin: "20px",
                   borderRadius: "30px",
+                  fontFamily: "SUITE-Regular",
+                  fontSize: "18px",
                 }}
               >
                 login
@@ -127,6 +130,8 @@ function Login() {
                   margin: "10px",
                   marginTop: "20px",
                   borderRadius: "30px",
+                  fontFamily: "SUITE-Regular",
+                  fontSize: "18px",
                 }}
               >
                 카카오 로그인
@@ -143,6 +148,8 @@ function Login() {
                   height: "50px",
                   margin: "10px",
                   borderRadius: "30px",
+                  fontFamily: "SUITE-Regular",
+                  fontSize: "18px",
                 }}
               >
                 Github 로그인
@@ -152,14 +159,53 @@ function Login() {
           <br></br>
           <div className="loginButton">
             <li>
-              <a href="/register">S.With 회원가입하기</a>
+              <a href="/register">
+                <button
+                  type="button"
+                  className="btn round"
+                  style={{
+                    backgroundColor: "#ffb9e4",
+                    width: "350px",
+                    height: "50px",
+                    margin: "10px",
+                    borderRadius: "30px",
+                    fontFamily: "SUITE-Regular",
+                    fontSize: "18px",
+                  }}
+                >
+                  S.With 회원가입하기
+                </button>
+              </a>
             </li>
             <li>
-              <a href="/find">S.With 아이디/비밀번호 찾기</a>
+              <a href="/find">
+                <button
+                  type="button"
+                  className="btn round"
+                  style={{
+                    backgroundColor: "#ffb9e4",
+                    width: "350px",
+                    height: "50px",
+                    margin: "10px",
+                    borderRadius: "30px",
+                    fontFamily: "SUITE-Regular",
+                    fontSize: "18px",
+                  }}
+                >
+                  S.With 아이디/비밀번호 찾기
+                </button>
+              </a>
             </li>
           </div>
         </div>
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <Footer />
     </div>
   );
 }

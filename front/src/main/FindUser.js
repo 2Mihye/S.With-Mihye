@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "./Header";
 import "../css/FindUser.css";
+import Footer from "./Footer";
 
 function FindUser() {
   const [number, setNumber] = useState(""); //보낸 난수
@@ -166,7 +167,12 @@ function FindUser() {
           <div className="finduser_title">아이디(email) 찾기</div>
 
           <div className="finduser_textbox">
-            <div className="finduser_text">찾을 Email을 입력하세요</div>
+            <div
+              className="finduser_text"
+              style={{ fontFamily: "SUITE-Regular", fontSize: "18px" }}
+            >
+              찾을 Email을 입력하세요
+            </div>
           </div>
           <div className="finduser_input_box">
             <input
@@ -185,6 +191,9 @@ function FindUser() {
                 width: "100px",
                 height: "50px",
                 borderRadius: "30px",
+                marginLeft: "8px",
+                fontFamily: "SUITE-Regular",
+                fontSize: "18px",
               }}
             >
               찾기
@@ -202,7 +211,12 @@ function FindUser() {
         <div className="finduser_emailtitle">비밀번호 찾기</div>
 
         <div className="finduser_emailbox">
-          <div className="finduser_emailtext">이메일을 입력하세요</div>
+          <div
+            className="finduser_emailtext"
+            style={{ fontFamily: "SUITE-Regular", fontSize: "18px" }}
+          >
+            이메일을 입력하세요
+          </div>
         </div>
         <div>
           <input
@@ -220,8 +234,10 @@ function FindUser() {
               backgroundColor: "#ffffb5",
               width: "100px",
               height: "50px",
-
+              marginLeft: "8px",
               borderRadius: "30px",
+              fontFamily: "SUITE-Regular",
+              fontSize: "18px",
             }}
           >
             인증하기
@@ -247,6 +263,8 @@ function FindUser() {
               margin: "10px",
               marginTop: "5px",
               borderRadius: "30px",
+              fontFamily: "SUITE-Regular",
+              fontSize: "18px",
             }}
           >
             인증확인
@@ -262,7 +280,9 @@ function FindUser() {
       <div className="finduser_box">
         <div className={isPasswordVisible ? "visible" : "hidden"}>
           <h4>비밀번호 수정하기 </h4>
-          <a>영문자,숫자,특수문자를 포함한 8자 이상의 비밀번호</a>
+          <a style={{ fontFamily: "SUITE-Regular", fontSize: "18px" }}>
+            영문자,숫자,특수문자를 포함한 8자 이상의 비밀번호
+          </a>
           <br />
           <input
             className="finduser_emailInput2"
@@ -287,11 +307,13 @@ function FindUser() {
             className="btn round"
             style={{
               backgroundColor: "#ffffb5",
-              width: "150px",
+              width: "170px",
               height: "50px",
               margin: "10px",
               marginTop: "5px",
               borderRadius: "30px",
+              fontFamily: "SUITE-Regular",
+              fontSize: "18px",
             }}
           >
             비밀번호 일치확인
@@ -310,12 +332,15 @@ function FindUser() {
               marginTop: "20px",
               marginBottom: "10px",
               borderRadius: "30px",
+              fontFamily: "SUITE-Regular",
+              fontSize: "18px",
             }}
           >
             비밀번호 수정
           </button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

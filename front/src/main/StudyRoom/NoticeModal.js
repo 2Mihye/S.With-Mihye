@@ -3,19 +3,20 @@ import axios from 'axios';
 import usersUserinfoAxios from '../../token/tokenAxios';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useParams, BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-function MyButton() {
+import './css/Notice.css';
+function NoticeModal() {
   const { post_no } = useParams();
   const [notice, setNotice] = useState({
     post_no: `${post_no}`,
     user_no: '',
+    notice_no: '',
     notice_title: '',
     notice_content: '',
     notice_password: '',
   });
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false); //모달 보여주기
 
   const [userData, setUserData] = useState('');
 
@@ -56,7 +57,7 @@ function MyButton() {
     e.preventDefault();
     try {
       const response = await usersUserinfoAxios.post(
-        `/studyRoom/create/StudyNoticeMoment/${post_no}`,
+        `/studyRoom/create/StudyNotice/${post_no}`,
         notice,
         {
           withCredentials: true,
@@ -67,17 +68,27 @@ function MyButton() {
 
       setNotice(response.data);
     } catch (error) {
-      console.log('시패' + userData.user_no);
-      console.log(notice.post_no);
+      console.log('user-no' + userData.user_no);
+      console.log('post-no' + notice.post_no);
       console.error('데이터 저장 불가', error);
     }
+    setShow(false);
   };
 
   return (
     <div>
-      <Button className="btn" variant="outline-primary" onClick={handleShow}>
-        공지글+
-      </Button>
+      <div>
+        <h4 className="notice">
+          Notice{' '}
+          <Button
+            className="Modal_btn"
+            variant="outline-primary"
+            onClick={handleShow}
+          >
+            공지글+
+          </Button>
+        </h4>
+      </div>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header>
@@ -122,11 +133,18 @@ function MyButton() {
             type="password"
             name="notice_password"
             maxLength="4"
-            minLength="4"
             value={notice.notice_password}
             onChange={handleInputChange}
           />
-          <Button className="." variant="secondary" onClick={handleSave}>
+          <Button
+            className="."
+            variant="secondary"
+            onClick={(e) => {
+              handleSave(e);
+              // 페이지 새로고침
+              window.location.reload();
+            }}
+          >
             저장
           </Button>
           <Button
@@ -141,4 +159,4 @@ function MyButton() {
     </div>
   );
 }
-export default MyButton;
+export default NoticeModal;

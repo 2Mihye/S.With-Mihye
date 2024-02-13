@@ -10,31 +10,27 @@
 		<result property="skill_img" column="skill_img" />
 	</resultMap>
 
-	<resultMap type="lm.swith.main.model.PostTechStacks"
-		id="PostTechStackResult">
+	<resultMap type="lm.swith.main.model.PostTechStacks" id="PostTechStackResult">
 		<result property="post_no" column="POST_NO" />
 		<result property="skill_no" column="SKILL_NO" />
 		<result property="user_no" column="USER_NO" />
 	</resultMap>
 
-	<resultMap type="lm.swith.main.model.Mentor"
-		id="MentorResult">
+	<resultMap type="lm.swith.main.model.Mentor" id="MentorResult">
 		<result property="user_no" column="USER_NO" />
 		<result property="mentor_status" column="MENTOR_STATUS" />
 		<result property="max_mentor_applicants"
 			column="MAX_MENTOR_APPLICANTS" />
 	</resultMap>
 
-	<resultMap type="lm.swith.main.model.Mentee"
-		id="MenteeResult">
+	<resultMap type="lm.swith.main.model.Mentee" id="MenteeResult">
 		<result property="user_no" column="USER_NO" />
 		<result property="mentee_status" column="MENTEE_STATUS" />
 		<result property="max_mentee_applicants"
 			column="MAX_MENTEE_APPLICANTS" />
 	</resultMap>
 
-	<resultMap type="lm.swith.main.model.StudyApplication"
-		id="StudyApplicationResult">
+	<resultMap type="lm.swith.main.model.StudyApplication" id="StudyApplicationResult">
 		<result property="user_no" column="USER_NO" />
 		<result property="status" column="STATUS" />
 		<result property="max_study_applicants"
@@ -42,8 +38,7 @@
 	</resultMap>
 
 
-	<resultMap type="lm.swith.user.model.SwithUser"
-		id="UsersResult">
+	<resultMap type="lm.swith.user.model.SwithUser" id="UsersResult">
 		<id property="user_no" column="user_no" />
 		<result property="email" column="email" />
 		<result property="nickname" column="nickname" />
@@ -55,8 +50,7 @@
 		<result property="user_role" column="user_role" />
 	</resultMap>
 
-	<resultMap type="lm.swith.main.model.Comments"
-		id="commentWithUser">
+	<resultMap type="lm.swith.main.model.Comments" id="commentWithUser">
 		<result property="comment_no" column="COMMENT_NO" />
 		<result property="post_no" column="POST_NO" />
 		<result property="user_no" column="USER_NO" />
@@ -66,17 +60,12 @@
 		<result property="nickname" column="NICKNAME" />
 	</resultMap>
 
-	<resultMap type="lm.swith.user.model.SwithUser"
-		id="userResult">
-		<id property="user_no" column="USER_NO" />
-		<result property="nickname" column="NICKNAME" />
-	</resultMap>
 
 	<resultMap type="lm.swith.main.model.Likes" id="LikesResult">
 		<result property="post_no" column="POST_NO" />
 		<result property="user_no" column="USER_NO" />
-		<result property="lieks" column="LIKES" />
 	</resultMap>
+
 
 	<resultMap type="lm.swith.main.model.StudyPost"
 		id="studyPostWithSkills">
@@ -107,32 +96,9 @@
 		<collection property="studyPostWithSkills"
 			resultMap="SkillResult" />
 	</resultMap>
-	<!-- ********************************************************* Main Page 
-		Part ********************************************************************************* -->
-	<!-- 스터디 전체 목록 OK -->
-	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
-	    SELECT sp.*,s.skill_no, s.skill_name, s.skill_img, u.*, c.*,
-	    ( 
-	    	SELECT COUNT(*)
-	    	FROM likes l
-	    	WHERE post_no = sp.post_no
-	    ) AS likes_count
-	    FROM STUDY_POST sp
-	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
-	    LEFT JOIN likes l ON sp.post_no = l.post_no
-	    LEFT JOIN users u ON sp.user_no = u.user_no
-	    LEFT JOIN comments c ON sp.post_no = c.post_no
-	    WHERE sp.study_status = 'O'
-	</select>
-
-		<!-- 댓글 리스트 -->
-	<select id="getCommentList" parameterType="lm.swith.main.model.Comments">
-		SELECT * FROM COMMENTS
-	</select>
-
-	<!-- 조건 sort 해서 검색 -->
-		<resultMap type="lm.swith.main.model.StudyPost"
+	
+		<!-- 조건 sort 해서 검색 -->
+	<resultMap type="lm.swith.main.model.StudyPost"
 		id="studyPostWithSkills2">
 		<id property="post_no" column="POST_NO" />
 		<result property="user_no" column="USER_NO" />
@@ -153,32 +119,60 @@
 		<result property="mentee_count" column="mentee_count" />
 		<result property="application_count" column="application_count" />
 		<association property="user" resultMap="UsersResult" />
-    <collection property="studyPostWithSkills" resultMap="SkillResult" />
-</resultMap>
+	    <collection property="studyPostWithSkills" resultMap="SkillResult" />
+	</resultMap>
+	
+	
+	<!-- ********************************************************* Main Page Part ********************************************************************************* -->
+	
+	
+	<!-- 스터디 전체 목록 OK -->
+	<select id="getAllStudyPostWithSkills" resultMap="studyPostWithSkills">
+	    SELECT sp.*,s.skill_no, s.skill_name, s.skill_img, u.*, c.*,
+	    ( 
+	    	SELECT COUNT(*)
+	    	FROM likes l
+	    	WHERE post_no = sp.post_no
+	    ) AS likes_count
+	    FROM STUDY_POST sp
+	    LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	    LEFT JOIN likes l ON sp.post_no = l.post_no
+	    LEFT JOIN users u ON sp.user_no = u.user_no
+	    LEFT JOIN comments c ON sp.post_no = c.post_no
+	    WHERE sp.study_status = 'O'
+	</select>
 
-<select id="getStudiesBySelect" parameterType="map" resultMap="studyPostWithSkills2">
-    SELECT sp.*, s.skill_name, pts.skill_no, s.skill_no, u.user_profile
-    FROM study_post sp
-    JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-    LEFT JOIN skill s ON pts.skill_no = s.skill_no
-    LEFT JOIN users u ON sp.user_no = u.user_no
-    WHERE 1=1
-    AND sp.post_no IN (
-        SELECT post_no FROM post_tech_stacks WHERE skill_no IN
-        <foreach collection="skill_no" item="skillNo" open="(" separator="," close=")">
-            #{skillNo}
-        </foreach>
-    )
-    <if test="recruit_type != null">
-        AND sp.recruit_type = #{recruit_type}
-    </if>
-    <if test="study_method != null">
-        AND sp.study_method = #{study_method}
-    </if>
-    <if test="study_location != null">
-        AND sp.study_location = #{study_location}
-    </if>
-</select>
+	<!-- 댓글 리스트 -->
+	<select id="getCommentList" parameterType="lm.swith.main.model.Comments">
+		SELECT * FROM COMMENTS
+	</select>
+
+
+	<!-- 스터디 조건 검색 -->
+	<select id="getStudiesBySelect" parameterType="map" resultMap="studyPostWithSkills2">
+	    SELECT sp.*, s.skill_name, pts.skill_no, s.skill_no, u.user_profile
+	    FROM study_post sp
+	    JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
+	    LEFT JOIN skill s ON pts.skill_no = s.skill_no
+	    LEFT JOIN users u ON sp.user_no = u.user_no
+	    WHERE 1=1 AND sp.study_status = 'O'
+	    AND sp.post_no IN (
+	        SELECT post_no FROM post_tech_stacks WHERE skill_no IN
+	        <foreach collection="skill_no" item="skillNo" open="(" separator="," close=")">
+	            #{skillNo}
+	        </foreach>
+	    )
+	    <if test="recruit_type != null">
+	        AND sp.recruit_type = #{recruit_type}
+	    </if>
+	    <if test="study_method != null">
+	        AND sp.study_method = #{study_method}
+	    </if>
+	    <if test="study_location != null">
+	        AND sp.study_location = #{study_location}
+	    </if>
+	</select>
 
 	<!-- 키워드 검색결과 스터디 목록 OK -->
 	<select id="getStudiesByKeyword"
@@ -255,8 +249,7 @@
 	</select>
 
 
-	<!-- ********************************************************* Likes Part 
-		********************************************************************************* -->
+	<!-- ********************************************************* Likes Part ********************************************************************************* -->
 
 	<!-- 스터디 찜 -->
 	<insert id="addLikes" parameterType="lm.swith.main.model.Likes">
@@ -271,7 +264,7 @@
 	</select>
 
 
-	<!-- 스터디 찜 목록 -->
+	<!-- 유저의 스터디 찜 목록 -->
 	<select id="isLiked" resultType="lm.swith.main.model.Likes">
 		SELECT * FROM LIKES WHERE
 		user_no = #{user_no} AND post_no = #{post_no}
@@ -279,8 +272,7 @@
 
 
 	<!-- 스터디 찜 삭제 -->
-	<delete id="deleteLikes"
-		parameterType="lm.swith.main.model.Likes">
+	<delete id="deleteLikes" parameterType="lm.swith.main.model.Likes">
 		DELETE FROM LIKES WHERE post_no = #{post_no} AND user_no
 		= #{user_no}
 	</delete>
@@ -292,12 +284,10 @@
         WHERE post_no = #{post_no}
     </select>
 
-	<!-- ******************************************************** My Page Part 
-		***************************************************************************** -->
+	<!-- ******************************************************** My Page Part ***************************************************************************** -->
 
 	<!-- 내가 쓴 스터디 목록 OK -->
-	<select id="getOwnStudiesWithUserNo"
-		resultMap="studyPostWithSkills">
+	<select id="getOwnStudiesWithUserNo" resultMap="studyPostWithSkills">
 		SELECT sp.*, s.skill_name, s.skill_img
 		FROM STUDY_POST sp
 		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
@@ -308,8 +298,7 @@
 
 
 	<!-- 내가 찜한 스터디 목록 OK -->
-	<select id="getAllStudiesWithLikes"
-		resultMap="studyPostWithSkills">
+	<select id="getAllStudiesWithLikes" resultMap="studyPostWithSkills">
 		SELECT sp.*, s.skill_name, s.skill_img
 		FROM study_post sp
 		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
@@ -320,8 +309,7 @@
 
 
 	<!-- 내가 참여한 스터디 목록 OK -->
-	<select id="getAllStudiesWithUserNo"
-		resultMap="studyPostWithSkills">
+	<select id="getAllStudiesWithUserNo" resultMap="studyPostWithSkills">
 		SELECT sp.*, s.skill_name, s.skill_img, u.*
 		FROM study_post sp
 		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
@@ -344,8 +332,7 @@
 		WHERE sa.post_no = #{post_no} AND sa.status = '승인'
 	</select>
 
-	<!-- *********************************************************** Study Detail 
-		Part ************************************************************************** -->
+	<!-- *********************************************************** Study Detail Part ************************************************************************** -->
 
 
 	<!-- 스터디 상세 페이지 OK -->
@@ -466,7 +453,7 @@
 		parameterType="lm.swith.main.model.StudyPost">
 		<![CDATA[
 		   SELECT * FROM study_post
-		   WHERE recruit_deadline <= CURRENT_DATE AND study_status = 'O'
+		   WHERE recruit_deadline < CURRENT_DATE AND study_status = 'O'
 		]]>
 	</select>
 
@@ -503,8 +490,7 @@
 
 
 
-	<!-- ********************************************************* Study Application 
-		Part *********************************************************************** -->
+	<!-- ********************************************************* Study Application Part *********************************************************************** -->
 
 
 	<!-- 스터디 참가 신청 -->

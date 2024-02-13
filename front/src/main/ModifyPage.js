@@ -5,6 +5,7 @@ import axios from "axios";
 import sample6_execDaumPostcode from "./KakaoAddress";
 import { useNavigate } from "react-router-dom";
 import { logout, isTokenAvailable } from "../token/tokenAxios";
+import Footer from "./Footer";
 
 const UpdateUser = () => {
   //주소값
@@ -367,7 +368,7 @@ const UpdateUser = () => {
           onClick={handleNickname}
           className="btn round"
           style={{
-            fontFamily: "NPSfontBold",
+            fontFamily: "SUITE-Regular",
             fontSize: "18px",
             backgroundColor: "#ffffb5",
             width: "150px",
@@ -400,7 +401,7 @@ const UpdateUser = () => {
           name="useraddress"
           className="btn round"
           style={{
-            fontFamily: "NPSfontBold",
+            fontFamily: "SUITE-Regular",
             fontSize: "18px",
             backgroundColor: "#ffffb5",
             width: "150px",
@@ -442,7 +443,7 @@ const UpdateUser = () => {
         name="login"
         className="btn round"
         style={{
-          fontFamily: "NPSfontBold",
+          fontFamily: "SUITE-Regular",
           fontSize: "18px",
           backgroundColor: "#75ddff",
           width: "200px",
@@ -474,9 +475,11 @@ const UpdateUser = () => {
           <h4
             className="s_text"
             style={{
-              marginLeft: "58px",
+              marginLeft: "1%",
               overflow: "hiddlen",
               whiteSpace: "nowrap",
+              fontFamily: "SUITE-Regular",
+              fontSize: "18px",
             }}
           >
             영문자,숫자,특수문자를 포함한 8자 이상의 비밀번호
@@ -506,7 +509,7 @@ const UpdateUser = () => {
           onClick={handleConfirmPassword}
           className="btn round"
           style={{
-            fontFamily: "NPSfontBold",
+            fontFamily: "SUITE-Regular",
             fontSize: "18px",
             backgroundColor: "#ffffb5",
             width: "165px",
@@ -525,7 +528,7 @@ const UpdateUser = () => {
           name="login"
           className="btn round"
           style={{
-            fontFamily: "NPSfontBold",
+            fontFamily: "SUITE-Regular",
             fontSize: "18px",
             backgroundColor: "#75ddff",
             width: "200px",
@@ -546,7 +549,7 @@ const UpdateUser = () => {
           onClick={handleDelete}
           className="btn round"
           style={{
-            fontFamily: "NPSfontBold",
+            fontFamily: "SUITE-Regular",
             fontSize: "18px",
             backgroundColor: "#FFB9E4",
             width: "200px",
@@ -563,6 +566,7 @@ const UpdateUser = () => {
         <br />
         <br />
       </div>
+      <Footer />
     </div>
   );
 };

@@ -52,12 +52,12 @@ public class StudyPostController {
 
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	    for (StudyPost studyArlam : studyPost) {
-	        deadLine = LocalDateTime.parse(studyArlam.getRecruit_deadline(), formatter); // 문자열을 날짜 형식으로 가져옴
+	    for (StudyPost studyAlarm : studyPost) {
+	        deadLine = LocalDateTime.parse(studyAlarm.getRecruit_deadline(), formatter); // 문자열을 날짜 형식으로 가져옴
 	        int compareResult = deadLine.compareTo(now); // deadLine의 날짜와 현재시간을 비교 deadLine이 크면 큰만큼 양수 작으면 음수 같으면 0을 표기
 	        if (compareResult == 7) {
-	        	System.out.println("확인 : " + studyArlam.getPost_no());
-	            alarmService.isLikeAlarm(studyArlam.getPost_no());
+	        	System.out.println("확인 : " + studyAlarm.getPost_no());
+	            alarmService.isLikeAlarm(studyAlarm.getPost_no());
 	        }
 	    }
 	    studyPostService.runUpdateStudyStatus();

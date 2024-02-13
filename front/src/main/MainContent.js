@@ -1181,7 +1181,7 @@ function MainContent() {
               </div>
             ))
           ) : (
-            <p>조건에 맞는 게시글이 없습니다</p>
+            <p></p>
           )}
         </ul>
         <div className="main_pagenation">

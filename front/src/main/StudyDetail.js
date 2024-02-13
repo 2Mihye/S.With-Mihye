@@ -473,13 +473,12 @@ function StudyDetail() {
           </section>
         </section>
         <div className="postContent_wrapper">
-          <h2 className="postInfo">{detailPages.study_title}</h2>
+          <p className="postInfo"></p>
           <p className="postContent">{detailPages.study_content}</p>
         </div>
 
         <div style={{ paddingBottom: "80px" }}>
           <div className="commentInput">
-            댓글
             <ul className="commentList_CommentList">
               {detailPages.comments &&
                 [...detailPages.comments]
@@ -521,12 +520,14 @@ function StudyDetail() {
                             </button>
                           </div>
                         ) : (
-                          <div>
-                            <p>{comment.comment_content}</p>
+                          <div style={{ display: "flex" }}>
+                            <p className="comment_list_box">
+                              {comment.comment_content}
+                            </p>
                             {comment.user_no === userData.user_no && (
                               <div>
                                 <button
-                                  className="commentDelete_buttonComplete"
+                                  className="commentDelete_buttonComplete_list"
                                   onClick={() => handleEditComment(comment)}
                                 >
                                   댓글 수정
@@ -537,7 +538,7 @@ function StudyDetail() {
                               {(userData.user_role === "ADMIN" ||
                                 comment.user_no === userData.user_no) && (
                                 <button
-                                  className="commentDelete_buttonComplete"
+                                  className="commentDelete_buttonComplete_list2"
                                   onClick={() => handleDeleteComment(comment)}
                                 >
                                   댓글 삭제
@@ -554,14 +555,18 @@ function StudyDetail() {
           <span className="commentInput_count"></span>
         </div>
         <div className="commentInput_container">
-          <img
-            className="commentInput_profile"
-            width="30px"
-            height="30px"
-            src={`data:image/jpeg;base64,${userData.user_profile}`}
-            alt="Profile"
-          />
-          <div className="commentItem_userNickname">{userData.nickname}</div>
+          <div className="commentItem_avatarWrapper">
+            <img
+              className="commentInput_profile"
+              width="30px"
+              height="30px"
+              src={`data:image/jpeg;base64,${userData.user_profile}`}
+              alt="Profile"
+            />
+            <div className="commentItem_userNickname_list">
+              {userData.nickname}
+            </div>
+          </div>
           <textarea
             class="commentInput_commentText"
             placeholder="댓글을 입력하세요."

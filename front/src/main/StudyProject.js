@@ -230,7 +230,7 @@ const StudyProject = ({ handleDataFromChild }) => {
             진행기간 :
             <input
               type="number"
-              placeholder="개월수를 입력하세요."
+              placeholder="개월수를 입력"
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
               onBlur={handleDataChange}

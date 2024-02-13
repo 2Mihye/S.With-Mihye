@@ -1,6 +1,9 @@
 package lm.swith.main.service;
 
-import java.util.Collections;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +20,6 @@ import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
 import lm.swith.main.model.PostTechStacks;
-import lm.swith.main.model.Skill;
 import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 import lm.swith.user.mapper.UsersMapper;
@@ -116,8 +118,14 @@ public class StudyPostService {
       Alarm alarm = new Alarm(); // 알람 데이터 넣어줄 객체
        List<StudyApplication> userNumber; // 보류 (user_no는 보내줄 사람) (신청한 사람들)
         SwithUser userNickName;
-       
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+        LocalDateTime deadLine;
+        int compare = 0;
         for (StudyPost post : expiredPosts) {
+        	deadLine = LocalDateTime.parse(post.getRecruit_deadline(), formatter);
+        	compare = deadLine.compareTo(now);
            // 마감기한 지난 스터디의 신청자 찾기
          userNumber = studyPostMapper.getAllApplicantsByPostNoStudyRoom(post.getPost_no()); 
          for(StudyApplication stap : userNumber) { 
@@ -129,7 +137,9 @@ public class StudyPostService {
           
           
            // 상태를 업데이트하는 작업 수행
+         if (compare == 0) {
            studyPostMapper.updateStudyStatus();
+         }
         }
    }
     
@@ -161,7 +171,6 @@ public class StudyPostService {
     	SwithUser users = studyPostMapper.getUserByUserNo(user_no);
     	return studyPostMapper.getAllStudiesWithUserNo(user_no);
     }
-    
     
     
     
