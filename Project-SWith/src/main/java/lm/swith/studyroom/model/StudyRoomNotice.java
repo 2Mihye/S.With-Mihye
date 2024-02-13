@@ -1,8 +1,6 @@
 package lm.swith.studyroom.model;
 
-
-
-import java.sql.Date;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

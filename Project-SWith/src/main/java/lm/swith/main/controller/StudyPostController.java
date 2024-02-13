@@ -1,6 +1,8 @@
 package lm.swith.main.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lm.swith.alarm.service.AlarmService;
 import lm.swith.main.model.Cafes;
 import lm.swith.main.model.Comments;
 import lm.swith.main.model.Likes;
@@ -27,37 +30,48 @@ import lm.swith.main.model.StudyApplication;
 import lm.swith.main.model.StudyPost;
 import lm.swith.main.service.StudyPostService;
 import lm.swith.user.model.SwithUser;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/")
+@RequiredArgsConstructor
 @CrossOrigin(origins="http://localhost:3000", allowCredentials="true", allowedHeaders="*")
 public class StudyPostController {
 	private final StudyPostService studyPostService;
+	private final AlarmService alarmService;
 	
-    public StudyPostController(StudyPostService studyPostService) {
-        this.studyPostService = studyPostService;
-    }
+ 
     
-	
- // 스터디 목록
-    @GetMapping("/post_list")
-    public ResponseEntity<Map<String, Object>> getAllStudyPostWithSkills() {
-        List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
-        List<Comments> comment = studyPostService.getCommentList();
-        studyPostService.runUpdateStudyStatus();
-        studyPostService.updateStudyStatus();
+	// 스터디 목록
+	@GetMapping("/post_list")
+	public ResponseEntity<Map<String, Object>> getAllStudyPostWithSkills() {
+	    List<StudyPost> studyPost = studyPostService.getAllStudyPostWithSkills();
+	    List<Comments> comment = studyPostService.getCommentList();
+	    LocalDateTime now = LocalDateTime.now(); // 현재 시간을 가져옴
+	    LocalDateTime deadLine;
 
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("studyPosts", studyPost);
-        responseMap.put("comments", comment);
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        if (!studyPost.isEmpty()) {
-            return ResponseEntity.ok(responseMap);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
-    }
+	    for (StudyPost studyArlam : studyPost) {
+	        deadLine = LocalDateTime.parse(studyArlam.getRecruit_deadline(), formatter); // 문자열을 날짜 형식으로 가져옴
+	        int compareResult = deadLine.compareTo(now); // deadLine의 날짜와 현재시간을 비교 deadLine이 크면 큰만큼 양수 작으면 음수 같으면 0을 표기
+	        if (compareResult == 7) {
+	        	System.out.println("확인 : " + studyArlam.getPost_no());
+	            alarmService.isLikeAlarm(studyArlam.getPost_no());
+	        }
+	    }
+	    studyPostService.runUpdateStudyStatus();
+	    //studyPostService.updateStudyStatus();
+	    Map<String, Object> responseMap = new HashMap<>();
+	    responseMap.put("studyPosts", studyPost);
+	    responseMap.put("comments", comment);
 
+	    if (!studyPost.isEmpty()) {
+	        return ResponseEntity.ok(responseMap);
+	    } else {
+	        return ResponseEntity.noContent().build();
+	    }
+	}
     // 찜하기
     @PostMapping("/likesUpdate")
     public String likesUpdate( @RequestParam("user_no") Long user_no, @RequestParam("post_no") Long post_no) {
@@ -209,26 +223,26 @@ public class StudyPostController {
  // 스터디 생성 처리
     @PostMapping("/create")
     public ResponseEntity<?> insertStudyPost(@RequestBody StudyPost studyPost) {
-    	LocalDate now = LocalDate.now(); // now(현재날짜) 
-		LocalDate recruitDeadline = LocalDate.parse(studyPost.getRecruit_deadline()); // 문자열을 날짜 형식으로 가져옴
-		int comparison = recruitDeadline.compareTo(now); //  recruitDeadline이  now랑같으면 0 을반환
+    	  LocalDate now = LocalDate.now(); // now(현재날짜) 
+			LocalDate recruitDeadline = LocalDate.parse(studyPost.getRecruit_deadline()); // 문자열을 날짜 형식으로 가져옴
+			int comparison = recruitDeadline.compareTo(now); //  recruitDeadline이  now랑같으면 0 을반환
 															// recruitDeadline이 now 보다 작으면 음수 반환
 															//recruitDeadline 이 now  보다 크면 큰 많큼 값을 반환	
 		
-		if (comparison == 0) {
-			System.out.println("두 날짜는 같습니다.");
-			return ResponseEntity.ok("같다");
-		} else if (comparison < 0) {
-			System.out.println("recruitDeadline은 현재 날짜 이전입니다.");
+			if (comparison == 0) {
+				System.out.println("두 날짜는 같습니다.");
+				return ResponseEntity.ok("같다");
+			} else if (comparison < 0) {
+				System.out.println("recruitDeadline은 현재 날짜 이전입니다.");
 				
-			return ResponseEntity.ok("success"); 
-		} else {
-			System.out.println("recruitDeadline은 현재 날짜 이후입니다.");
-			studyPostService.insertStudyPost(studyPost);
-			System.out.println(comparison + " 크기");
+				return ResponseEntity.ok("success"); 
+			} else {
+				System.out.println("recruitDeadline은 현재 날짜 이후입니다.");
+				studyPostService.insertStudyPost(studyPost);
+				System.out.println(comparison + " 크기");
 				
-			return ResponseEntity.ok("false1");
-		}
+				return ResponseEntity.ok("false1");
+			}
     }
 	
      // 내가 쓴 스터디 목록
@@ -305,53 +319,35 @@ public class StudyPostController {
 	}
 	
 	
-//	
-//	// 조건 스터디 목록  
-//	@GetMapping("/getSelectedList")
-//	public ResponseEntity<List<StudyPost>> getStudiesBySelect(
-//	    @RequestParam(value = "skill_no", required = false) List<Long> skill_nos,
-//	    @RequestParam(value = "recruit_type", required = false) String recruit_type,
-//	    @RequestParam(value = "study_method", required = false) String study_method,
-//	    @RequestParam(value = "study_location", required = false) String study_location) {
-//
-//	    Map<String, Object> params = new HashMap<>();
-//	    params.put("skill_no", skill_nos);
-//	    params.put("recruit_type", recruit_type);
-//	    params.put("study_method", study_method);
-//	    params.put("study_location", study_location);
-//
-//	    List<StudyPost> studyPost = studyPostService.getStudiesBySelect(params);
-//
-//	    if (!studyPost.isEmpty()) {
-//	        return ResponseEntity.ok(studyPost);
-//	    } else {
-//	        return ResponseEntity.noContent().build();
-//	    }
-//	}
-	@GetMapping("/getFilteredStudies")
-	public ResponseEntity<List<StudyPost>> getFilteredStudies(
-	        @RequestParam(value = "skill_no", required = false) List<Long> skill_nos,
-	        @RequestParam(value = "recruit_type", required = false) String recruit_type,
-	        @RequestParam(value = "study_method", required = false) String study_method,
-	        @RequestParam(value = "study_location", required = false) String study_location) {
+	
+	// 조건 스터디 목록  
+	@GetMapping("/getSelectedList")
+	public ResponseEntity<List<StudyPost>> getStudiesBySelect(
+	    @RequestParam(value = "skill_no", required = false) List<Long> skill_no,
+	    @RequestParam(value = "recruit_type", required = false) String recruit_type,
+	    @RequestParam(value = "study_method", required = false) String study_method,
+	    @RequestParam(value = "study_location", required = false) String study_location) {
 
 	    Map<String, Object> params = new HashMap<>();
-	    params.put("skill_no", skill_nos);
+
+	    params.put("skill_no", skill_no);
 	    params.put("recruit_type", recruit_type);
 	    params.put("study_method", study_method);
 	    params.put("study_location", study_location);
 
-	    List<StudyPost> filteredStudies = studyPostService.getFilteredStudies(params);
+	    List<StudyPost> studyPost = studyPostService.getStudiesBySelect(
+	    	    (List<Long>) params.get("skill_no"),
+	    	    (String) params.get("recruit_type"),
+	    	    (String) params.get("study_method"),
+	    	    (String) params.get("study_location")
+	    	);
 
-	    if (!filteredStudies.isEmpty()) {
-	        return ResponseEntity.ok(filteredStudies);
+	    if (!studyPost.isEmpty()) {
+	        return ResponseEntity.ok(studyPost);
 	    } else {
 	        return ResponseEntity.noContent().build();
 	    }
 	}
-	
-	
-	
     
     // 검색 스터디 목록
     @GetMapping("/KeywordStudy")
@@ -391,5 +387,8 @@ public class StudyPostController {
  		studyPostService.deleteUser(user_no);
  		return "redirect:/admin";
  	}
+ 	
+ 	
+ 	
  
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lm.swith.alarm.model.Alarm;
@@ -37,6 +38,14 @@ public class AlarmController {
 		System.out.println(alarm.getPost_no());
 		System.out.println(alarm.getUser_no());
 		alarmService.InsertAlarm(alarm);
+		return ResponseEntity.ok("success");
+	}
+	
+	// 알람 삭제
+	@PostMapping("/alarmDelete/{alarm_no}")
+	public ResponseEntity<?> deleteAlarm(@PathVariable Long alarm_no){
+		System.out.println(alarm_no + "알람 번호 확인");
+		alarmService.deleteAlarm(alarm_no);
 		return ResponseEntity.ok("success");
 	}
 }

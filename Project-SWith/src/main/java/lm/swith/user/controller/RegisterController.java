@@ -337,6 +337,7 @@ public class RegisterController {
                 */
     }
     
+    
     @ResponseBody
 	  @PostMapping("/findPassword")
 	  public ResponseEntity<String> findPassword(@RequestBody SwithUser swithUser){
@@ -346,7 +347,7 @@ public class RegisterController {
 		     return ResponseEntity.ok(num);
 	  }
     
-    //email(아이디)찾기
+  //email(아이디)찾기
 	  @PostMapping("/ExistEmail")
 	  public ResponseEntity<String> checkEmail(@RequestBody SwithUser swithUser){
 		  SwithUser user = userService.getUserByEmail(swithUser.getEmail());

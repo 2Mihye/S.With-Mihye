@@ -3,7 +3,7 @@ package lm.swith.main.model;
 import lombok.*;
 
 @Getter @Setter
-public class Mentor { // 멘토
+public class Mentor {
 	private Long mentor_no;
 	private Long user_no;
 	private Long post_no;

@@ -1,10 +1,12 @@
 package lm.swith.main.model;
 
+
 import java.sql.Timestamp;
 import java.util.List;
 
 import lm.swith.user.model.SwithUser;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Getter @Setter
@@ -34,22 +36,20 @@ public class StudyPost {
     private int likes_count; // likes count
     private List<Long> skills; // 스터디 내 기술들 담을 곳
     private List<PostTechStacks> postTechStacks; 
-    private int skill_no;
+    
+    private Long skill_no;
     private String study_likes;
     private String skill_name; // join 했을 때 skill 이름 받을 곳
     private String skill_img; // join 했을 때 skill img 받을 곳
 	
 	private List<Skill> studyPostWithSkills; // 같은 post_no 와 함께있는 skill_no 리스트로 저장
-	
 	private List<Comments> comments; // 댓글들 담을 곳
 	
 	private SwithUser user; // 유저 테이블
-
-	
 	private Likes likes; // 찜 테이블
 	
     private Mentor mentor; // 멘토 테이블
     private Mentee mentee; // 멘티 테이블
     private StudyApplication studyApplication; // 스터디 참가 현황 테이블
-	
+    
 }

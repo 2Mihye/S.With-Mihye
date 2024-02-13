@@ -6,13 +6,6 @@
   font-style: normal;
 }
 
-.visible {
-  display: block;
-}
-.hidden {
-  display: none;
-}
-
 .title {
   font-family: "NPSfontBold";
   color: #2c2f30;
@@ -89,4 +82,11 @@
   margin-top: 10px;
   padding: 0px 20px;
   border: 3px solid #b9eeff;
+}
+
+.visible {
+  display: block;
+}
+.hidden {
+  display: none;
 }

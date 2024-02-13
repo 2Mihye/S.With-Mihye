@@ -1,7 +1,5 @@
 package lm.swith.main.model;
 
-import java.util.List;
-
 import lombok.*;
 
 @Getter 

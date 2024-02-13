@@ -473,6 +473,7 @@ function StudyDetail() {
           </section>
         </section>
         <div className="postContent_wrapper">
+          <h2 className="postInfo">{detailPages.study_title}</h2>
           <p className="postContent">{detailPages.study_content}</p>
         </div>
 

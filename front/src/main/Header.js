@@ -46,6 +46,7 @@ export default function Header() {
   /////////////////////////////////////////////////////////////
   const [alarm, setAlarm] = useState(false);
   const [alarmUserNo, setAlarmUserNo] = useState(null);
+
   return (
     <header className="border-bottom border-light border-5 mb-5 p-2">
       <div className="container">
@@ -97,6 +98,14 @@ export default function Header() {
                         className="alarm_img"
                         src={process.env.PUBLIC_URL + "../img/bell.png"}
                         alt="alarm"
+                        onClick={(e) => {
+                          // 클릭한 유저의 user_no를 상태에 저장
+                          const clickedUserNo = userData.user_no;
+
+                          // 모달 열기 및 user_no 전달
+                          setAlarmUserNo(clickedUserNo);
+                          setAlarm(!alarm);
+                        }}
                       />
                     </div>
                   </div>
@@ -146,15 +155,14 @@ export default function Header() {
           </nav>
         </div>
       </div>
-      {/* <Modal closeModal={() => setAlarm(!alarm)}>
-        <AlarmModal
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          userNo={alarmUserNo}
-        />
-      </Modal> */}
+      {alarm && (
+        <Modal closeModal={() => setAlarm(!alarm)}>
+          <AlarmModal
+            userNo={alarmUserNo}
+            closeModal={() => setAlarm(!alarm)}
+          />
+        </Modal>
+      )}
     </header>
   );
 }

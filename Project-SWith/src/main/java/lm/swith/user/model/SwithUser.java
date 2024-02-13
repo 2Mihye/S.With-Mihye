@@ -1,4 +1,5 @@
 package lm.swith.user.model;
+import java.sql.Blob;
 
 /*
  USER_NO -> userNO
