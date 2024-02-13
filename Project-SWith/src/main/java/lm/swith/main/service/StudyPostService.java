@@ -45,6 +45,8 @@ public class StudyPostService {
     public void insertStudyPost(StudyPost studyPost) {
         try {
             // StudyPost 삽입
+        	studyPost.setStudy_period(studyPost.getStudy_period() + "개월");
+        	System.out.println(studyPost.getStudy_period());
             studyPostMapper.insertStudyPost(studyPost);
 
             // PostTechStacks 삽입

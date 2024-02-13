@@ -6,7 +6,7 @@ import usersUserinfoAxios from "../token/tokenAxios";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "./Header";
-import "../css/RegisterUser.css";
+import "../css/FindUser.css";
 
 function FindUser() {
   const [number, setNumber] = useState(""); //보낸 난수
@@ -161,16 +161,16 @@ function FindUser() {
       <Header />
 
       <br></br>
-      <div>
-        <h1 className="title">아이디(email) 찾기</h1>
-        <form className="m-5 mb-1">
-          <div className="register_id m-3">
-            <div className="two">
-              <h4 className="s_text">찾을 Email을 입력하세요</h4>
-            </div>
-            <label className="m-2"></label>
+      <div className="finduser_box">
+        <div>
+          <div className="finduser_title">아이디(email) 찾기</div>
+
+          <div className="finduser_textbox">
+            <div className="finduser_text">찾을 Email을 입력하세요</div>
+          </div>
+          <div className="finduser_input_box">
             <input
-              className="textInput"
+              className="finduser_textInput"
               type="text"
               name="username"
               value={swithUser.username}
@@ -184,35 +184,29 @@ function FindUser() {
                 backgroundColor: "#ffffb5",
                 width: "100px",
                 height: "50px",
-                margin: "10px",
-                marginTop: "5px",
                 borderRadius: "30px",
               }}
             >
               찾기
             </button>
-            <p className={isMessageVisible ? "visible" : "hidden"}>
-              {confirmEmail
-                ? `${swithUser.email} 존재하는 이메일 입니다.`
-                : `${swithUser.email} 존재하지 않는 이메일 입니다.`}
-            </p>
           </div>
-        </form>
+          <p className={isMessageVisible ? "visible" : "hidden"}>
+            {confirmEmail
+              ? `${swithUser.email} 존재하는 이메일 입니다.`
+              : `${swithUser.email} 존재하지 않는 이메일 입니다.`}
+          </p>
+        </div>
       </div>
-      <br />
-      <br />
-      <br />
-      <div>
-        <div className="register_id ml-5">
-          <div className="two">
-            <h1 className="title">비밀번호 찾기</h1>
-          </div>
 
-          <h4 className="s_text_id">이메일을 입력하세요</h4>
-          <label className="m-2"></label>
+      <div className="finduser_box">
+        <div className="finduser_emailtitle">비밀번호 찾기</div>
 
+        <div className="finduser_emailbox">
+          <div className="finduser_emailtext">이메일을 입력하세요</div>
+        </div>
+        <div>
           <input
-            className="textInput"
+            className="finduser_emailInput"
             type="text"
             name="email"
             value={swithUser.email}
@@ -226,14 +220,15 @@ function FindUser() {
               backgroundColor: "#ffffb5",
               width: "100px",
               height: "50px",
-              margin: "10px",
-              marginTop: "5px",
+
               borderRadius: "30px",
             }}
           >
             인증하기
           </button>
-          <br />
+        </div>
+
+        <div>
           <input
             type="text"
             name="number"
@@ -256,17 +251,21 @@ function FindUser() {
           >
             인증확인
           </button>
-          <br />
         </div>
         <br />
-        <br />
-        <br />
+      </div>
+
+      <br />
+      <br />
+      <br />
+
+      <div className="finduser_box">
         <div className={isPasswordVisible ? "visible" : "hidden"}>
           <h4>비밀번호 수정하기 </h4>
           <a>영문자,숫자,특수문자를 포함한 8자 이상의 비밀번호</a>
           <br />
           <input
-            className="textInput"
+            className="finduser_emailInput2"
             type="password"
             name="password"
             value={userData.password}
@@ -275,7 +274,7 @@ function FindUser() {
           />
           <br />
           <input
-            className="textInput"
+            className="finduser_textInput"
             type="password"
             name="confirmPassword"
             value={confirmPassword}
@@ -288,7 +287,7 @@ function FindUser() {
             className="btn round"
             style={{
               backgroundColor: "#ffffb5",
-              width: "100px",
+              width: "150px",
               height: "50px",
               margin: "10px",
               marginTop: "5px",
