@@ -25,6 +25,7 @@ const DayCount = () => {
 
     fetchStudyDetail();
   }, [post_no]); // post_no가 변경될 때마다 실행
+
   const startDay = new Date(DayCount.study_start); //스터디 시작일
   const today = new Date(); //오늘
   const dDay = today - startDay;

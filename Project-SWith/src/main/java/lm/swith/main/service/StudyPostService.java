@@ -156,7 +156,7 @@ public class StudyPostService {
     // MyPage Part
     // 내가 쓴 스터디 목록
     public List<StudyPost> getOwnStudiesWithUserNo(Long user_no) {
-    	SwithUser users = studyPostMapper.getUserByUserNo(user_no);
+    	System.out.println("service : " + user_no);
     	return studyPostMapper.getOwnStudiesWithUserNo(user_no);
     }
     

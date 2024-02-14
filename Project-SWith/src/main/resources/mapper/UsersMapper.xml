@@ -1,7 +1,19 @@
 <!-- MembersMapper (myBatis) -->
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="lm.swith.user.mapper.UsersMapper">
+
+	<mapper namespace="lm.swith.user.mapper.UsersMapper">
+	<resultMap type="lm.swith.user.model.SwithUser" id="deleteUserResultMap">
+	<id property="user_no" column="USER_NO"/>
+	<result property="email" column="EMAIL"/>
+	<result property="signout" column="SIGNOUT"/>
+	<association property="studyPost" resultMap="StudyPost"/>
+	</resultMap>
+	
+	<resultMap type="lm.swith.main.model.StudyPost" id="StudyPost">
+	<id property="post_no" column="POST_NO"/>
+	</resultMap>
+	
 	<!-- 회원등록 -->
 	<insert id ="insertUser" parameterType="lm.swith.user.model.SwithUser">
 		INSERT INTO USERS (EMAIL, PASSWORD, USERNAME, NICKNAME, USER_PROFILE, USERADDRESS, USER_INTRODUCTION)
@@ -51,14 +63,35 @@
 		UPDATE USERS SET PASSWORD = #{password} WHERE email = #{email}
 	</update>
 	
-	<!-- delete user -->
-	<delete id = "deleteUser" parameterType="lm.swith.user.model.SwithUser">
-		DELETE FROM USERS WHERE EMAIL = #{email}
-	</delete>
+	
 	
 	<select id="findByUserNo" parameterType="lm.swith.user.model.SwithUser">
 		SELECT * FROM Users WHERE USER_NO = #{user_no}
 	</select>
+	
+	
+<!-- 회원탈퇴용 delete user (신청) -->
+	<update id = "deleteUser" parameterType="lm.swith.user.model.SwithUser">
+		UPDATE USERS SET NICKNAME='(이름없음)',SIGNOUT='TRUE' WHERE EMAIL = #{email}
+	</update>
+	<delete id= "deleteUserLikes" parameterType="lm.swith.main.model.Likes">
+		DELETE FROM LIKES WHERE USER_NO  =#{user_no}
+	</delete>
+	<delete id = "deleteUserApplication" parameterType="lm.swith.main.model.StudyApplication">
+		DELETE FROM STUDY_APPLICATION WHERE USER_NO= #{user_no}
+	</delete>
+	
+	<select id = "selectDeleteUserList" resultMap="deleteUserResultMap">
+		SELECT U.user_no, U.email, U.signout, SP.post_no
+		FROM USERS U
+		LEFT JOIN STUDY_POST SP ON U.user_no = SP.user_no
+		WHERE U.SIGNOUT = 'TRUE'
+	</select>
+	<delete id="deleteAdmin" parameterType="lm.swith.user.model.SwithUser">
+		DELETE FROM USERS WHERE USER_NO = #{user_no}
+	</delete>
+	
+	
 	
 	
 </mapper>

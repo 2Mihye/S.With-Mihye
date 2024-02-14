@@ -1,8 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../security/AuthContext";
 import { useEffect, useState } from "react";
-import { logout, isTokenAvailable } from "../token/tokenAxios";
+import { isTokenAvailable } from "../token/tokenAxios";
 import { useNavigate } from "react-router-dom";
 import usersUserinfoAxios from "../token/tokenAxios";
 import Modal from "./Modal";
@@ -130,11 +128,13 @@ export default function Header() {
                 <li className="nav-item">
                   <div className="profile">
                     <div className="profile_1">
-                      <img
-                        className="profile_img"
-                        src={`data:image/jpeg;base64,${userData.user_profile}`}
-                        alt="profile"
-                      />
+                      <a className="nav-link" href="/mypage">
+                        <img
+                          className="profile_img"
+                          src={`data:image/jpeg;base64,${userData.user_profile}`}
+                          alt="profile"
+                        />
+                      </a>
                     </div>
                   </div>
                 </li>

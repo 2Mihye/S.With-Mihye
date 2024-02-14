@@ -4,7 +4,7 @@ import Header from "./Header";
 import axios from "axios";
 import sample6_execDaumPostcode from "./KakaoAddress";
 import { useNavigate } from "react-router-dom";
-import { logout, isTokenAvailable } from "../token/tokenAxios";
+import { isTokenAvailable } from "../token/tokenAxios";
 import Footer from "./Footer";
 
 const UpdateUser = () => {
@@ -208,6 +208,20 @@ const UpdateUser = () => {
           "http://localhost:8080/users/deleteUser",
           userData,
           // 삭제 전송
+          {
+            withCredentials: true,
+          }
+        );
+        const responseLikes = await usersUserinfoAxios.post(
+          "http://localhost:8080/users/deleteLikes",
+          userData,
+          {
+            withCredentials: true,
+          }
+        );
+        const responseApplication = await usersUserinfoAxios.post(
+          "http://localhost:8080/users/deleteApplication",
+          userData,
           {
             withCredentials: true,
           }

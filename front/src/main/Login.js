@@ -38,7 +38,7 @@ function Login() {
   const checkLoginStatus = async () => {
     try {
       // 서버에 현재 인증된 사용자의 정보를 가져오는 요청을 보냅니다.
-      const response = await LoginAxios.get("/users/userinfo");
+      const response = await LoginAxios.get("/userinfo");
 
       // 서버에서 반환된 사용자 정보를 가져옵니다.
       const user = response.data;
@@ -117,44 +117,7 @@ function Login() {
                 login
               </button>
             </div>
-            <div className="login_sns">
-              <button
-                type="button"
-                name="login"
-                onClick={handleLogin}
-                className="btn round"
-                style={{
-                  backgroundColor: "#ffffb5",
-                  width: "350px",
-                  height: "50px",
-                  margin: "10px",
-                  marginTop: "20px",
-                  borderRadius: "30px",
-                  fontFamily: "SUITE-Regular",
-                  fontSize: "18px",
-                }}
-              >
-                카카오 로그인
-              </button>
-
-              <button
-                type="button"
-                name="login"
-                onClick={handleLogin}
-                className="btn round"
-                style={{
-                  backgroundColor: "#ffffb5",
-                  width: "350px",
-                  height: "50px",
-                  margin: "10px",
-                  borderRadius: "30px",
-                  fontFamily: "SUITE-Regular",
-                  fontSize: "18px",
-                }}
-              >
-                Github 로그인
-              </button>
-            </div>
+            <div className="login_sns"></div>
           </form>
           <br></br>
           <div className="loginButton">

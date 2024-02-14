@@ -1,22 +1,13 @@
 package lm.swith.user.Service;
 
-import java.sql.Blob;
 import java.util.List;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
+import lm.swith.main.model.Likes;
+import lm.swith.main.model.StudyApplication;
 import lm.swith.user.mapper.UsersMapper;
 import lm.swith.user.model.SwithUser;
 import lombok.extern.slf4j.Slf4j;
@@ -97,10 +88,24 @@ public class UserService {
 		usersMapper.updatePassword(swithUser);
 	}
 	
-	//delete user by Email
-	public void deleteUser(SwithUser swithUser) {
-		usersMapper.deleteUser(swithUser);
-	}
+	//DELETE USER
+		//delete user by Email
+		public void deleteUser(SwithUser swithUser) {
+			usersMapper.deleteUser(swithUser);
+		}
+		public void deleteUserLikes(Likes likes) {
+			usersMapper.deleteUserLikes(likes);
+		}
+		public void deleteUserApplication(StudyApplication studyApplication) {
+			usersMapper.deleteUserApplication(studyApplication);
+		}
+		public List<SwithUser> selectDeleteUserList() {
+			return usersMapper.selectDeleteUserList();
+		}
+		
+		public void deleteAdmin(SwithUser swithUser) {
+			usersMapper.deleteAdmin(swithUser);
+		}
 	
 	// select user_no
 	public SwithUser findByUserNo(Long user_no) {

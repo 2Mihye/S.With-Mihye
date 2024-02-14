@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import usersUserinfoAxios from '../../token/tokenAxios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Modal from './Modal';
-import ProfileModal from './Modal';
+import Modal from '../../main/Modal';
+import ProfileModal from '../../main/Modal';
 const Application = () => {
   const { post_no } = useParams();
   const [profile, setProfile] = useState(false);

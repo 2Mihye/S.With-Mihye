@@ -255,7 +255,6 @@
   padding: 0 20px;
   border: 0px;
   text-align: right;
-  margin-left: 400px;
 }
 
 .commentDelete_buttonComplete_list2 {
@@ -268,7 +267,6 @@
   padding: 0 20px;
   border: 0px;
   text-align: right;
-  margin-left: 10px;
 }
 
 .commentItem_CommentList {
@@ -309,12 +307,14 @@
   display: flex;
 }
 
-.commentList_CommentList {
-  width: 100%;
+.comment_edit_box {
+  width: 100px;
 }
 
 .comment_list_box {
-  margin-left: 37px;
+  width: 580px;
+  margin-left: 10%;
+  flex-wrap: wrap;
 }
 
 .studyApplication {

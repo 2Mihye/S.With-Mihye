@@ -67,8 +67,7 @@
 	</resultMap>
 
 
-	<resultMap type="lm.swith.main.model.StudyPost"
-		id="studyPostWithSkills">
+	<resultMap type="lm.swith.main.model.StudyPost" id="studyPostWithSkills">
 		<id property="post_no" column="POST_NO" />
 		<result property="user_no" column="USER_NO" />
 		<result property="nickname" column="NICKNAME" />
@@ -90,11 +89,9 @@
 		<association property="user" resultMap="UsersResult" />
 		<association property="mentor" resultMap="MentorResult" />
 		<association property="mentee" resultMap="MenteeResult" />
-		<association property="studyApplication"
-			resultMap="StudyApplicationResult" />
+		<association property="studyApplication" resultMap="StudyApplicationResult" />
 		<association property="comments" resultMap="commentWithUser" />
-		<collection property="studyPostWithSkills"
-			resultMap="SkillResult" />
+		<collection property="studyPostWithSkills" resultMap="SkillResult" />
 	</resultMap>
 	
 		<!-- 조건 sort 해서 검색 -->
@@ -141,6 +138,7 @@
 	    LEFT JOIN users u ON sp.user_no = u.user_no
 	    LEFT JOIN comments c ON sp.post_no = c.post_no
 	    WHERE sp.study_status = 'O'
+	    ORDER BY study_post_time DESC
 	</select>
 
 	<!-- 댓글 리스트 -->
@@ -288,18 +286,17 @@
 
 	<!-- 내가 쓴 스터디 목록 OK -->
 	<select id="getOwnStudiesWithUserNo" resultMap="studyPostWithSkills">
-		SELECT sp.*, s.skill_name, s.skill_img
+		SELECT sp.*, s.skill_name
 		FROM STUDY_POST sp
 		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
-		LEFT JOIN
-		skill s ON pts.skill_no = s.skill_no
+		LEFT JOIN skill s ON pts.skill_no = s.skill_no
 		WHERE sp.user_no = #{user_no}
 	</select>
 
 
 	<!-- 내가 찜한 스터디 목록 OK -->
 	<select id="getAllStudiesWithLikes" resultMap="studyPostWithSkills">
-		SELECT sp.*, s.skill_name, s.skill_img
+		SELECT sp.*, s.skill_name
 		FROM study_post sp
 		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 		LEFT JOIN skill s ON pts.skill_no = s.skill_no
@@ -310,7 +307,7 @@
 
 	<!-- 내가 참여한 스터디 목록 OK -->
 	<select id="getAllStudiesWithUserNo" resultMap="studyPostWithSkills">
-		SELECT sp.*, s.skill_name, s.skill_img, u.*
+		SELECT sp.*, s.skill_name, u.*
 		FROM study_post sp
 		LEFT JOIN post_tech_stacks pts ON sp.post_no = pts.post_no
 		LEFT JOIN
@@ -318,9 +315,9 @@
 		LEFT JOIN study_application sa ON
 		sp.post_no = sa.POST_NO
 		LEFT JOIN users u ON u.user_no = sp.user_no
-		WHERE sa.user_no = #{user_no} AND sa.status =
-		'승인'
-		ORDER BY sp.study_start DESC
+		WHERE sa.user_no = #{user_no} AND sa.status ='승인'
+		AND sp.study_status='X'
+		ORDER BY sp.study_start
 	</select>
 
 	<!-- 승인된 스터디 인원만 조회 -->

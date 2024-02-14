@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -30,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lm.swith.main.model.Likes;
+import lm.swith.main.model.StudyApplication;
 import lm.swith.user.Service.KakaoService;
 import lm.swith.user.Service.MailService;
 import lm.swith.user.Service.UserService;
@@ -280,11 +283,50 @@ public class RegisterController {
 	        return ResponseEntity.ok("User's password updated successfully");
 	    }
 	    
+	  //delete User 관련
 	    @PostMapping("/deleteUser")
 	    public ResponseEntity<String> deleteUser(@RequestBody SwithUser swithUser){
 	    	userService.deleteUser(swithUser);
+	    	return ResponseEntity.ok("Delete User hold");
+	    }
+	    
+	    @PostMapping("/deleteLikes")
+	    public ResponseEntity<?> deleteUserLikes(@RequestBody Likes likes){
+	    	userService.deleteUserLikes(likes);
+	    	return ResponseEntity.ok("Delete User's Like");
+	    }
+	    @PostMapping("/deleteApplication")
+	    public ResponseEntity<String> deleteUserApplication(@RequestBody StudyApplication studyApplication){
+	    	userService.deleteUserApplication(studyApplication);
+	    	return ResponseEntity.ok("Delete User's StudyPost Application");
+	    }
+	    
+	    @GetMapping("/selectDeleteUser")
+	    public ResponseEntity<List<SwithUser>> selectDeleteUserList(){
+	    	List<SwithUser> user = userService.selectDeleteUserList();
+	    	if(!user.isEmpty()) {
+	    		return ResponseEntity.ok(user);
+	    	}else {
+	    		return ResponseEntity.noContent().build();
+	    	}
+	    }
+	    
+	    @PostMapping("deleteAdmin/{user_no}")
+	    public ResponseEntity<String> deleteAdmin(@PathVariable Long user_no ,@RequestBody SwithUser swithUser){
+	    	swithUser.setUser_no(user_no);
+	    	userService.deleteAdmin(swithUser);
 	    	return ResponseEntity.ok("Delete User");
 	    }
+
+
+
+
+
+
+
+
+
+
 	    
 	    
 	//카카오 

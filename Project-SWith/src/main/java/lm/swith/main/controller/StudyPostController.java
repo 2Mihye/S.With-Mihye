@@ -248,7 +248,7 @@ public class StudyPostController {
      // 내가 쓴 스터디 목록
      @GetMapping("/my_own_studies/{user_no}")
      public ResponseEntity<List<StudyPost>> getOwnStudiesWithSwithUserNo(@PathVariable Long user_no) {
-     	List<StudyPost> studyPost = studyPostService.getAllStudiesWithUserNo(user_no);
+     	List<StudyPost> studyPost = studyPostService.getOwnStudiesWithUserNo(user_no);
          if (studyPost != null  && !studyPost.isEmpty()) {
              return ResponseEntity.ok(studyPost);
          } else {

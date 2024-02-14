@@ -34,7 +34,7 @@ function FindUser() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("/users/userData");
+        const response = await axios.get("/users/userinfo");
         setUserData(response.data);
         console.log(userData);
       } catch (error) {
@@ -46,6 +46,12 @@ function FindUser() {
   const handleFind = async (e) => {
     e.preventDefault();
     const { email } = swithUser;
+    // 이메일이 비어 있는지 확인
+    if (!email.trim()) {
+      setIsMessageVisible(true);
+      setConfirmEmail(false);
+      return; // 이메일이 비어 있으면 함수 종료
+    }
     try {
       const response = await axios.post(
         "http://localhost:8080/users/ExistEmail",

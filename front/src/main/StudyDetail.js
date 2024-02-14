@@ -7,6 +7,8 @@ import usersUserinfoAxios from "../token/tokenAxios";
 import axios from "axios";
 import StudyDetailUpdate from "./StudyDetailUpdate";
 import StudyApplication from "./StudyApplication";
+import Modal from "./Modal";
+import ProfileModal from "./ProfileModal";
 
 function StudyDetail() {
   const { post_no } = useParams(); // 동적 라우트 매개변수 가져오기
@@ -342,6 +344,10 @@ function StudyDetail() {
     <button className="commentInput_buttonComplete_done">모집완료</button>
   );
 
+  ///////////////////////
+  const [profile, setProfile] = useState(false);
+  const [profileUserNo, setProfileUserNo] = useState(null);
+
   return (
     <div>
       <Header />
@@ -369,6 +375,17 @@ function StudyDetail() {
                 height="30px"
                 src={`data:image/jpeg;base64,${swithUser.user_profile}`}
                 alt="Profile"
+                onClick={(e) => {
+                  e.preventDefault(); // 기본 동작 막기 (링크 이동 방지)
+                  e.stopPropagation(); // 이벤트 전파 방지
+
+                  // 클릭한 유저의 user_no를 상태에 저장
+                  const clickedUserNo = swithUser.user_no;
+
+                  // 모달 열기 및 user_no 전달
+                  setProfileUserNo(clickedUserNo);
+                  setProfile(!profile);
+                }}
               />
               <div className="username">{detailPages.nickname}</div>
             </div>
@@ -493,6 +510,18 @@ function StudyDetail() {
                             height="30px"
                             src={`data:image/jpeg;base64,${comment.user_profile}`}
                             alt="Profile"
+                            style={{ cursor: "pointer" }}
+                            onClick={(e) => {
+                              e.preventDefault(); // 기본 동작 막기 (링크 이동 방지)
+                              e.stopPropagation(); // 이벤트 전파 방지
+
+                              // 클릭한 유저의 user_no를 상태에 저장
+                              const clickedUserNo = comment.user_no;
+
+                              // 모달 열기 및 user_no 전달
+                              setProfileUserNo(clickedUserNo);
+                              setProfile(!profile);
+                            }}
                           />
                           <div className="commentItem_userNickname">
                             {comment.nickname}
@@ -521,29 +550,31 @@ function StudyDetail() {
                           </div>
                         ) : (
                           <div style={{ display: "flex" }}>
-                            <p className="comment_list_box">
+                            <div className="comment_list_box">
                               {comment.comment_content}
-                            </p>
-                            {comment.user_no === userData.user_no && (
-                              <div>
-                                <button
-                                  className="commentDelete_buttonComplete_list"
-                                  onClick={() => handleEditComment(comment)}
-                                >
-                                  댓글 수정
-                                </button>
-                              </div>
-                            )}
-                            <div>
-                              {(userData.user_role === "ADMIN" ||
-                                comment.user_no === userData.user_no) && (
-                                <button
-                                  className="commentDelete_buttonComplete_list2"
-                                  onClick={() => handleDeleteComment(comment)}
-                                >
-                                  댓글 삭제
-                                </button>
+                            </div>
+                            <div className="comment_edit_box">
+                              {comment.user_no === userData.user_no && (
+                                <div>
+                                  <button
+                                    className="commentDelete_buttonComplete_list"
+                                    onClick={() => handleEditComment(comment)}
+                                  >
+                                    댓글 수정
+                                  </button>
+                                </div>
                               )}
+                              <div>
+                                {(userData.user_role === "ADMIN" ||
+                                  comment.user_no === userData.user_no) && (
+                                  <button
+                                    className="commentDelete_buttonComplete_list2"
+                                    onClick={() => handleDeleteComment(comment)}
+                                  >
+                                    댓글 삭제
+                                  </button>
+                                )}
+                              </div>
                             </div>
                           </div>
                         )}
@@ -562,6 +593,18 @@ function StudyDetail() {
               height="30px"
               src={`data:image/jpeg;base64,${userData.user_profile}`}
               alt="Profile"
+              style={{ cursor: "pointer" }}
+              onClick={(e) => {
+                e.preventDefault(); // 기본 동작 막기 (링크 이동 방지)
+                e.stopPropagation(); // 이벤트 전파 방지
+
+                // 클릭한 유저의 user_no를 상태에 저장
+                const clickedUserNo = userData.user_no;
+
+                // 모달 열기 및 user_no 전달
+                setProfileUserNo(clickedUserNo);
+                setProfile(!profile);
+              }}
             />
             <div className="commentItem_userNickname_list">
               {userData.nickname}
@@ -582,14 +625,14 @@ function StudyDetail() {
           >
             댓글 등록
           </button>
-          {detailPages.user_no === userData.user_no && (
+          {/* {detailPages.user_no === userData.user_no && (
             <button
               className="commentInput_buttonComplete"
               onClick={handleButtonClick}
             >
               게시글 수정하기
             </button>
-          )}
+          )} */}
           {(userData.user_role === "ADMIN" ||
             detailPages.user_no === userData.user_no) && (
             <button
@@ -601,6 +644,17 @@ function StudyDetail() {
           )}
         </div>
       </div>
+      {profile && (
+        <Modal closeModal={() => setProfile(!profile)}>
+          <ProfileModal
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            userNo={profileUserNo}
+          />
+        </Modal>
+      )}
     </div>
   );
 }

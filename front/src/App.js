@@ -3,6 +3,7 @@ import { isTokenAvailable, logout } from "./token/tokenAxios";
 import { jwtDecode } from "jwt-decode"; // npm install jwt-decode
 import "./App.css";
 import Control from "./main/Control";
+import RoomEnd from "./main/StudyRoom/RoomEnd";
 
 const App = () => {
   useEffect(() => {
@@ -42,6 +43,7 @@ const App = () => {
   return (
     <div className="App">
       <Control />
+      <RoomEnd />
     </div>
   );
 };

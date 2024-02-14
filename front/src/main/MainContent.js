@@ -33,7 +33,7 @@ function MainContent() {
   const [like, setLike] = useState([]);
 
   const [filteredBoards, setFilteredBoards] = useState([]);
-
+  const modalEl = useRef();
   const skills = [
     "Angular",
     "C",
@@ -50,12 +50,10 @@ function MainContent() {
     "GraphQL",
     "Java Script",
     "Java",
-    "Kotlin",
     "Kubernetes",
     "MongoDB",
     "mySql",
     "NestJS",
-    "NextJS",
     "NodeJS",
     "Php",
     "Python",
@@ -73,9 +71,6 @@ function MainContent() {
   skills.forEach((skill, index) => {
     skills[index] = { skill_no: index + 1, skill_name: skill };
   });
-
-  const modalEl = useRef(null);
-
   useEffect(() => {
     if (modalEl.current && isSkillVisible) {
       // modalEl이 정의되었고, isSkillVisible이 true일 때만 ref를 적용
@@ -85,13 +80,8 @@ function MainContent() {
   }, [isSkillVisible]);
 
   const handleClickOutside = ({ target }) => {
-    if (
-      isSkillVisible &&
-      modalEl.current &&
-      !modalEl.current.contains(target)
-    ) {
+    if (isSkillVisible && !modalEl.current.contains(target))
       toggleContentSkill(); // 이미 토글 처리 함수 사용
-    }
   };
 
   useEffect(() => {
@@ -103,7 +93,6 @@ function MainContent() {
 
   const [boards, setBoards] = useState([]);
   const [comments, setComments] = useState([]);
-  const [skillData, setSkillData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -391,44 +380,18 @@ function MainContent() {
           recruit_type: clickedRecruit,
           study_method: clickedMethod,
           study_location: clickedCity,
-          skill_no: clickedSkills, // 쉼표로 구분된 문자열이 아닌 배열로 전달
+          skill_no: clickedSkills,
         };
 
-        // 모든 파라미터가 비어있는 경우 함수 실행을 중지
-        if (
-          !params.recruit_type &&
-          !params.study_method &&
-          !params.study_location &&
-          params.skill_no.length === 0
-        ) {
-          return;
-        }
+        const areAnyParamsNonNull = Object.values(params).some(
+          (value) => value !== null
+        );
 
-        // study_location만 값이 있는 경우에 대한 조건 추가
-        let url = "/getSelectedList";
-
-        // skill_no가 값이 있는 경우에만 추가
-        if (params.skill_no.length > 0) {
-          url += `?${params.skill_no
-            .map((skill) => `skill_no=${encodeURIComponent(skill)}`)
-            .join("&")}`;
-        }
-
-        // 다른 파라미터가 있는 경우에도 URL에 추가
-        const otherParams = Object.entries(params)
-          .filter(([key, value]) => key !== "skill_no" && value !== "")
-          .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-          .join("&");
-
-        if (otherParams !== "") {
-          url += (url.includes("?") ? "&" : "?") + otherParams;
-        }
-
-        // 선택된 값이 하나도 없을 때만 요청을 보냄
-        if (Object.values(params).some((value) => value !== null)) {
-          const response = await usersUserinfoAxios.get(url);
-
-          console.log("url확인용: ", url);
+        // 선택된 값이 하나도 없거나 두 개 이상인 경우에도 요청을 보냄
+        if (areAnyParamsNonNull) {
+          const response = await usersUserinfoAxios.get("/getSelectedList", {
+            params: params,
+          });
 
           console.log("검색 결과 확인:", response.data);
           setSearchPostResult(response.data);
@@ -437,7 +400,7 @@ function MainContent() {
           setSearchPostResult([]); // 검색할 파라미터가 없을 때 결과를 초기화하거나 원하는 동작을 수행
         }
       } catch (error) {
-        console.error("게시글을 가져오는 중 에러 발생:", error);
+        console.error("Error fetching boards:", error);
       }
     };
 
@@ -560,9 +523,6 @@ function MainContent() {
         }
       })
     : []; // 만약 boards가 배열이 아니면 updatedBoards를 빈 배열로 설정
-
-  // isEmpty 함수 정의
-  const isEmpty = (value) => value == null || value === "";
 
   ///////////////////////////////////////////////
   const [profile, setProfile] = useState(false);
@@ -980,10 +940,6 @@ function MainContent() {
               <p>조건에 해당하는 게시물이 없습니다.</p>
             )
           ) : (
-            clickedRecruit.length === 0 &&
-            clickedMethod.length === 0 &&
-            clickedCity.length === 0 &&
-            clickedSkills.length === 0 &&
             currentMoment.map((board) => (
               <div key={board.post_no} onClick={(e) => e.stopPropagation()}>
                 <Link
@@ -1082,124 +1038,21 @@ function MainContent() {
               </div>
             ))
           )}
-          {searchPostResult && searchPostResult.length > 0 ? (
-            searchPostResult.map((board) => (
-              <div key={board.post_no} onClick={(e) => e.stopPropagation()}>
-                <Link
-                  className="board_box"
-                  to={`/post_detail/${board.post_no}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    console.log("Link Clicked");
-                  }}
-                >
-                  <li>
-                    {/* <p>{board.post_no}</p> */}
-                    <div className="study_sort_badge">
-                      <div className="study_sort_badge_content">
-                        {board.recruit_type}
-                      </div>
-
-                      <div className="heart_button_container">
-                        <HeartButton
-                          className="heart_button"
-                          like={board.isZzim}
-                          onClick={(e) => {
-                            e.preventDefault(); // 기본 동작 막기 (링크 이동 방지)
-                            e.stopPropagation(); // 이벤트 전파 방지
-                            console.log("HeartButton Clicked");
-                            handleHeartButtonClick(e, board.post_no);
-                            handleLikeButton(board.post_no);
-                            console.log("제발 " + board.post_no);
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="study_schedule">
-                      <p className="">마감일</p>
-                      <p>|</p>
-                      <p>
-                        {new Date(board.recruit_deadline).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div>
-                      <h1 className="board_title">{board.study_title}</h1>
-                    </div>
-                    <ul className="skill_icon_section">
-                      {board.studyPostWithSkills.map((skill) => (
-                        <li key={skill.skill_no}>
-                          <img
-                            src={`https://2mihye.github.io/Skill_IMG/images/${skill.skill_name}.png`}
-                            alt={skill.skill_name}
-                            width="30"
-                            height="30"
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="board_content_border"></div>
-                    <section className="board_info_section">
-                      <div className="board_info_left">
-                        <div className="user_profile_img">
-                          <img
-                            className="user_profile_img_set"
-                            width="30px"
-                            height="30px"
-                            src={`data:image/jpeg;base64,${board.user_profile}`}
-                            alt="Profile"
-                            onClick={(e) => {
-                              e.preventDefault(); // 기본 동작 막기 (링크 이동 방지)
-                              e.stopPropagation(); // 이벤트 전파 방지
-
-                              // 클릭한 유저의 user_no를 상태에 저장
-                              const clickedUserNo = board.user_no;
-
-                              // 모달 열기 및 user_no 전달
-                              setProfileUserNo(clickedUserNo);
-                              setProfile(!profile);
-                            }}
-                          />
-                        </div>
-                        <div>{board.nickname}</div>
-                      </div>
-                      <div className="board_info_right">
-                        <div className="comment_count_section">
-                          <img
-                            width="30px"
-                            height="30px"
-                            src={CommentIcon}
-                            alt="Comment"
-                          />
-                          <p className="comment_count">
-                            {getCommentCount(board.post_no)}
-                          </p>
-                        </div>
-                      </div>
-                    </section>
-                  </li>
-                </Link>
-              </div>
-            ))
-          ) : (
-            <p></p>
-          )}
         </ul>
         <div className="main_pagenation">
-          {boards && (
-            <Pagination>
-              {[...Array(Math.ceil(boards.length / momentPerPage)).keys()].map(
-                (number) => (
-                  <Pagination.Item
-                    key={number + 1}
-                    active={number + 1 === currentPage}
-                    onClick={() => handlePageChange(number + 1)}
-                  >
-                    {number + 1}
-                  </Pagination.Item>
-                )
-              )}
-            </Pagination>
-          )}
+          <Pagination>
+            {[...Array(Math.ceil(boards.length / momentPerPage)).keys()].map(
+              (number) => (
+                <Pagination.Item
+                  key={number + 1}
+                  active={number + 1 === currentPage}
+                  onClick={() => handlePageChange(number + 1)}
+                >
+                  {number + 1}
+                </Pagination.Item>
+              )
+            )}
+          </Pagination>
         </div>
       </main>
       {profile && (
